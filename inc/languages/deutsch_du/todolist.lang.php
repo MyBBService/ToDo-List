@@ -1,10 +1,10 @@
 <?php
-$l['offline'] = "Aufgaben-Liste ist deaktiviert. Bitte versuche es sp&auml;ter noch einmal.";
+$l['offline'] = "Aufgaben-Liste ist deaktiviert. Bitte versuche es später noch einmal.";
 
 //Overview
 $l['title_overview'] = "Aufgaben-Liste";
-$l['add_todo'] = "Aufgabe hinzuf&uuml;gen";
-$l['delete_todo'] = "L&ouml;schen";
+$l['add_todo'] = "Aufgabe hinzufügen";
+$l['delete_todo'] = "Löschen";
 $l['edit_todo'] = "Bearbeiten";
 $l['show_todo'] = "Anzeigen";
 $l['moderation_todo'] = "Wird moderiert von";
@@ -13,16 +13,16 @@ $l['title_todo'] = "Titel";
 $l['done_todo'] = "% Erledigt";
 $l['status_todo'] = "Status";
 $l['from_todo'] = "Geschrieben von";
-$l['priority_todo'] = "Priorit&auml;t";
+$l['priority_todo'] = "Priorität";
 $l['action_todo'] = "Aktion";
 $l['description_todo'] = "Beschreibung";
 $l['no_todo'] = "Leider sind keine Aufgaben eingetragen.";
-$l['added_todo'] = "Aufgabe hinzugef&uuml;gt!";
-$l['deleted_todo'] = "Aufgabe gel&ouml;scht!";
+$l['added_todo'] = "Aufgabe hinzugefügt!";
+$l['deleted_todo'] = "Aufgabe gelöscht!";
 
 //Show Todo
 $l['lastedit_showtodo'] = "Zuletzt aktualisiert";
-$l['back_showtodo'] = "Zuruck zur &Uuml;bersicht";
+$l['back_showtodo'] = "Zuruck zur übersicht";
 $l['today_showtodo'] = "Heute";
 $l['yesterday_showtodo'] = "Gestern";
 $l['from_showtodo'] = "von";
@@ -31,7 +31,7 @@ $l['from_showtodo'] = "von";
 $l['edit_edittodo'] = "Aufgabe bearbeiten";
 $l['send_edittodo'] = "Aufgabe speichern";
 $l['nowstat_edittodo'] = "Momentaner Status";
-$l['nowprio_edittodo'] = "Momentane Priorit&auml;t";
+$l['nowprio_edittodo'] = "Momentane Priorität";
 $l['nowdone_edittodo'] = "Momentan % Erledigt";
 
 //Priority Classes
