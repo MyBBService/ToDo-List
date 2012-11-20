@@ -31,17 +31,17 @@ function todolist_install()
 		`date` INT(11) ,
 		`name` TEXT NOT NULL ,
 		`nameid` TEXT NOT NULL ,
-		`usergroup` TEXT NOT NULL ,
 		`lasteditor` TEXT NOT NULL ,
 		`lasteditorid` TEXT NOT NULL ,
-		`editorgroup` TEXT NOT NULL ,
 		`lastedit` INT(11),
 		`priority` TEXT NOT NULL ,
 		`message` TEXT NOT NULL ,
 		`status` TEXT NOT NULL ,
 		`done` TEXT NOT NULL
 	) ENGINE=MyISAM DEFAULT CHARSET=utf8");
-	
+
+//		`editorgroup` TEXT NOT NULL ,	
+//		`usergroup` TEXT NOT NULL ,
 	$templateset = array(
 	    "prefix" => "todolist",
 	    "title" => "ToDoListe",
@@ -52,14 +52,14 @@ function todolist_install()
         "title" => "todolist",
         "template" => "<html>
 <head>
-<title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todolist_setting6\']}</title>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
 {\$headerinclude}
 </head>
 <body>
 {\$header}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=\"thead\" colspan=\"7\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todolist_setting6\']}</strong></td>
+		<td class=\"thead\" colspan=\"7\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
 	</tr>
 	<tr>
 		<td class=tcat>{\$lang->title_todo}</td>
@@ -89,7 +89,7 @@ function todolist_install()
         "title" => "todolist_show",
         "template" => "<html>
 <head>
-<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todolist_setting6\']} - {\$lang->show_showtodo}</title>
+<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->show_showtodo}</title>
 {\$headerinclude}
 </head>
 <body>
@@ -97,7 +97,7 @@ function todolist_install()
 {\$selectodo}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=thead colspan=\"4\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todolist_setting6\']} - {\$lang->show_showtodo}</strong></td>
+		<td class=thead colspan=\"4\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']} - {\$lang->show_showtodo}</strong></td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->title_todo}:</td>
@@ -146,7 +146,7 @@ function todolist_install()
         "title" => "todolist_add",
         "template" => "<html>
 <head>
-<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todolist_setting6\']} - {\$lang->add_todo}</title>
+<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->add_todo}</title>
 {\$headerinclude}
 </head>
 <body>
@@ -187,7 +187,7 @@ function todolist_install()
         "title" => "todolist_edit",
         "template" => "<html>
 <head>
-<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todolist_setting6\']} - {\$lang->edit_edittodo}</title>
+<title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->edit_edittodo}</title>
 {\$headerinclude}
 </head>
 <body>
@@ -209,18 +209,18 @@ function todolist_install()
 
 
 	$todolist_group = array(
-        "title"          => $lang->name_settingoverview,
-        "name"           => "todolist",
-        "description"    => $lang->description_settingoverview,
+        "title"          => $lang->setting_group_todo,
+        "name"           => "todo",
+        "description"    => $lang->setting_group_todo_desc,
         "disporder"      => "50",
         "isdefault"      => "0",
     );
     $gid = $db->insert_query("settinggroups", $todolist_group);
 
 	$todolist_setting_1 = array(
-        "name"           => "todolist_setting1",
-        "title"          => $lang->name_setting1,
-        "description"    => $lang->desc_setting1,
+        "name"           => "todo_activate",
+        "title"          => $lang->setting_todo_activate,
+        "description"    => $lang->setting_todo_activate_desc,
         "optionscode"    => "yesno",
         "value"          => 'yes',
         "disporder"      => '1',
@@ -229,9 +229,9 @@ function todolist_install()
 	$db->insert_query("settings", $todolist_setting_1);
 
 	$todolist_setting_2 = array(
-        "name"           => "todolist_setting2",
-        "title"          => $lang->name_setting2,
-        "description"    => $lang->desc_setting2,
+        "name"           => "todo_allow_guests",
+        "title"          => $lang->setting_todo_allow_guests,
+        "description"    => $lang->setting_todo_allow_guests_desc,
         "optionscode"    => "yesno",
         "value"          => 'no',
         "disporder"      => '2',
@@ -240,9 +240,9 @@ function todolist_install()
 	$db->insert_query("settings", $todolist_setting_2);
 
 	$todolist_setting_3 = array(
-        "name"           => "todolist_setting3",
-        "title"          => $lang->name_setting3,
-        "description"    => $lang->desc_setting3,
+        "name"           => "todo_disallowed_groups",
+        "title"          => $lang->setting_todo_disallowed_groups,
+        "description"    => $lang->setting_todo_disallowed_groups_desc,
         "optionscode"    => "text",
 		"value"			 => "5",
         "disporder"      => '3',
@@ -251,9 +251,9 @@ function todolist_install()
 	$db->insert_query("settings", $todolist_setting_3);
 
 	$todolist_setting_4 = array(
-        "name"           => "todolist_setting4",
-        "title"          => $lang->name_setting4,
-        "description"    => $lang->desc_setting4,
+        "name"           => "todo_mod_groups",
+        "title"          => $lang->setting_todo_mod_groups,
+        "description"    => $lang->setting_todo_mod_groups_desc,
         "optionscode"    => "text",
 		"value"          => '4',
         "disporder"      => '5',
@@ -262,9 +262,9 @@ function todolist_install()
 	$db->insert_query("settings", $todolist_setting_4);
 
 	$todolist_setting_5 = array(
-        "name"           => "todolist_setting5",
-        "title"          => $lang->name_setting5,
-        "description"    => $lang->desc_setting5,
+        "name"           => "todo_add_groups",
+        "title"          => $lang->setting_todo_add_groups,
+        "description"    => $lang->setting_todo_add_groups_desc,
         "optionscode"    => "text",
 		"value"          => '4',
         "disporder"      => '4',
@@ -273,9 +273,9 @@ function todolist_install()
 	$db->insert_query("settings", $todolist_setting_5);
 
 	$todolist_setting_6 = array(
-        "name"           => "todolist_setting6",
-        "title"          => $lang->name_setting6,
-        "description"    => $lang->desc_setting6,
+        "name"           => "todo_name",
+        "title"          => $lang->setting_todo_name,
+        "description"    => $lang->setting_todo_name_desc,
         "optionscode"    => "text",
         "disporder"      => '6',
         "gid"            => intval($gid),
@@ -299,14 +299,11 @@ function todolist_uninstall()
 	
 	$db->drop_table("todolist");
 
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting1';");
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting2';");
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting3';");
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting4';");
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting5';");
-	$db->query("DELETE FROM `".TABLE_PREFIX."settings` WHERE name='todolist_setting6';");
-    $db->query("DELETE FROM `".TABLE_PREFIX."settinggroups` WHERE name='todolist';");
-    rebuild_settings();
+	$query = $db->simple_select("settinggroups", "gid", "name='todo'");
+    $g = $db->fetch_array($query);
+	$db->delete_query("settinggroups", "gid='".$g['gid']."'");
+	$db->delete_query("settings", "gid='".$g['gid']."'");
+	rebuild_settings();
 
 	//Delete templates
 	$templatearray = array(

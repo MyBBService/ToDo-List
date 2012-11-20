@@ -1,33 +1,21 @@
 <?php
-//Plugins
+//Plugin
 $l['name_plugins'] = "ToDo-Liste";
 $l['description_plugins'] = "Es bietet eine Liste für deine zu erledigenden Aufgaben.";
 
-//Setting-Overview
-$l['name_settingoverview'] = "ToDo-Liste";
-$l['description_settingoverview'] = "Einstellungen für die Aufgaben-Liste";
-
-//Setting #1
-$l['name_setting1'] = "Aktivieren?";
-$l['desc_setting1'] = "";
-
-//Setting #2
-$l['name_setting2'] = "Erlaube Gästen den Zugriff";
-$l['desc_setting2'] = "Willst du den Gästen den Zugriff erlauben?";
-
-//Setting #3
-$l['name_setting3'] = "Verweigere bestimmten Gruppen den Zugriff";
-$l['desc_setting3'] = "Gebe die Gruppen-IDs ein, denen der Zugriff verweigert werden soll. Mit \",\" trennen.";
-
-//Setting #4
-$l['name_setting4'] = "Moderation";
-$l['desc_setting4'] = "Gebe die Gruppen-IDs ein, deren Mitglieder Aufgaben moderieren können. Mit \",\" trennen.";
-
-//Setting #5
-$l['name_setting5'] = "Kann Aufgaben hinzufügen";
-$l['desc_setting5'] = "Gebe die Gruppen-IDs ein, die Aufgaben hinzufügen können. Mit \",\" trennen.";
-
-//Setting #6
-$l['name_setting6'] = "Angezeigter Name";
-$l['desc_setting6'] = "Gib hier der Name ein, der angezeigt werden soll. Beispiel: Interne Aufgaben-Liste";
+//Settings
+$l['setting_group_todo'] = "ToDo-Liste";
+$l['setting_group_todo_desc'] = "Einstellungen für die ToDo-Liste";
+$l['setting_todo_activate'] = "Aktivieren?";
+$l['setting_todo_activate_desc'] = "";
+$l['setting_todo_allow_guests'] = "Erlaube Gästen den Zugriff";
+$l['setting_todo_allow_guests_desc'] = "Willst du den Gästen den Zugriff erlauben?";
+$l['setting_todo_disallowed_groups'] = "Verweigere bestimmten Gruppen den Zugriff";
+$l['setting_todo_disallowed_groups_desc'] = "Gebe die Gruppen-IDs ein, denen der Zugriff verweigert werden soll. Mit \",\" trennen.";
+$l['setting_todo_mod_groups'] = "Moderation";
+$l['setting_todo_mod_groups_desc'] = "Gebe die Gruppen-IDs ein, deren Mitglieder Aufgaben moderieren können. Mit \",\" trennen.";
+$l['setting_todo_add_groups'] = "Kann Aufgaben hinzufügen";
+$l['setting_todo_add_groups_desc'] = "Gebe die Gruppen-IDs ein, die Aufgaben hinzufügen können. Mit \",\" trennen.";
+$l['setting_todo_name'] = "Angezeigter Name";
+$l['setting_todo_name_desc'] = "Gib hier der Name ein, der angezeigt werden soll. Beispiel: Interne Aufgaben-Liste";
 ?>

@@ -7,26 +7,26 @@ require_once "global.php";
 
 $lang->load('todolist');
 
-if($mybb->settings['todolist_setting1'] == '0')
+if($mybb->settings['todo_activate'] == '0')
 	error($lang->offline);
 
-if($mybb->settings['todolist_setting2'] == '0' && $mybb->user['uid'] == '0')
+if($mybb->settings['todo_allow_guests'] == '0' && $mybb->user['uid'] == '0')
 	error_no_permission();
 
-$perm_group = explode(",", $mybb->settings['todolist_setting3']);
+$perm_group = explode(",", $mybb->settings['todo_disallowed_groups']);
 foreach($perm_group as $groups) {
 	if ($mybb->user['usergroup'] == $groups)
 		error_no_permission();
 }
 
-$perm_group = explode(",", $mybb->settings['todolist_setting5']);
+$perm_group = explode(",", $mybb->settings['todo_add_groups']);
 foreach($perm_group as $groups) {
 	if ($mybb->user['usergroup'] == $groups)
 		$addtodo = "<strong><img src='images/todolist/add.png' /> <a href='todolist.php?action=submit'>$lang->add_todo</a></strong>";
 }
 
 $modgroup = "";
-$mods = explode(",", $mybb->settings['todolist_setting4']);
+$mods = explode(",", $mybb->settings['todo_mod_groups']);
 foreach($groupscache as $group) {
 	if(in_array($group['gid'], $mods))
 		$modgroup .= format_name($group['title'], $group['gid']).", ";
@@ -34,15 +34,19 @@ foreach($groupscache as $group) {
 $modgroup = substr($modgroup, 0, -2);
 
 if ($mybb->input['action'] == "") {
-	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todolist_setting6']}", "todolist.php");
+	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 	$get_todo = $db->query("SELECT * FROM ".TABLE_PREFIX."todolist ORDER BY date DESC");
 	while($row = $db->fetch_array($get_todo)) {
 		$id = $row['id'];
 		$title = $row['title'];
 		$name = $row['name'];
-		$group = $row['usergroup'];
+//		$group = $row['usergroup'];
+		if($nameid != "")
+			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
+		else
+			$group = "";
 		
-		$perm_group = explode(",", $mybb->settings['todolist_setting4']);
+		$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
 		foreach($perm_group as $groups) {
 			if ($mybb->user['usergroup'] == $groups) {
 				$mod_todo = "- <a href='todolist.php?action=edit&id=$id'><img src='images/todolist/edit.png' /> ".$lang->edit_todo."</a> - <a href='todolist.php?action=delete&id=$id'><img src='images/todolist/delete.png' /> ".$lang->delete_todo."</a>";
@@ -98,7 +102,7 @@ if ($mybb->input['action'] == "") {
 	eval("\$todolist .= \"".$templates->get("todolist")."\";");
 	output_page($todolist);
 } elseif ($mybb->input['action'] == 'show') {
-	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todolist_setting6']}", "todolist.php");
+	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 	add_breadcrumb("{$lang->show_showtodo}", "todolist.php?action=show&id=$id");
 	
 	$id = $mybb->input['id'];
@@ -109,12 +113,20 @@ if ($mybb->input['action'] == "") {
 		$nameid = $row['nameid'];
 		$name = $row['name'];
 		$message = $row['message'];
-		$group = $row['usergroup'];
+//		$group = $row['usergroup'];
 		$editor = $row['lasteditor'];
 		$editorid = $row['lasteditorid'];
-		$editorgroup = $row['editorgroup'];
+		//$editorgroup = $row['editorgroup'];
+		if($editorid != "")
+			$editorgroup = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$editorid}"), "usergroup");
+		else
+			$editorgroup = "";
+		if($nameid != "")
+			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$nameid}"), "usergroup");
+		else
+			$group = "";
 		
-		$perm_group = explode(",", $mybb->settings['todolist_setting4']);
+		$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
 		foreach($perm_group as $groups) {
 			if ($mybb->user['usergroup'] == $groups) {
 				$mod_todo = "<tr class='trow2'><td style='width:100px;'>".$lang->action_todo."</td><td><a href='todolist.php?action=edit&id=$id'><img src='images/todolist/edit.png' /> ".$lang->edit_todo."</a> - <a href='todolist.php?action=delete&id=$id'><img src='images/todolist/delete.png' /> ".$lang->delete_todo."</a></td></tr>";
@@ -191,7 +203,7 @@ if ($mybb->input['action'] == "") {
 } elseif ($mybb->input['action'] == 'submit') {
 	//show the form
 	if ($mybb->input['title'] == '') {
-		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todolist_setting6']}", "todolist.php");
+		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 		add_breadcrumb("$lang->add_addtodo", "todolist.php?action=submit");
 		eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
 		output_page($todolist_add);
@@ -202,7 +214,7 @@ if ($mybb->input['action'] == "") {
 		$insert['title'] = $db->escape_string($mybb->input['title']);
 		$insert['priority'] = $db->escape_string($mybb->input['priority']);
 		$insert['message'] = $db->escape_string($mybb->input['message']);
-		$insert['usergroup'] = $mybb->user['displaygroup'];
+		//$insert['usergroup'] = $mybb->user['displaygroup'];
 		$insert['status'] = 'wait';
 		$insert['done'] = '0 done';
 		$db->insert_query("todolist",$insert);
@@ -215,7 +227,7 @@ if ($mybb->input['action'] == "") {
 } elseif ($mybb->input['action'] == 'edit') {
 	$id = $mybb->input['id'];
 	if(isset($id)) {
-		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todolist_setting6']}", "todolist.php");
+		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 		add_breadcrumb("$lang->show_showtodo", "todolist.php?action=show&id=$id");
 		add_breadcrumb("$lang->edit_edittodo", "todolist.php?action=edit&id={$row[id]}");
 		$query = $db->simple_select('todolist', '*', 'id='.$id);
@@ -293,9 +305,9 @@ if ($mybb->input['action'] == "") {
 	$lasteditor = $mybb->user['username'];
 	$lasteditorid = $mybb->user['uid'];
 	$lastedit = time();
-	$editorgroup = $mybb->user['displaygroup'];
+//	$editorgroup = $mybb->user['displaygroup'];
 	
-	$db->query("UPDATE ".TABLE_PREFIX."todolist SET title='$title', done='$done', status='$status', priority='$priority', message='$message', lasteditor='$lasteditor', lasteditorid='$lasteditorid', lastedit='$lastedit', editorgroup='$editorgroup' WHERE id='$id'");
+	$db->query("UPDATE ".TABLE_PREFIX."todolist SET title='$title', done='$done', status='$status', priority='$priority', message='$message', lasteditor='$lasteditor', lasteditorid='$lasteditorid', lastedit='$lastedit' WHERE id='$id'");
 	redirect("todolist.php?action=show&id=$id", $lang->edited_todo);
 }
 ?>
