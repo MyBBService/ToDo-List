@@ -3,11 +3,12 @@ if(!defined("IN_MYBB")) {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
-function todolist_info() {
+function todolist_info()
+{
 	global $lang;
 	$lang->load('todolist');
 	return array(
-		"name"			=> "ToDo Liste",
+		"name"			=> "ToDo-Liste",
 		"description"	=> "Dieses Plugin erstellt eine ToDo Liste, mithilfe Aufgaben in deinem Forum verwaltet werden können<br /><i>Based on ToDo List by FalkenaugeMihawk</i>",
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
@@ -19,7 +20,8 @@ function todolist_info() {
 }
 
 
-function todolist_install() {
+function todolist_install()
+{
 	global $db, $lang;
 	$lang->load('todolist');
 	
@@ -95,7 +97,7 @@ function todolist_install() {
 {\$selectodo}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=thead colspan=\"4\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todolist_setting6\']} - Aufgabe anzeigen</strong></td>
+		<td class=thead colspan=\"4\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todolist_setting6\']} - {\$lang->show_showtodo}</strong></td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->title_todo}:</td>
@@ -194,7 +196,7 @@ function todolist_install() {
 	<tr>
 		<td class=thead colspan=6><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
 	</tr>
-	<form action=\"todolist.php?act=submit-edit\" method=\"post\">
+	<form action=\"todolist.php?action=submit-edit\" method=\"post\">
 		{\$editing}
 	</form>
 </table>

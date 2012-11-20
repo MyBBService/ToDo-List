@@ -1,10 +1,10 @@
 <?php
 //Plugins
-$l['name_plugins'] = "Aufgaben-Liste";
+$l['name_plugins'] = "ToDo-Liste";
 $l['description_plugins'] = "Es bietet eine Liste für deine zu erledigenden Aufgaben.";
 
 //Setting-Overview
-$l['name_settingoverview'] = "Aufgaben-Liste";
+$l['name_settingoverview'] = "ToDo-Liste";
 $l['description_settingoverview'] = "Einstellungen für die Aufgaben-Liste";
 
 //Setting #1
@@ -17,7 +17,7 @@ $l['desc_setting2'] = "Willst du den Gästen den Zugriff erlauben?";
 
 //Setting #3
 $l['name_setting3'] = "Verweigere bestimmten Gruppen den Zugriff";
-$l['desc_setting3'] = "Gebe die Gruppen-IDs ein, denen der Zugriff zu verweigert werden soll. Mit \",\" trennen.";
+$l['desc_setting3'] = "Gebe die Gruppen-IDs ein, denen der Zugriff verweigert werden soll. Mit \",\" trennen.";
 
 //Setting #4
 $l['name_setting4'] = "Moderation";

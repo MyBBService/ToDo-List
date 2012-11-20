@@ -1,8 +1,8 @@
 <?php
-$l['offline'] = "Aufgaben-Liste ist deaktiviert. Bitte versuche es später noch einmal.";
+$l['offline'] = "Die ToDo-Liste ist deaktiviert. Bitte versuche es später noch einmal.";
 
 //Overview
-$l['title_overview'] = "Aufgaben-Liste";
+$l['title_overview'] = "ToDo-Liste";
 $l['add_todo'] = "Aufgabe hinzufügen";
 $l['delete_todo'] = "Löschen";
 $l['edit_todo'] = "Bearbeiten";
@@ -21,8 +21,9 @@ $l['added_todo'] = "Aufgabe hinzugefügt!";
 $l['deleted_todo'] = "Aufgabe gelöscht!";
 
 //Show Todo
+$l['show_showtodo'] = "Aufgabe anzeigen";
 $l['lastedit_showtodo'] = "Zuletzt aktualisiert";
-$l['back_showtodo'] = "Zuruck zur übersicht";
+$l['back_showtodo'] = "Zuruck zur Übersicht";
 $l['today_showtodo'] = "Heute";
 $l['yesterday_showtodo'] = "Gestern";
 $l['from_showtodo'] = "von";
