@@ -35,7 +35,19 @@ $modgroup = substr($modgroup, 0, -2);
 
 if ($mybb->input['action'] == "") {
 	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
-	$get_todo = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC"));
+
+	$page = (int)$mybb->input['page'];
+	if($page > 0)
+		$start = ($page-1) *$mybb->settings['todo_per_page'];
+	else {
+		$start = 0;
+		$page = 1;
+	}
+	$query = $db->simple_select("todolist", "COUNT(id) AS count");
+	$num = $db->fetch_field($query, "count");
+	$multipage = multipage($num, $mybb->settings['todo_per_page'], $page, "todolist.php");
+
+	$get_todo = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
 	while($row = $db->fetch_array($get_todo)) {
 		$id = $row['id'];
 		$title = $row['title'];

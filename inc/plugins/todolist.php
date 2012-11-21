@@ -27,18 +27,18 @@ function todolist_install()
 	
 	$col = $db->build_create_table_collation();
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,
-				`title` varchar(50) NOT NULL,
-				`date` bigint(30) NOT NULL,
-				`name` varchar(120) NOT NULL,
-				`nameid` int(10) NOT NULL,
-				`lasteditor` varchar(120) NOT NULL DEFAULT '',
-				`lasteditorid` int(10) NOT NULL DEFAULT '0',
-				`lastedit` bigint(30) NOT NULL DEFAULT '0',
-				`priority` varchar(6) NOT NULL,
-				`message` text NOT NULL,
-				`status` varchar(11) NOT NULL,
-				`done` varchar(8) NOT NULL,
+				`id`			int(11)			NOT NULL AUTO_INCREMENT,
+				`title`			varchar(50)		NOT NULL,
+				`date`			bigint(30)		NOT NULL,
+				`name`			varchar(120)	NOT NULL,
+				`nameid`		int(10)			NOT NULL,
+				`lasteditor`	varchar(120)	NOT NULL DEFAULT '',
+				`lasteditorid`	int(10)			NOT NULL DEFAULT '0',
+				`lastedit`		bigint(30)		NOT NULL DEFAULT '0',
+				`priority`		varchar(6)		NOT NULL,
+				`message`		text			NOT NULL,
+				`status`		varchar(11)		NOT NULL,
+				`done`			varchar(8)		NOT NULL,
 	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
 
 	$templateset = array(
@@ -223,7 +223,7 @@ function todolist_install()
         "optionscode"    => "yesno",
         "value"          => 'yes',
         "disporder"      => '1',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
     );
 	$db->insert_query("settings", $todolist_setting_1);
 
@@ -234,7 +234,7 @@ function todolist_install()
         "optionscode"    => "yesno",
         "value"          => 'no',
         "disporder"      => '2',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
     );
 	$db->insert_query("settings", $todolist_setting_2);
 
@@ -245,7 +245,7 @@ function todolist_install()
         "optionscode"    => "text",
 		"value"			 => "5",
         "disporder"      => '3',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
     );
 	$db->insert_query("settings", $todolist_setting_3);
 
@@ -256,7 +256,7 @@ function todolist_install()
         "optionscode"    => "text",
 		"value"          => '4',
         "disporder"      => '5',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
     );
 	$db->insert_query("settings", $todolist_setting_4);
 
@@ -267,7 +267,7 @@ function todolist_install()
         "optionscode"    => "text",
 		"value"          => '4',
         "disporder"      => '4',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_5);
 
@@ -277,9 +277,20 @@ function todolist_install()
         "description"    => $lang->setting_todo_name_desc,
         "optionscode"    => "text",
         "disporder"      => '6',
-        "gid"            => intval($gid),
+        "gid"            => (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_6);
+
+	$todolist_setting_7 = array(
+        "name"			=> "todo_per_page",
+        "title"			=> $lang->setting_todo_per_page,
+        "description"	=> $lang->setting_todo_per_page_desc,
+        "optionscode"	=> "text",
+        "value"			=> "10",
+        "disporder"		=> '7',
+        "gid"			=> (int)$gid,
+	);
+	$db->insert_query("settings", $todolist_setting_7);
 	rebuild_settings();
 }
 

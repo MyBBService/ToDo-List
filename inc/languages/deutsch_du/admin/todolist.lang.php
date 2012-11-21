@@ -18,4 +18,6 @@ $l['setting_todo_add_groups'] = "Kann Aufgaben hinzufügen";
 $l['setting_todo_add_groups_desc'] = "Gebe die Gruppen-IDs ein, die Aufgaben hinzufügen können. Mit \",\" trennen.";
 $l['setting_todo_name'] = "Angezeigter Name";
 $l['setting_todo_name_desc'] = "Gib hier der Name ein, der angezeigt werden soll. Beispiel: Interne Aufgaben-Liste";
+$l['setting_todo_per_page'] = "Einträge pro Seite";
+$l['setting_todo_per_page_desc'] = "Gib hier die Anzahl der Einträge ein, die pro Seite angezeigt werden sollen";
 ?>
