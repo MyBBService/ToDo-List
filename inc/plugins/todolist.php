@@ -25,23 +25,22 @@ function todolist_install()
 	global $db, $lang;
 	$lang->load('todolist');
 	
+	$col = $db->build_create_table_collation();
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
-		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-		`title` TEXT NOT NULL ,
-		`date` INT(11) ,
-		`name` TEXT NOT NULL ,
-		`nameid` TEXT NOT NULL ,
-		`lasteditor` TEXT NOT NULL ,
-		`lasteditorid` TEXT NOT NULL ,
-		`lastedit` INT(11),
-		`priority` TEXT NOT NULL ,
-		`message` TEXT NOT NULL ,
-		`status` TEXT NOT NULL ,
-		`done` TEXT NOT NULL
-	) ENGINE=MyISAM DEFAULT CHARSET=utf8");
+				`id` int(11) NOT NULL AUTO_INCREMENT,
+				`title` varchar(50) NOT NULL,
+				`date` bigint(30) NOT NULL,
+				`name` varchar(120) NOT NULL,
+				`nameid` int(10) NOT NULL,
+				`lasteditor` varchar(120) NOT NULL DEFAULT '',
+				`lasteditorid` int(10) NOT NULL DEFAULT '0',
+				`lastedit` bigint(30) NOT NULL DEFAULT '0',
+				`priority` varchar(6) NOT NULL,
+				`message` text NOT NULL,
+				`status` varchar(11) NOT NULL,
+				`done` varchar(8) NOT NULL,
+	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
 
-//		`editorgroup` TEXT NOT NULL ,	
-//		`usergroup` TEXT NOT NULL ,
 	$templateset = array(
 	    "prefix" => "todolist",
 	    "title" => "ToDoListe",
@@ -313,6 +312,6 @@ function todolist_uninstall()
 		"todolist_edit"
     );
     $deltemplates = implode("','", $templatearray);
-	$db->query("DELETE FROM ".TABLE_PREFIX."templates WHERE title in ('{$deltemplates}');");
+	$db->delete_query("templates", "title in ('{$deltemplates}')");
 }
 ?>

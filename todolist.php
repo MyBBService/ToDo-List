@@ -35,12 +35,11 @@ $modgroup = substr($modgroup, 0, -2);
 
 if ($mybb->input['action'] == "") {
 	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
-	$get_todo = $db->query("SELECT * FROM ".TABLE_PREFIX."todolist ORDER BY date DESC");
+	$get_todo = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC"));
 	while($row = $db->fetch_array($get_todo)) {
 		$id = $row['id'];
 		$title = $row['title'];
 		$name = $row['name'];
-//		$group = $row['usergroup'];
 		if($nameid != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
@@ -105,18 +104,16 @@ if ($mybb->input['action'] == "") {
 	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 	add_breadcrumb("{$lang->show_showtodo}", "todolist.php?action=show&id=$id");
 	
-	$id = $mybb->input['id'];
-	$query = $db->simple_select('todolist', '*', 'id='.$id);
+	$id = (int)$mybb->input['id'];
+	$query = $db->simple_select('todolist', '*', "id='{$id}'");
 	while($row = $db->fetch_array($query))  {
 		$id = $row['id'];
 		$title = $row['title'];
 		$nameid = $row['nameid'];
 		$name = $row['name'];
 		$message = $row['message'];
-//		$group = $row['usergroup'];
 		$editor = $row['lasteditor'];
 		$editorid = $row['lasteditorid'];
-		//$editorgroup = $row['editorgroup'];
 		if($editorid != "")
 			$editorgroup = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$editorid}"), "usergroup");
 		else
@@ -208,29 +205,30 @@ if ($mybb->input['action'] == "") {
 		eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
 		output_page($todolist_add);
 	} else {
-		$insert['date'] = time();
-		$insert['nameid'] = $mybb->user['uid'];
-		$insert['name'] = $mybb->user['username'];
-		$insert['title'] = $db->escape_string($mybb->input['title']);
-		$insert['priority'] = $db->escape_string($mybb->input['priority']);
-		$insert['message'] = $db->escape_string($mybb->input['message']);
-		//$insert['usergroup'] = $mybb->user['displaygroup'];
-		$insert['status'] = 'wait';
-		$insert['done'] = '0 done';
-		$db->insert_query("todolist",$insert);
+		$insert = array(
+			"date" => TIME_NOW,
+			"nameid" => (int)$mybb->user['uid'],
+			"name" => $db->escape_string($mybb->user['username']),
+			"title" => $db->escape_string($mybb->input['title']),
+			"priority" => $db->escape_string($mybb->input['priority']),
+			"message" => $db->escape_string($mybb->input['message']),
+			"status" => "wait",
+			"done" => "0 done"
+		);
+		$db->insert_query("todolist", $insert);
 		redirect("todolist.php", $lang->added_todo);
 	}
 } elseif ($mybb->input['action'] == 'delete') {
-	$id = $mybb->input['id'];
-	$db->query("DELETE FROM ".TABLE_PREFIX."todolist WHERE id='" . $id . "'");
+	$id = (int)$mybb->input['id'];
+	$db->delete_query("todolist", "id='{$id}'");
 	redirect("todolist.php", $lang->deleted_todo);
 } elseif ($mybb->input['action'] == 'edit') {
-	$id = $mybb->input['id'];
+	$id = (int)$mybb->input['id'];
 	if(isset($id)) {
 		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
 		add_breadcrumb("$lang->show_showtodo", "todolist.php?action=show&id=$id");
 		add_breadcrumb("$lang->edit_edittodo", "todolist.php?action=edit&id={$row[id]}");
-		$query = $db->simple_select('todolist', '*', 'id='.$id);
+		$query = $db->simple_select('todolist', '*', "id='{$id}'");
 		while($row = $db->fetch_array($query)) {
 			$id = $row['id'];
 			$title = $row['title'];
@@ -296,18 +294,19 @@ if ($mybb->input['action'] == "") {
 		output_page($todolist_edit);
 	}
 } elseif($mybb->input['action'] == 'submit-edit') {
-	$id = $mybb->input['id'];
-	$title = $mybb->input['title'];
-	$done = $mybb->input['done'];
-	$status = $mybb->input['status'];
-	$priority = $mybb->input['priority'];
-	$message = $mybb->input['message'];
-	$lasteditor = $mybb->user['username'];
-	$lasteditorid = $mybb->user['uid'];
-	$lastedit = time();
-//	$editorgroup = $mybb->user['displaygroup'];
-	
-	$db->query("UPDATE ".TABLE_PREFIX."todolist SET title='$title', done='$done', status='$status', priority='$priority', message='$message', lasteditor='$lasteditor', lasteditorid='$lasteditorid', lastedit='$lastedit' WHERE id='$id'");
+	$id = (int)$mybb->input['id'];
+
+	$update_array = array(
+		"title" => $db->escape_string($mybb->input['title']),
+		"done" => $db->escape_string($mybb->input['done']),
+		"status" => $db->escape_string($mybb->input['status']),
+		"priority" => $db->escape_string($mybb->input['priority']),
+		"message" => $db->escape_string($mybb->input['message']),
+		"lasteditor" => $db->escape_string($mybb->user['username']),
+		"lasteditorid" => (int)$mybb->user['uid'],
+		"lastedit" => TIME_NOW
+	);
+	$db->update_query("todolist", $update_array, "id='{$id}'");
 	redirect("todolist.php?action=show&id=$id", $lang->edited_todo);
 }
 ?>
