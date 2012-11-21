@@ -56,6 +56,7 @@ function todolist_install()
 </head>
 <body>
 {\$header}
+{\$multipage}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"7\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
@@ -75,6 +76,7 @@ function todolist_install()
 		<td style=\"width:190px;\" colspan=\"2\">{\$lang->moderation_todo}: {\$modgroup}</td>
 	</tr>
 </table>
+{\$multipage}
 {\$loggedin}
 <br />
 {\$footer}
