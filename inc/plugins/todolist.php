@@ -5,8 +5,6 @@ if(!defined("IN_MYBB")) {
 
 function todolist_info()
 {
-	global $lang;
-	$lang->load('todolist');
 	return array(
 		"name"			=> "ToDo-Liste",
 		"description"	=> "Dieses Plugin erstellt eine ToDo Liste, mithilfe Aufgaben in deinem Forum verwaltet werden können<br /><i>Based on ToDo List by FalkenaugeMihawk</i>",
@@ -171,7 +169,7 @@ function todolist_install()
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->description_todo}:</td>
-		<td><textarea name=\"message\" rows=\"6\" cols=\"15\" style=\"width:300px; height:200px;\">$message</textarea></td>
+		<td><textarea name=\"message\" rows=\"20\" cols=\"70\" id=\"message\">{\$message}</textarea>{\$codebuttons}</td>
 	</tr>
 	<tr class=\"trow1\">
 		<td colspan=\"2\"><input type=\"submit\" value=\"{\$lang->add_todo}\" style=\"margin-left: 280px; \"/></td>

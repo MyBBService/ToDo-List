@@ -114,16 +114,28 @@ if ($mybb->input['action'] == "") {
 	output_page($todolist);
 } elseif ($mybb->input['action'] == 'show') {
 	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
-	add_breadcrumb("{$lang->show_showtodo}", "todolist.php?action=show&id=$id");
 	
 	$id = (int)$mybb->input['id'];
 	$query = $db->simple_select('todolist', '*', "id='{$id}'");
+
+	require_once MYBB_ROOT."inc/class_parser.php";
+	$parser = new postParser;
+	$parser_options = array(
+		"allow_html" => 0,
+		"allow_mycode" => 1,
+		"allow_smilies" => 1,
+		"allow_imgcode" => 1,
+		"allow_videocode" => 0,
+		"filter_badwords" => 1
+	);
+
 	while($row = $db->fetch_array($query))  {
 		$id = $row['id'];
 		$title = $row['title'];
+		add_breadcrumb("{$lang->show_showtodo}: {$title}", "todolist.php?action=show&id=$id");
 		$nameid = $row['nameid'];
 		$name = $row['name'];
-		$message = $row['message'];
+		$message = $parser->parse_message($row['message'], $parser_options);
 		$editor = $row['lasteditor'];
 		$editorid = $row['lasteditorid'];
 		if($editorid != "")
@@ -213,7 +225,8 @@ if ($mybb->input['action'] == "") {
 	//show the form
 	if ($mybb->input['title'] == '') {
 		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
-		add_breadcrumb("$lang->add_addtodo", "todolist.php?action=submit");
+		add_breadcrumb($lang->add_todo, "todolist.php?action=submit");
+		$codebuttons = build_mycode_inserter();
 		eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
 		output_page($todolist_add);
 	} else {
@@ -238,12 +251,12 @@ if ($mybb->input['action'] == "") {
 	$id = (int)$mybb->input['id'];
 	if(isset($id)) {
 		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
-		add_breadcrumb("$lang->show_showtodo", "todolist.php?action=show&id=$id");
-		add_breadcrumb("$lang->edit_edittodo", "todolist.php?action=edit&id={$row[id]}");
 		$query = $db->simple_select('todolist', '*', "id='{$id}'");
 		while($row = $db->fetch_array($query)) {
 			$id = $row['id'];
 			$title = $row['title'];
+			add_breadcrumb("{$lang->show_showtodo}: {$title}", "todolist.php?action=show&id=$id");
+			add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$row[id]}");
 			$message = $row['message'];
 			
 			if($row['priority'] == 'normal') {
@@ -293,11 +306,12 @@ if ($mybb->input['action'] == "") {
 				$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; ' selected>{$lang->done_100}</option></select>";
 			}
 			
+			$codebuttons = build_mycode_inserter();
 			$editing = "<tr class='trow1'><input type='hidden' name='id' size='2' value='" . $id . "'><td style='width:100px;'>Titel:</td><td><input type='text' name='title' size='40' value='" . $title . "'></td></tr>
-			<tr class='trow1'><td style='width:100px;'>{$lang->priority_edittodo}:</td><td>{$lang->nowprio_edittodo}: $priority - $changeprio</td></tr>
-			<tr class='trow1'><td style='width:100px;'>{$lang->done_edittodo}:</td><td>{$lang->nowdone_edittodo}: $done - $changedone</td></tr>
-			<tr class='trow1'><td style='width:100px;'>{$lang->status_edittodo}:</td><td>{$lang->nowstat_edittodo}: $status - $changestatus</td></tr>
-			<tr class='trow1'><td style='width:200px;'>{$lang->description_edittodo}:</td><td><textarea name='message' rows='6' cols='15' style='width:300px; height:200px;'>$message</textarea></td></tr>
+			<tr class='trow1'><td style='width:100px;'>{$lang->priority_todo}:</td><td>{$lang->nowprio_edittodo}: $priority - $changeprio</td></tr>
+			<tr class='trow1'><td style='width:100px;'>{$lang->done_todo}:</td><td>{$lang->nowdone_edittodo}: $done - $changedone</td></tr>
+			<tr class='trow1'><td style='width:100px;'>{$lang->status_todo}:</td><td>{$lang->nowstat_edittodo}: $status - $changestatus</td></tr>
+			<tr class='trow1'><td style='width:200px;'>{$lang->description_todo}:</td><td><textarea name=\"message\" rows=\"20\" cols=\"70\" id=\"message\">$message</textarea>$codebuttons</td></tr>
 			<tr class='trow1'><td colspan='2'><input type='submit' value='{$lang->send_edittodo}' style='margin-left: 280px; '/></td></form>
 			<tr class='trow1'><td colspan='2'><a href='todolist.php?action=show&id=$id' target='_self'>{$lang->back_showtodo}</a></td></tr>";
 		}
