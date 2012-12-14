@@ -7,7 +7,7 @@ require_once "global.php";
 
 $lang->load('todolist');
 
-if($mybb->settings['todo_activate'] == '0')
+if(!function_exists("todolist_info") || $mybb->settings['todo_activate'] == '0')
 	error($lang->offline);
 
 if($mybb->settings['todo_allow_guests'] == '0' && $mybb->user['uid'] == '0')
