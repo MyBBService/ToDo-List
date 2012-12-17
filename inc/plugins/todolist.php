@@ -3,6 +3,8 @@ if(!defined("IN_MYBB")) {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
+$plugins->add_hook("admin_config_settings_begin", "todo_load_lang");
+
 function todolist_info()
 {
 	return array(
@@ -324,5 +326,10 @@ function todolist_uninstall()
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
+}
+
+function todo_load_lang() {
+	global $lang;
+	$lang->load('todolist');
 }
 ?>
