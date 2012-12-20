@@ -25,6 +25,8 @@ function todolist_install()
 	global $db, $lang;
 	$lang->load('todolist');
 	
+	
+	//Datenbank Tabelle
 	$col = $db->build_create_table_collation();
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
 				`id`			int(11)			NOT NULL AUTO_INCREMENT,
@@ -41,12 +43,16 @@ function todolist_install()
 				`done`			varchar(8)		NOT NULL,
 	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
 
+
+	//Template Gruppe
 	$templateset = array(
 	    "prefix" => "todolist",
 	    "title" => "ToDoListe",
     );
 	$db->insert_query("templategroups", $templateset);
 
+
+	//Templates
 	$templatearray = array(
         "title" => "todolist",
         "template" => "<html>
@@ -195,10 +201,36 @@ function todolist_install()
 {\$header}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=thead colspan=6><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
+		<td class=\"thead\" colspan=\"6\"><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
 	</tr>
 	<form action=\"todolist.php?action=submit-edit\" method=\"post\">
-		{\$editing}
+		<tr class=\"trow1\">
+			<input type=\"hidden\" name=\"id\" size=\"2\" value=\"{\$id}\">
+			<td style=\"width:100px;\">Titel:</td>
+			<td><input type=\"text\" name=\"title\" size=\"40\" value=\"{\$title}\"></td>
+		</tr>
+		<tr class=\"trow1\">
+			<td style=\"width:100px;\">{\$lang->priority_todo}:</td>
+			<td>{\$lang->nowprio_edittodo}: {\$priority} - {\$changeprio}</td>
+		</tr>
+		<tr class=\"trow1\">
+			<td style=\"width:100px;\">{\$lang->done_todo}:</td>
+			<td>{\$lang->nowdone_edittodo}: {\$done} - {\$changedone}</td>
+		</tr>
+		<tr class=\"trow1\">
+			<td style=\"width:100px;\">{\$lang->status_todo}:</td>
+			<td>{\$lang->nowstat_edittodo}: {\$status} - {\$changestatus}</td>
+		</tr>
+		<tr class=\"trow1\">
+			<td style=\"width:200px;\">{\$lang->description_todo}:</td>
+			<td><textarea name=\"message\" rows=\"20\" cols=\"70\" id=\"message\">{\$message}</textarea>{\$codebuttons}</td>
+		</tr>
+		<tr class=\"trow1\">
+			<td colspan=\"2\"><input type=\"submit\" value=\"{\$lang->send_edittodo}\" style=\"margin-left: 280px; \"/></td>
+		</tr>
+		<tr class=\"trow1\">
+			<td colspan=\"2\"><a href=\"todolist.php?action=show&id={\$id}\">{\$lang->back_showtodo}</a></td>
+		</tr>
 	</form>
 </table>
 {\$footer}
@@ -208,7 +240,64 @@ function todolist_install()
     );
     $db->insert_query("templates", $templatearray);
 
+	$templatearray = array(
+        "title" => "todolist_table",
+        "template" => "<tr class=\"trow1\" colspan=\"7\">
+	<td>{\$title}</td>
+	<td>{\$time} - {\$time2}</td>
+	<td>{\$owner}</td>
+	<td>{\$priority}</td>
+	<td>{\$status}</td>
+	<td>{\$done}</td>
+	<td style=\"width:200px\">
+		<center>
+			<a href=\"todolist.php?action=show&id={\$id}\"><img src=\"images/todolist/show.png\" /> {\$lang->show_todo}</a> {\$mod_todo}</a>
+		</center>
+	</td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
 
+	$templatearray = array(
+        "title" => "todolist_table_no_results",
+        "template" => "<tr class=\"trow1\">
+	<td colspan=\"7\"><center>{\$lang->no_todo}</center></td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_mod",
+        "template" => "<a href=\"todolist.php?action=edit&id={\$id}\"><img src=\"images/todolist/edit.png\" /> {\$lang->edit_todo}</a> 
+- <a href=\"todolist.php?action=delete&id={\$id}\"><img src=\"images/todolist/delete.png\" /> {\$lang->delete_todo}</a>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_mod_table",
+        "template" => "<tr class=\"trow2\">
+	<td style=\"width:100px;\">{\$lang->action_todo}</td>
+	<td>{\$mod_todo}</td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_edited",
+        "template" => "<tr class=\"trow1\">
+	<td style=\"width:200px;\">{\$lang->lastedit_showtodo}:</td>
+	<td>{\$time3} - {\$time4} {\$lang->from_todo} <a href=\"member.php?action=profile&uid={\$editorid}\">{\$formattedname2}</a></td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	
+	//Einstellung Gruppe
 	$todolist_group = array(
         "title"          => $lang->setting_group_todo,
         "name"           => "todo",
@@ -218,6 +307,8 @@ function todolist_install()
     );
     $gid = $db->insert_query("settinggroups", $todolist_group);
 
+
+	//Einstellungen
 	$todolist_setting_1 = array(
         "name"           => "todo_activate",
         "title"          => $lang->setting_todo_activate,
