@@ -435,7 +435,12 @@ function todolist_uninstall()
         "todolist",
         "todolist_show",
         "todolist_add",
-		"todolist_edit"
+		"todolist_edit",
+		"todolist_table",
+		"todolist_table_no_results",
+		"todolist_mod",
+		"todolist_mod_table",
+		"todolist_edited"
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");

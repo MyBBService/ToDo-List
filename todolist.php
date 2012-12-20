@@ -2,7 +2,7 @@
 define("IN_MYBB", 1);
 define('THIS_SCRIPT', 'todolist.php');
 
-$templatelist = "todolist, todolist_show, todolist_edit, todolist_add";
+$templatelist = "todolist, todolist_show, todolist_add, todolist_edit, todolist_table, todolist_table_no_results, todolist_mod, todolist_mod_table, todolist_edited";
 require_once "global.php";
 
 $lang->load('todolist');
@@ -268,11 +268,9 @@ if ($mybb->input['action'] == "") {
 		} elseif($row['status'] == 'development') {
 			$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
 			$status_check['development'] = "selected=\"selected\"";
-		//*
 		} elseif($row['status'] == 'feedback') {
 			$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
 			$status_check['feedback'] = "selected=\"selected\"";
-		//*/
 		} elseif($row['status'] == 'resolved') {
 			$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
 			$status_check['resolved'] = "selected=\"selected\"";
