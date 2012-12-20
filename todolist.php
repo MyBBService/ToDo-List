@@ -22,7 +22,7 @@ foreach($perm_group as $groups) {
 $perm_group = explode(",", $mybb->settings['todo_add_groups']);
 foreach($perm_group as $groups) {
 	if ($mybb->user['usergroup'] == $groups)
-		$addtodo = "<strong><img src='images/todolist/add.png' /> <a href='todolist.php?action=submit'>{$lang->add_todo}</a></strong>";
+		$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=submit\">{$lang->add_todo}</a></strong>";
 }
 
 $modgroup = "";
@@ -34,7 +34,7 @@ foreach($groupscache as $group) {
 $modgroup = substr($modgroup, 0, -2);
 
 if ($mybb->input['action'] == "") {
-	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 
 	$page = (int)$mybb->input['page'];
 	if($page > 0)
@@ -47,7 +47,7 @@ if ($mybb->input['action'] == "") {
 	$num = $db->fetch_field($query, "count");
 	$multipage = multipage($num, $mybb->settings['todo_per_page'], $page, "todolist.php");
 
-	$get_todo = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
+	$query = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
 	$todo = "";
 
 	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
@@ -57,11 +57,11 @@ if ($mybb->input['action'] == "") {
 			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
 		}
 	}
-	while($row = $db->fetch_array($get_todo)) {
+	while($row = $db->fetch_array($query)) {
 		$id = $row['id'];
 		$title = $row['title'];
 		$name = $row['name'];
-		if($nameid != "")
+		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
 			$group = "";
@@ -71,38 +71,37 @@ if ($mybb->input['action'] == "") {
 		} elseif($row['priority'] == 'high') {
 			$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";
 		} elseif($row['priority'] == 'low') {
-			$priority = "<img src='images/todolist/low_prio.gif' border=\"0\" /> {$lang->low_priority}";
+			$priority = "<img src=\"images/todolist/low_prio.gif\" border=\"0\" /> {$lang->low_priority}";
 		}
 		
 		if($row['status'] == 'wait') {
-			$status = "<img src='images/todolist/waiting.png' border='0' /> {$lang->status_wait}";
+			$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
 		} elseif($row['status'] == 'development') {
-			$status = "<img src='images/todolist/development.png' border='0' /> {$lang->status_dev}";
+			$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
 		} elseif($row['status'] == 'feedback') {
-			$status = "<img src='images/todolist/feedback.png' border='0' /> {$lang->status_feed}";
+			$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
 		} elseif($row['status'] == 'resolved') {
-			$status = "<img src='images/icons/exclamation.gif' border='0' /> {$lang->status_resolved}";
+			$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
 		} elseif($row['status'] == 'closed') {
-			$status = "<img src='images/todolist/lock.png' border='0' /> {$lang->status_closed}";
+			$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
 		}
 		
-		if($row['done'] == '0 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_0}";
-		} elseif($row['done'] == '25 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_25}";
-		} elseif($row['done'] == '50 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_50}";
-		} elseif($row['done'] == '75 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_75}";
-		} elseif($row['done'] == '100 done') {
-			$done = "<img src='images/todolist/done.png' border='0' /> {$lang->done_100}";
+		if($row['done'] == '0') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
+		} elseif($row['done'] == '25') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
+		} elseif($row['done'] == '50') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
+		} elseif($row['done'] == '75') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
+		} elseif($row['done'] == '100') {
+			$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
 		}
 		
-		$time = date("d.m.Y", $row['date']);
-		$time2 = date("H:i", $row['date']);
+		$date = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
 		
-		$formattedname = format_name($name, $group);
-		$owner = "<a href='member.php?action=profile&uid={$row[nameid]}'>{$formattedname}</a>";
+		$formattedname = format_name($row['name'], $group);
+		$owner = build_profile_link($formattedname, $row['nameid']);
 		
 		eval("\$todo .= \"".$templates->get("todolist_table")."\";");		
 	}
@@ -114,7 +113,7 @@ if ($mybb->input['action'] == "") {
 	eval("\$todolist .= \"".$templates->get("todolist")."\";");
 	output_page($todolist);
 } elseif ($mybb->input['action'] == 'show') {
-	add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 	
 	$id = (int)$mybb->input['id'];
 	$query = $db->simple_select('todolist', '*', "id='{$id}'");
@@ -141,7 +140,7 @@ if ($mybb->input['action'] == "") {
 	$row = $db->fetch_array($query);
 	$id = $row['id'];
 	$title = $row['title'];
-	add_breadcrumb("{$lang->show_showtodo}: {$title}", "todolist.php?action=show&id=$id");
+	add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
 	$nameid = $row['nameid'];
 	$name = $row['name'];
 	$message = $parser->parse_message($row['message'], $parser_options);
@@ -162,60 +161,49 @@ if ($mybb->input['action'] == "") {
 	} elseif($row['priority'] == 'high') {
 		$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";
 	} elseif($row['priority'] == 'low') {
-		$priority = "<img src='images/todolist/low_prio.gif' border=\"0\" /> {$lang->low_priority}";
+		$priority = "<img src=\"images/todolist/low_prio.gif\" border=\"0\" /> {$lang->low_priority}";
 	}
 	
 	if($row['status'] == 'wait') {
-		$status = "<img src='images/todolist/waiting.png' border='0' /> {$lang->status_wait}";
+		$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
 	} elseif($row['status'] == 'development') {
-		$status = "<img src='images/todolist/development.png' border='0' /> {$lang->status_dev}";
+		$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
 	} elseif($row['status'] == 'feedback') {
-		$status = "<img src='images/todolist/feedback.png' border='0' /> {$lang->status_feed}";
+		$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
 	} elseif($row['status'] == 'resolved') {
-		$status = "<img src='images/icons/exclamation.gif' border='0' /> {$lang->status_resolved}";
+		$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
 	} elseif($row['status'] == 'closed') {
-		$status = "<img src='images/todolist/lock.png' border='0' /> {$lang->status_closed}";
+		$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
 	}
 	
-	if($row['done'] == '0 done') {
-		$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_0}";
-	} elseif($row['done'] == '25 done') {
-		$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_25}";
-	} elseif($row['done'] == '50 done') {
-		$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_50}";
-	} elseif($row['done'] == '75 done') {
-		$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_75}";
-	} elseif($row['done'] == '100 done') {
-		$done = "<img src='images/todolist/done.png' border='0' /> {$lang->done_100}";
+	if($row['done'] == '0') {
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
+	} elseif($row['done'] == '25') {
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
+	} elseif($row['done'] == '50') {
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
+	} elseif($row['done'] == '75') {
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
+	} elseif($row['done'] == '100') {
+		$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
 	}
 	
-	$time = date("d.m.Y", $row['date']);
-	$time2 = date("H:i", $row['date']);
-	$time3 = date("d.m.Y", $row['lastedit']);
-	$time4 = date("H:i", $row['lastedit']);
-	
-	$timestamp = date("d.m.Y", time());
-	$timestamp2 = date("d.m.Y", time() -86400);
-	
-	if($time3 == $timestamp) {
-		$time3 = $lang->today_showtodo;
-	} elseif($time3 == $timestamp2) {
-		$time3 = $lang->yesterday_showtodo;
-	}
-	
-	$formattedname = format_name($name, $group);
-	$formattedname2 = format_name($editor, $editorgroup);
-	
-	if($editor != '' && $editorid != '' && $time3 != '' && $editorgroup != '') {
+	$showtododate = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
+	$date = my_date($mybb->settings['dateformat'], $row['lastedit'])." - ".my_date($mybb->settings['timeformat'], $row['lastedit']);
+
+	$formattedname = format_name($row['name'], $group);
+	$showtodofrom = build_profile_link($formattedname, $row['nameid']);
+	$formattedname = format_name($row['lasteditor'], $editorgroup);
+	$lasteditor = build_profile_link($formattedname, $editorid);
+
+	if($editor != '' && $editorid != '') {
 		eval("\$showtodolastedit = \"".$templates->get("todolist_edited")."\";");
 	}
 	
 	$showtodotitle = $title;
-	$showtododate = $time." - ".$time2;
 	$showtodoprio = $priority;
 	$showtododone = $done;
 	$showtodostatus = $status;
-	$showtodofrom = "<a href='member.php?action=profile&uid={$nameid}'>{$formattedname}</a>";
 	$showtodoaction = $mod_todo;
 	$showtodomess = $message;
 	$showtodoback = "<a href='todolist.php'>{$lang->back_showtodo}</a>";
@@ -225,7 +213,7 @@ if ($mybb->input['action'] == "") {
 } elseif ($mybb->input['action'] == 'submit') {
 	//show the form
 	if ($mybb->input['title'] == '') {
-		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
+		add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 		add_breadcrumb($lang->add_todo, "todolist.php?action=submit");
 		$codebuttons = build_mycode_inserter();
 		eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
@@ -239,7 +227,7 @@ if ($mybb->input['action'] == "") {
 			"priority" => $db->escape_string($mybb->input['priority']),
 			"message" => $db->escape_string($mybb->input['message']),
 			"status" => "wait",
-			"done" => "0 done"
+			"done" => "0"
 		);
 		$db->insert_query("todolist", $insert);
 		redirect("todolist.php", $lang->added_todo);
@@ -251,61 +239,64 @@ if ($mybb->input['action'] == "") {
 } elseif ($mybb->input['action'] == 'edit') {
 	$id = (int)$mybb->input['id'];
 	if(isset($id)) {
-		add_breadcrumb("{$lang->title_overview}: {$mybb->settings['todo_name']}", "todolist.php");
+		add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 		$query = $db->simple_select('todolist', '*', "id='{$id}'");
 		$row = $db->fetch_array($query);
 
 		$id = $row['id'];
 		$title = $row['title'];
-		add_breadcrumb("{$lang->show_showtodo}: {$title}", "todolist.php?action=show&id=$id");
-		add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$row[id]}");
+		add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
+		add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$id}");
 		$message = $row['message'];
 		
+		$priority_check = array("high" => "", "normal" => "", "low" => "");
 		if($row['priority'] == 'normal') {
 			$priority = "<img src=\"images/todolist/norm_prio.png\" border=\"0\" /> {$lang->normal_priority}";
-			$changeprio = "<select name='priority' style='width:100px;'><option value='high' style='background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center; '>{$lang->high_priority}</option><option value='normal' style='background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center; ' selected>{$lang->normal_priority}</option><option value='low' style='background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center; '>{$lang->low_priority}</option></select>";
+			$priority_check['normal'] = "selected=\"selected\"";
 		} elseif($row['priority'] == 'high') {
 			$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";
-			$changeprio = "<select name='priority' style='width:100px;'><option value='high' style='background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->high_priority}</option><option value='normal' style='background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center; '>{$lang->normal_priority}</option><option value='low' style='background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center; '>{$lang->low_priority}</option></select>";
+			$priority_check['high'] = "selected=\"selected\"";
 		} elseif($row['priority'] == 'low') {
-			$priority = "<img src='images/todolist/low_prio.gif' border=\"0\" /> {$lang->low_priority}";
-			$changeprio = "<select name='priority' style='width:100px;'><option value='high' style='background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center; '>{$lang->high_priority}</option><option value='normal' style='background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center; '>{$lang->normal_priority}</option><option value='low' style='background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->low_priority}</option></select>";
+			$priority = "<img src=\"images/todolist/low_prio.gif\" border=\"0\" /> {$lang->low_priority}";
+			$priority_check['low'] = "selected=\"selected\"";
 		}
 		
+		$status_check = array("wait" => "", "development" => "", "feedback" => "", "resolved" => "", "closed" => "");
 		if($row['status'] == 'wait') {
-			$status = "<img src='images/todolist/waiting.png' border='0' /> {$lang->status_wait}";
-			$changestatus = "<select name='status' style='width:140px;'><option value='wait' style='background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_wait}</option><option value='development' style='background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_dev}</option><option value='resolved' style='background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center; '>{$lang->status_resolved}</option><option value='closed' style='background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_closed}</option></select>";
+			$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
+			$status_check['wait'] = "selected=\"selected\"";
 		} elseif($row['status'] == 'development') {
-			$status = "<img src='images/todolist/development.png' border='0' /> {$lang->status_dev}";
-			$changestatus = "<select name='status' style='width:140px;'><option value='wait' style='background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_wait}</option><option value='development' style='background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center; ' selected>{$lang->status_dev}</option><option value='resolved' style='background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center; '>{$lang->status_resolved}</option><option value='closed' style='background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_closed}</option></select>";
-		/*
+			$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
+			$status_check['development'] = "selected=\"selected\"";
+		//*
 		} elseif($row['status'] == 'feedback') {
-			$status = "<img src='images/todolist/feedback.png' border='0' /> {$lang->status_feed}";
-			$changestatus = "<select name='status' style='width:140px;'><option value='feedback' style='background-image:url(images/todolist/feedback.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_feed}</option><option value='wait' style='background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_wait}</option><option value='development' style='background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_dev}</option><option value='resolved' style='background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center; '>{$lang->status_resolved}</option><option value='closed' style='background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_closed}</option></select>";
-		*/
+			$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
+			$status_check['feedback'] = "selected=\"selected\"";
+		//*/
 		} elseif($row['status'] == 'resolved') {
-			$status = "<img src='images/icons/exclamation.gif' border='0' /> {$lang->status_resolved}";
-			$changestatus = "<select name='status' style='width:140px;'><option value='wait' style='background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_wait}</option><option value='development' style='background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_dev}</option><option value='resolved' style='background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->status_resolved}</option><option value='closed' style='background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_closed}</option></select>";
+			$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
+			$status_check['resolved'] = "selected=\"selected\"";
 		} elseif($row['status'] == 'closed') {
-			$status = "<img src='images/todolist/lock.png' border='0' /> {$lang->status_closed}";
-			$changestatus = "<select name='status' style='width:140px;'><option value='wait' style='background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_wait}</option><option value='development' style='background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center; '>{$lang->status_dev}</option><option value='resolved' style='background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center; '>{$lang->status_resolved}</option><option value='closed' style='background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center; ' selected>{$lang->status_closed}</option></select>";
+			$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
+			$status_check['closed'] = "selected=\"selected\"";
 		}
 		
-		if($row['done'] == '0 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_0}";
-			$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; '>{$lang->done_100}</option></select>";
-		} elseif($row['done'] == '25 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_25}";
-			$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; '>{$lang->done_100}</option></select>";
-		} elseif($row['done'] == '50 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_50}";
-			$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; '>{$lang->done_100}</option></select>";
-		} elseif($row['done'] == '75 done') {
-			$done = "<img src='images/spinner.gif' border='0' /> {$lang->done_75}";
-			$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; ' selected>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; '>{$lang->done_100}</option></select>";
-		} elseif($row['done'] == '100 done') {
-			$done = "<img src='images/todolist/done.png' border='0' /> {$lang->done_100}";
-			$changedone = "<select name='done' style='width:130px;'><option value='0 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_0}</option><option value='25 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_25}</option><option value='50 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_50}</option></option><option value='75 done' style='background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center; '>{$lang->done_75}</option><option value='100 done' style='background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center; ' selected>{$lang->done_100}</option></select>";
+		$done_check = array("0" => "", "25" => "", "50" => "", "75" => "", "100" => "");
+		if($row['done'] == '0') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
+			$done_check['0'] = "selected=\"selected\"";
+		} elseif($row['done'] == '25') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
+			$done_check['25'] = "selected=\"selected\"";
+		} elseif($row['done'] == '50') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
+			$done_check['50'] = "selected=\"selected\"";
+		} elseif($row['done'] == '75') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
+			$done_check['75'] = "selected=\"selected\"";
+		} elseif($row['done'] == '100') {
+			$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
+			$done_check['100'] = "selected=\"selected\"";
 		}
 		
 		$codebuttons = build_mycode_inserter();

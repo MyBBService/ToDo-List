@@ -211,15 +211,37 @@ function todolist_install()
 		</tr>
 		<tr class=\"trow1\">
 			<td style=\"width:100px;\">{\$lang->priority_todo}:</td>
-			<td>{\$lang->nowprio_edittodo}: {\$priority} - {\$changeprio}</td>
+			<td>{\$lang->nowprio_edittodo}: {\$priority} - 
+				<select name=\"priority\" style=\"width:100px;\">
+					<option value=\"high\" style=\"background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center;\" {\$priority_check[\'high\']}>{\$lang->high_priority}</option>
+					<option value=\"normal\" style=\"background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center;\" {\$priority_check[\'normal\']}>{\$lang->normal_priority}</option>
+					<option value=\"low\" style=\"background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center;\" {\$priority_check[\'low\']}>{\$lang->low_priority}</option>
+				</select>
+			</td>
 		</tr>
 		<tr class=\"trow1\">
 			<td style=\"width:100px;\">{\$lang->done_todo}:</td>
-			<td>{\$lang->nowdone_edittodo}: {\$done} - {\$changedone}</td>
+			<td>{\$lang->nowdone_edittodo}: {\$done} -
+				<select name=\"done\" style=\"width:130px;\">
+					<option value=\"0\" style=\"background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center;\" {\$done_check[\'0\']}>{\$lang->done_0}</option>
+					<option value=\"25\" style=\"background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center;\" {\$done_check[\'25\']}>{\$lang->done_25}</option>
+					<option value=\"50\" style=\"background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center;\" {\$done_check[\'50\']}>{\$lang->done_50}</option>
+					<option value=\"75\" style=\"background-image:url(images/spinner.gif); background-repeat:no-repeat; text-align:center;\" {\$done_check[\'75\']}>{\$lang->done_75}</option>
+					<option value=\"100\" style=\"background-image:url(images/todolist/done.png); background-repeat:no-repeat; text-align:center;\" {\$done_check[\'100\']}>{\$lang->done_100}</option>
+				</select>			
+			</td>
 		</tr>
 		<tr class=\"trow1\">
 			<td style=\"width:100px;\">{\$lang->status_todo}:</td>
-			<td>{\$lang->nowstat_edittodo}: {\$status} - {\$changestatus}</td>
+			<td>{\$lang->nowstat_edittodo}: {\$status} - 
+				<select name=\"status\" style=\"width:140px;\">
+					<option value=\"wait\" style=\"background-image:url(images/todolist/waiting.png); background-repeat:no-repeat; text-align:center;\" {\$status_check[\'wait\']}>{\$lang->status_wait}</option>
+					<option value=\"development\" style=\"background-image:url(images/todolist/development.png); background-repeat:no-repeat; text-align:center;\" {\$status_check[\'development\']}>{\$lang->status_dev}</option>
+					<option value=\"resolved\" style=\"background-image:url(images/icons/exclamation.gif); background-repeat:no-repeat; text-align:center;\" {\$status_check[\'resolved\']}>{\$lang->status_resolved}</option>
+					<option value=\"feedback\" style=\"background-image:url(images/icons/feedback.gif); background-repeat:no-repeat; text-align:center;\" {\$status_check[\'feedback\']}>{\$lang->status_feed}</option>
+					<option value=\"closed\" style=\"background-image:url(images/todolist/lock.png); background-repeat:no-repeat; text-align:center;\" {\$status_check[\'closed\']}>{\$lang->status_closed}</option>
+				</select>
+			</td>
 		</tr>
 		<tr class=\"trow1\">
 			<td style=\"width:200px;\">{\$lang->description_todo}:</td>
@@ -244,7 +266,7 @@ function todolist_install()
         "title" => "todolist_table",
         "template" => "<tr class=\"trow1\" colspan=\"7\">
 	<td>{\$title}</td>
-	<td>{\$time} - {\$time2}</td>
+	<td>{\$date}</td>
 	<td>{\$owner}</td>
 	<td>{\$priority}</td>
 	<td>{\$status}</td>
@@ -290,7 +312,7 @@ function todolist_install()
         "title" => "todolist_edited",
         "template" => "<tr class=\"trow1\">
 	<td style=\"width:200px;\">{\$lang->lastedit_showtodo}:</td>
-	<td>{\$time3} - {\$time4} {\$lang->from_todo} <a href=\"member.php?action=profile&uid={\$editorid}\">{\$formattedname2}</a></td>
+	<td>{\$date} {\$lang->from_todo} {\$lasteditor}</td>
 </tr>",
         "sid" => -2
     );
