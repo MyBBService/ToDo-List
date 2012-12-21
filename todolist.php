@@ -49,18 +49,17 @@ if ($mybb->input['action'] == "") {
 
 	$query = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
 	$todo = "";
-
 	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
-	foreach($perm_group as $groups) {
+	while($row = $db->fetch_array($query)) {
+		$id = $row['id'];
+		$title = $row['title'];
+		$name = $row['name'];
+		foreach($perm_group as $groups) {
 		if ($mybb->user['usergroup'] == $groups) {
 			$mod_todo = "- ";
 			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
 		}
 	}
-	while($row = $db->fetch_array($query)) {
-		$id = $row['id'];
-		$title = $row['title'];
-		$name = $row['name'];
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
