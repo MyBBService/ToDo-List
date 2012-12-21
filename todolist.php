@@ -14,16 +14,12 @@ if($mybb->settings['todo_allow_guests'] == '0' && $mybb->user['uid'] == '0')
 	error_no_permission();
 
 $perm_group = explode(",", $mybb->settings['todo_disallowed_groups']);
-foreach($perm_group as $groups) {
-	if ($mybb->user['usergroup'] == $groups)
-		error_no_permission();
-}
+if(in_array($mybb->user['usergroup'], $perm_group))
+	error_no_permission();
 
 $perm_group = explode(",", $mybb->settings['todo_add_groups']);
-foreach($perm_group as $groups) {
-	if ($mybb->user['usergroup'] == $groups)
-		$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=submit\">{$lang->add_todo}</a></strong>";
-}
+if(in_array($mybb->user['usergroup'], $perm_group))
+	$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=submit\">{$lang->add_todo}</a></strong>";
 
 $modgroup = "";
 $mods = explode(",", $mybb->settings['todo_mod_groups']);
@@ -54,16 +50,14 @@ if ($mybb->input['action'] == "") {
 		$id = $row['id'];
 		$title = $row['title'];
 		$name = $row['name'];
-		foreach($perm_group as $groups) {
-		if ($mybb->user['usergroup'] == $groups) {
-			$mod_todo = "- ";
-			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
-		}
-	}
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
 			$group = "";
+		if(in_array($mybb->user['usergroup'], $perm_group)) {
+			$mod_todo = "- ";
+			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
+		}
 			
 		if($row['priority'] == 'normal') {
 			$priority = "<img src=\"images/todolist/norm_prio.png\" border=\"0\" /> {$lang->normal_priority}";
@@ -129,11 +123,9 @@ if ($mybb->input['action'] == "") {
 	);
 
 	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
-	foreach($perm_group as $groups) {
-		if ($mybb->user['usergroup'] == $groups) {
-			eval("\$mod_todo = \"".$templates->get("todolist_mod")."\";");
-			eval("\$mod_todo = \"".$templates->get("todolist_mod_table")."\";");
-		}
+	if(in_array($mybb->user['usergroup'], $perm_group)) {
+		eval("\$mod_todo = \"".$templates->get("todolist_mod")."\";");
+		eval("\$mod_todo = \"".$templates->get("todolist_mod_table")."\";");
 	}
 
 	$row = $db->fetch_array($query);
@@ -195,7 +187,8 @@ if ($mybb->input['action'] == "") {
 	$formattedname = format_name($row['lasteditor'], $editorgroup);
 	$lasteditor = build_profile_link($formattedname, $editorid);
 
-	if($editor != '' && $editorid != '') {
+	$showtodolastedit = "";
+	if($lasteditor != '' && $editorid != 0 && $row['lastedit'] != '') {
 		eval("\$showtodolastedit = \"".$templates->get("todolist_edited")."\";");
 	}
 	
