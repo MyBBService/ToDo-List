@@ -4,6 +4,8 @@ if(!defined("IN_MYBB")) {
 }
 
 $plugins->add_hook("admin_config_settings_begin", "todo_load_lang");
+$plugins->add_hook("fetch_wol_activity_end", "todo_wol_activity");
+$plugins->add_hook("build_friendly_wol_location_end", "todo_wol_location");
 
 function todolist_info()
 {
@@ -444,6 +446,63 @@ function todolist_uninstall()
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
+}
+
+function todo_wol_activity($user_activity)
+{
+    $split_loc = explode(".php", $user_activity['location']);
+    if($split_loc[0] == $user['location']) {
+        $filename = '';
+    } else {
+        $filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
+    }
+    global $parameters;
+
+    switch ($filename)
+    {
+		case 'todolist':
+            $user_activity['activity'] = "todo";
+            if($parameters['action'] == "show")
+                $user_activity['todo']['show'] = (int)$parameters['id'];
+            elseif($parameters['action'] == "submit")
+                $user_activity['todo']['submit'] = true;
+            elseif($parameters['action'] == "delete")
+                $user_activity['todo']['delete'] = (int)$parameters['id'];
+            elseif($parameters['action'] == "edit" || $parameters['action'] == "submit-edit")
+                $user_activity['todo']['edit'] = (int)$parameters['id'];
+			break;
+    }
+
+    return $user_activity;
+}
+
+function todo_wol_location($array)
+{
+	global $lang, $settings, $db;
+	$lang->load("todolist");
+    switch ($array['user_activity']['activity'])
+    {
+        case 'todo':
+	    	//echo "<pre>"; var_dump($array['user_activity']['todo']); echo "</pre>";
+    	   	if(isset($array['user_activity']['todo']['show'])) {
+	        	$id=(int)$array['user_activity']['todo']['show'];
+	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
+	            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
+			} elseif(isset($array['user_activity']['todo']['submit']))
+	            $array['location_name'] = $lang->todo_wol_submit;
+			elseif(isset($array['user_activity']['todo']['delete'])) {
+	        	$id=(int)$array['user_activity']['todo']['delete'];
+	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
+	            $array['location_name'] = $lang->sprintf($lang->todo_wol_delete, $todo);
+			} elseif(isset($array['user_activity']['todo']['edit'])) {
+	        	$id=(int)$array['user_activity']['todo']['edit'];
+	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
+	            $array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
+			} else
+	            $array['location_name'] = $lang->todo_wol;
+            break;
+    }
+    return $array;
 }
 
 function todo_load_lang() {

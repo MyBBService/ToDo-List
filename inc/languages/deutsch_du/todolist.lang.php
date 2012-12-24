@@ -24,8 +24,6 @@ $l['deleted_todo'] = "Aufgabe gelöscht!";
 $l['show_showtodo'] = "Aufgabe anzeigen";
 $l['lastedit_showtodo'] = "Zuletzt aktualisiert";
 $l['back_showtodo'] = "Zuruck zur Übersicht";
-$l['today_showtodo'] = "Heute";
-$l['yesterday_showtodo'] = "Gestern";
 $l['from_showtodo'] = "von";
 
 //Edit Todo
@@ -53,4 +51,10 @@ $l['done_25'] = "25% Erledigt";
 $l['done_50'] = "50% Erledigt";
 $l['done_75'] = "75% Erledigt";
 $l['done_100'] = "100% Erledigt";
+
+//WIO Liste
+$l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";
+$l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
+$l['todo_wol_delete'] = "Löscht die Aufgabe {1}";
+$l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
 ?>
