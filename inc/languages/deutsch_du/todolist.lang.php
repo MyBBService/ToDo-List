@@ -54,7 +54,8 @@ $l['done_100'] = "100% Erledigt";
 
 //WIO Liste
 $l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";
+$l['todo_wol_submit'] = "Fügt eine neue Aufgabe ein";
 $l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
-$l['todo_wol_delete'] = "Löscht die Aufgabe {1}";
+$l['todo_wol_delete'] = "Löscht eine Aufgabe";
 $l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
 ?>

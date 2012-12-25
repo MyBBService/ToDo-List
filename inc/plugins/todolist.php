@@ -462,14 +462,12 @@ function todo_wol_activity($user_activity)
     {
 		case 'todolist':
             $user_activity['activity'] = "todo";
-            if($parameters['action'] == "show")
-                $user_activity['todo']['show'] = (int)$parameters['id'];
-            elseif($parameters['action'] == "submit")
-                $user_activity['todo']['submit'] = true;
-            elseif($parameters['action'] == "delete")
-                $user_activity['todo']['delete'] = (int)$parameters['id'];
-            elseif($parameters['action'] == "edit" || $parameters['action'] == "submit-edit")
-                $user_activity['todo']['edit'] = (int)$parameters['id'];
+            $user_activity['todo']['action'] = $parameters['action'];
+            if($parameters['action'] == "submit-edit")
+                $user_activity['todo']['action'] = "edit";
+            
+            if(isset($parameters['id']))
+                $user_activity['todo']['id'] = (int)$parameters['id'];
 			break;
     }
 
@@ -484,22 +482,28 @@ function todo_wol_location($array)
     {
         case 'todo':
 	    	//echo "<pre>"; var_dump($array['user_activity']['todo']); echo "</pre>";
-    	   	if(isset($array['user_activity']['todo']['show'])) {
-	        	$id=(int)$array['user_activity']['todo']['show'];
-	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
-	            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
-			} elseif(isset($array['user_activity']['todo']['submit']))
-	            $array['location_name'] = $lang->todo_wol_submit;
-			elseif(isset($array['user_activity']['todo']['delete'])) {
-	        	$id=(int)$array['user_activity']['todo']['delete'];
-	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
-	            $array['location_name'] = $lang->sprintf($lang->todo_wol_delete, $todo);
-			} elseif(isset($array['user_activity']['todo']['edit'])) {
-	        	$id=(int)$array['user_activity']['todo']['edit'];
-	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");
-	            $array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
-			} else
-	            $array['location_name'] = $lang->todo_wol;
+	        if(isset($array['user_activity']['todo']['id'])) {
+	        	$id = $array['user_activity']['todo']['id'];
+	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");				
+			}
+			
+			switch ($array['user_activity']['todo']['action'])
+			{
+				case "show":
+		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
+		            break;
+				case "submit":
+		            $array['location_name'] = $lang->todo_wol_submit;
+		            break;
+		        case "delete":
+		            $array['location_name'] = $lang->todo_wol_delete;
+		        	break;
+		        case "edit":
+	           		$array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
+	           		break;
+	           	default:
+		            $array['location_name'] = $lang->todo_wol;          	
+			}
             break;
     }
     return $array;
