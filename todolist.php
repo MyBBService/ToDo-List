@@ -11,11 +11,11 @@ if(!function_exists("todolist_info") || $mybb->settings['todo_activate'] == '0')
 	error($lang->offline);
 
 if($mybb->settings['todo_allow_guests'] == '0' && $mybb->user['uid'] == '0')
-	error_no_permission();
+	todo_no_permission();
 
 $perm_group = explode(",", $mybb->settings['todo_disallowed_groups']);
 if(in_array($mybb->user['usergroup'], $perm_group))
-	error_no_permission();
+	todo_no_permission();
 
 $perm_group = explode(",", $mybb->settings['todo_add_groups']);
 if(in_array($mybb->user['usergroup'], $perm_group))

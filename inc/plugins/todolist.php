@@ -15,7 +15,7 @@ function todolist_info()
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
 		"authorsite"	=> "http://mybbservice.de",
-		"version"		=> "1.0 Beta",
+		"version"		=> "1.0 Beta 2",
 		"guid"			=> "",
 		"compatibility" => "16*",
 	);
@@ -415,6 +415,17 @@ function todolist_install()
         "gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_7);
+
+	$todolist_setting_8 = array(
+        "name"			=> "todo_404_errors",
+        "title"			=> $lang->setting_todo_404_errors,
+        "description"	=> $lang->setting_todo_404_errors_desc,
+        "optionscode"	=> "yesno",
+        "value"			=> "no",
+        "disporder"		=> '8',
+        "gid"			=> (int)$gid,
+	);
+	$db->insert_query("settings", $todolist_setting_8);
 	rebuild_settings();
 }
 
@@ -517,5 +528,15 @@ function todo_wol_location($array)
 function todo_load_lang() {
 	global $lang;
 	$lang->load('todolist');
+}
+
+function todo_no_permission() {
+	global $mybb;
+	if($mybb->settings['todo_404_errors'])
+	    header("HTTP/1.1 404 Not Found");
+	else
+		error_no_permission();
+	
+	exit;
 }
 ?>

@@ -20,4 +20,6 @@ $l['setting_todo_name'] = "Angezeigter Name";
 $l['setting_todo_name_desc'] = "Gib hier der Name ein, der angezeigt werden soll. Beispiel: Interne Aufgaben-Liste";
 $l['setting_todo_per_page'] = "Einträge pro Seite";
 $l['setting_todo_per_page_desc'] = "Gib hier die Anzahl der Einträge ein, die pro Seite angezeigt werden sollen";
+$l['setting_todo_404_errors'] = "Sollen 404 Fehler gezeigt werden?";
+$l['setting_todo_404_errors_desc'] = "Wenn diese Einstellung aktiviert ist, werden anstatt den \"no_permission\" Fehlern 404 (Seite existiert nicht) Fehler angezeigt.<br />Dies kann helfen, wenn die ToDo-Liste nicht für die öffentlichkeit bestimmt ist";
 ?>
