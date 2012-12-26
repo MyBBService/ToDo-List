@@ -52,9 +52,16 @@ $l['done_50'] = "50% Erledigt";
 $l['done_75'] = "75% Erledigt";
 $l['done_100'] = "100% Erledigt";
 
+//Errors
+$l['no_title'] = "Bitte gebe einen Titel an!";
+$l['no_done'] = "Bitte wähle aus, wie viel bereits erledigt wurde!";
+$l['no_status'] = "Bitte wähle einen Status aus!";
+$l['no_priority'] = "Bitte wähle eine Priorität aus!";
+$l['no_message'] = "Bitte gebe eine Beschreibung an!";
+
 //WIO Liste
 $l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";
-$l['todo_wol_submit'] = "Fügt eine neue Aufgabe ein";
+$l['todo_wol_add'] = "Fügt eine neue Aufgabe ein";
 $l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
 $l['todo_wol_delete'] = "Löscht eine Aufgabe";
 $l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";

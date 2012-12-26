@@ -19,7 +19,7 @@ if(in_array($mybb->user['usergroup'], $perm_group))
 
 $perm_group = explode(",", $mybb->settings['todo_add_groups']);
 if(in_array($mybb->user['usergroup'], $perm_group))
-	$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=submit\">{$lang->add_todo}</a></strong>";
+	$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=add\">{$lang->add_todo}</a></strong>";
 
 $modgroup = "";
 $mods = explode(",", $mybb->settings['todo_mod_groups']);
@@ -202,112 +202,207 @@ if ($mybb->input['action'] == "") {
 	
 	eval("\$todolist_show = \"".$templates->get("todolist_show")."\";");
 	output_page($todolist_show);
-} elseif ($mybb->input['action'] == 'submit') {
-	//show the form
-	if ($mybb->input['title'] == '') {
-		add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-		add_breadcrumb($lang->add_todo, "todolist.php?action=submit");
-		$codebuttons = build_mycode_inserter();
-		eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
-		output_page($todolist_add);
-	} else {
-		$insert = array(
-			"date" => TIME_NOW,
-			"nameid" => (int)$mybb->user['uid'],
-			"name" => $db->escape_string($mybb->user['username']),
-			"title" => $db->escape_string($mybb->input['title']),
-			"priority" => $db->escape_string($mybb->input['priority']),
-			"message" => $db->escape_string($mybb->input['message']),
-			"status" => "wait",
-			"done" => "0"
-		);
-		$db->insert_query("todolist", $insert);
-		redirect("todolist.php", $lang->added_todo);
+} elseif ($mybb->input['action'] == 'add') {
+	if($mybb->request_method == "post") {
+		verify_post_check($mybb->input['my_post_key'], false);
+		if(!isset($mybb->input['title']) || $mybb->input['title'] == "")
+		    $errors[] = $lang->no_title;
+	
+		if(!isset($mybb->input['priority']) || $mybb->input['priority'] == "")
+		    $errors[] = $lang->no_priority;
+	
+		if(!isset($mybb->input['message']) || $mybb->input['message'] == "")
+		    $errors[] = $lang->no_message;
+		
+		if(!isset($errors)) {
+			$insert = array(
+				"date" => TIME_NOW,
+				"nameid" => (int)$mybb->user['uid'],
+				"name" => $db->escape_string($mybb->user['username']),
+				"title" => $db->escape_string($mybb->input['title']),
+				"priority" => $db->escape_string($mybb->input['priority']),
+				"message" => $db->escape_string($mybb->input['message'])
+			);
+			$db->insert_query("todolist", $insert);
+			redirect("todolist.php", $lang->added_todo);
+		}
 	}
+	
+	$priority_check = array("high" => "", "normal" => "", "low" => "");
+	if(isset($errors))
+	{
+		$errors = inline_error($errors);
+		if($mybb->input['priority'] == 'normal')
+			$priority_check['normal'] = "selected=\"selected\"";
+		elseif($mybb->input['priority'] == 'high')
+			$priority_check['high'] = "selected=\"selected\"";
+		elseif($mybb->input['priority'] == 'low')
+			$priority_check['low'] = "selected=\"selected\"";
+		$title = $mybb->input['title'];
+		$message = $mybb->input['message'];
+	} else {
+		$priority_check['normal'] = "selected=\"selected\"";
+		$title = ""; $message = "";
+	}
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	add_breadcrumb($lang->add_todo, "todolist.php?action=add");
+	$codebuttons = build_mycode_inserter();
+	eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
+	output_page($todolist_add);
 } elseif ($mybb->input['action'] == 'delete') {
 	$id = (int)$mybb->input['id'];
 	$db->delete_query("todolist", "id='{$id}'");
 	redirect("todolist.php", $lang->deleted_todo);
 } elseif ($mybb->input['action'] == 'edit') {
+	if(!isset($mybb->input['id']))
+	    header("Location: {$mybb->settings['bburl']}/todolist.php");
 	$id = (int)$mybb->input['id'];
-	if(isset($id)) {
-		add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-		$query = $db->simple_select('todolist', '*', "id='{$id}'");
-		$row = $db->fetch_array($query);
+	
+	if($mybb->request_method == "post") {
+		verify_post_check($mybb->input['my_post_key'], false);
+		if(!isset($mybb->input['title']) || $mybb->input['title'] == "")
+		    $errors[] = $lang->no_title;
 
-		$id = $row['id'];
-		$title = $row['title'];
-		add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
-		add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$id}");
-		$message = $row['message'];
-		
-		$priority_check = array("high" => "", "normal" => "", "low" => "");
-		if($row['priority'] == 'normal') {
-			$priority = "<img src=\"images/todolist/norm_prio.png\" border=\"0\" /> {$lang->normal_priority}";
-			$priority_check['normal'] = "selected=\"selected\"";
-		} elseif($row['priority'] == 'high') {
-			$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";
-			$priority_check['high'] = "selected=\"selected\"";
-		} elseif($row['priority'] == 'low') {
-			$priority = "<img src=\"images/todolist/low_prio.gif\" border=\"0\" /> {$lang->low_priority}";
-			$priority_check['low'] = "selected=\"selected\"";
+		if(!isset($mybb->input['done']) || $mybb->input['done'] == "")
+		    $errors[] = $lang->no_done;
+
+		if(!isset($mybb->input['status']) || $mybb->input['status'] == "")
+		    $errors[] = $lang->no_status;
+
+		if(!isset($mybb->input['priority']) || $mybb->input['priority'] == "")
+		    $errors[] = $lang->no_priority;
+
+		if(!isset($mybb->input['message']) || $mybb->input['message'] == "")
+		    $errors[] = $lang->no_message;
+
+		if(!isset($errors)) {
+			$update_array = array(
+				"title" => $db->escape_string($mybb->input['title']),
+				"done" => $db->escape_string($mybb->input['done']),
+				"status" => $db->escape_string($mybb->input['status']),
+				"priority" => $db->escape_string($mybb->input['priority']),
+				"message" => $db->escape_string($mybb->input['message']),
+				"lasteditor" => $db->escape_string($mybb->user['username']),
+				"lasteditorid" => (int)$mybb->user['uid'],
+				"lastedit" => TIME_NOW
+			);
+			$db->update_query("todolist", $update_array, "id='{$id}'");
+			redirect("todolist.php?action=show&id={$id}", $lang->edited_todo);
 		}
-		
-		$status_check = array("wait" => "", "development" => "", "feedback" => "", "resolved" => "", "closed" => "");
-		if($row['status'] == 'wait') {
-			$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
-			$status_check['wait'] = "selected=\"selected\"";
-		} elseif($row['status'] == 'development') {
-			$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
-			$status_check['development'] = "selected=\"selected\"";
-		} elseif($row['status'] == 'feedback') {
-			$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
-			$status_check['feedback'] = "selected=\"selected\"";
-		} elseif($row['status'] == 'resolved') {
-			$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
-			$status_check['resolved'] = "selected=\"selected\"";
-		} elseif($row['status'] == 'closed') {
-			$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
-			$status_check['closed'] = "selected=\"selected\"";
-		}
-		
-		$done_check = array("0" => "", "25" => "", "50" => "", "75" => "", "100" => "");
-		if($row['done'] == '0') {
-			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
-			$done_check['0'] = "selected=\"selected\"";
-		} elseif($row['done'] == '25') {
-			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
-			$done_check['25'] = "selected=\"selected\"";
-		} elseif($row['done'] == '50') {
-			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
-			$done_check['50'] = "selected=\"selected\"";
-		} elseif($row['done'] == '75') {
-			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
-			$done_check['75'] = "selected=\"selected\"";
-		} elseif($row['done'] == '100') {
-			$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
-			$done_check['100'] = "selected=\"selected\"";
-		}
-		
-		$codebuttons = build_mycode_inserter();
-		
-		eval("\$todolist_edit = \"".$templates->get("todolist_edit")."\";");
-		output_page($todolist_edit);
 	}
-} elseif($mybb->input['action'] == 'submit-edit') {
-	$id = (int)$mybb->input['id'];
 
-	$update_array = array(
-		"title" => $db->escape_string($mybb->input['title']),
-		"done" => $db->escape_string($mybb->input['done']),
-		"status" => $db->escape_string($mybb->input['status']),
-		"priority" => $db->escape_string($mybb->input['priority']),
-		"message" => $db->escape_string($mybb->input['message']),
-		"lasteditor" => $db->escape_string($mybb->user['username']),
-		"lasteditorid" => (int)$mybb->user['uid'],
-		"lastedit" => TIME_NOW
-	);
-	$db->update_query("todolist", $update_array, "id='{$id}'");
-	redirect("todolist.php?action=show&id=$id", $lang->edited_todo);
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	$query = $db->simple_select('todolist', '*', "id='{$id}'");
+	$row = $db->fetch_array($query);
+
+	$priority_check = array("high" => "", "normal" => "", "low" => "");
+	$status_check = array("wait" => "", "development" => "", "feedback" => "", "resolved" => "", "closed" => "");
+	$done_check = array("0" => "", "25" => "", "50" => "", "75" => "", "100" => "");
+	if(isset($errors))
+	{
+		$errors = inline_error($errors);
+		
+		if($mybb->input['priority'] == 'normal')
+			$priority_check['normal'] = "selected=\"selected\"";
+		elseif($mybb->input['priority'] == 'high')
+			$priority_check['high'] = "selected=\"selected\"";
+		elseif($mybb->input['priority'] == 'low')
+			$priority_check['low'] = "selected=\"selected\"";
+
+		if($mybb->input['status'] == 'wait')
+			$status_check['wait'] = "selected=\"selected\"";
+		elseif($mybb->input['status'] == 'development')
+			$status_check['development'] = "selected=\"selected\"";
+		elseif($mybb->input['status'] == 'feedback')
+			$status_check['feedback'] = "selected=\"selected\"";
+		elseif($mybb->input['status'] == 'resolved')
+			$status_check['resolved'] = "selected=\"selected\"";
+		elseif($mybb->input['status'] == 'closed')
+			$status_check['closed'] = "selected=\"selected\"";
+	
+		if($mybb->input['done'] == '0')
+			$done_check['0'] = "selected=\"selected\"";
+		elseif($mybb->input['done'] == '25')
+			$done_check['25'] = "selected=\"selected\"";
+		elseif($mybb->input['done'] == '50')
+			$done_check['50'] = "selected=\"selected\"";
+		elseif($mybb->input['done'] == '75')
+			$done_check['75'] = "selected=\"selected\"";
+		elseif($mybb->input['done'] == '100')
+			$done_check['100'] = "selected=\"selected\"";
+
+		$title = $mybb->input['title'];
+		$message = $mybb->input['message'];
+	} else {
+		$errors = "";
+		
+		if($row['priority'] == 'normal')
+			$priority_check['normal'] = "selected=\"selected\"";
+		elseif($row['priority'] == 'high')
+			$priority_check['high'] = "selected=\"selected\"";
+		elseif($row['priority'] == 'low')
+			$priority_check['low'] = "selected=\"selected\"";
+
+		if($row['status'] == 'wait')
+			$status_check['wait'] = "selected=\"selected\"";
+		elseif($row['status'] == 'development')
+			$status_check['development'] = "selected=\"selected\"";
+		elseif($row['status'] == 'feedback')
+			$status_check['feedback'] = "selected=\"selected\"";
+		elseif($row['status'] == 'resolved')
+			$status_check['resolved'] = "selected=\"selected\"";
+		elseif($row['status'] == 'closed')
+			$status_check['closed'] = "selected=\"selected\"";
+
+		if($row['done'] == '0')
+			$done_check['0'] = "selected=\"selected\"";
+		elseif($row['done'] == '25')
+			$done_check['25'] = "selected=\"selected\"";
+		elseif($row['done'] == '50')
+			$done_check['50'] = "selected=\"selected\"";
+		elseif($row['done'] == '75')
+			$done_check['75'] = "selected=\"selected\"";
+		elseif($row['done'] == '100')
+			$done_check['100'] = "selected=\"selected\"";
+
+		$message = $row['message'];
+		$title = $row['title'];
+	}
+
+	add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
+	add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$id}");
+	
+	if($row['priority'] == 'normal')
+		$priority = "<img src=\"images/todolist/norm_prio.png\" border=\"0\" /> {$lang->normal_priority}";
+	elseif($row['priority'] == 'high')
+		$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";
+	elseif($row['priority'] == 'low')
+		$priority = "<img src=\"images/todolist/low_prio.gif\" border=\"0\" /> {$lang->low_priority}";
+	
+	if($row['status'] == 'wait')
+		$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
+	elseif($row['status'] == 'development')
+		$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
+	elseif($row['status'] == 'feedback')
+		$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
+	elseif($row['status'] == 'resolved')
+		$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
+	elseif($row['status'] == 'closed')
+		$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
+	
+	if($row['done'] == '0')
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
+	elseif($row['done'] == '25')
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
+	elseif($row['done'] == '50')
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
+	elseif($row['done'] == '75')
+		$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
+	elseif($row['done'] == '100')
+		$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
+	
+	$codebuttons = build_mycode_inserter();	
+	eval("\$todolist_edit = \"".$templates->get("todolist_edit")."\";");
+	output_page($todolist_edit);
 }
 ?>

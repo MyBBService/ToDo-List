@@ -41,8 +41,8 @@ function todolist_install()
 				`lastedit`		bigint(30)		NOT NULL DEFAULT '0',
 				`priority`		varchar(6)		NOT NULL,
 				`message`		text			NOT NULL,
-				`status`		varchar(11)		NOT NULL,
-				`done`			varchar(8)		NOT NULL,
+				`status`		varchar(11)		NOT NULL DEFAULT 'wait',
+				`done`			int(3)			NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
 
 
@@ -160,21 +160,24 @@ function todolist_install()
 </head>
 <body>
 {\$header}
+{\$errors}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=thead colspan=2><strong>{\$lang->title_overview}: {\$lang->add_todo}</strong></td>
 	</tr>
-	<form action=\"\" method=\"post\">
+	<form action=\"todolist.php\" method=\"post\">
+	<input type=\"hidden\" name=\"action\" value=\"add\" />
+	<input type=\"hidden\" name=\"my_post_key\" value=\"{\$mybb->post_code}\" />
 	<tr class=\"trow1\">
 		<td style=\"width:100px;\">{\$lang->title_todo}:</td>
-		<td><input type=\"text\" name=\"title\" style=\"width:300px;\"/></td>
+		<td><input type=\"text\" class=\"textbox\" name=\"title\" style=\"width:300px;\" value=\"{\$title}\" /></td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:100px;\">{\$lang->priority_todo}:</td>
 		<td><select name=\"priority\" style=\"width:100px;\">
-			<option value=\"normal\" style=\"background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center; \">{\$lang->normal_priority}</option>
-			<option value=\"high\" style=\"background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center; \">{\$lang->high_priority}</option>
-			<option value=\"low\" style=\"background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center; \">{\$lang->low_priority}</option>
+			<option value=\"normal\" style=\"background-image:url(images/todolist/norm_prio.png); background-repeat:no-repeat; text-align:center; \" {\$priority_check[\'normal\']}>{\$lang->normal_priority}</option>
+			<option value=\"high\" style=\"background-image:url(images/todolist/high_prio.gif); background-repeat:no-repeat; text-align:center; \" {\$priority_check[\'high\']}>{\$lang->high_priority}</option>
+			<option value=\"low\" style=\"background-image:url(images/todolist/low_prio.gif); background-repeat:no-repeat; text-align:center; \" {\$priority_check[\'low\']}>{\$lang->low_priority}</option>
 		</select></td>
 	</tr>
 	<tr class=\"trow1\">
@@ -184,6 +187,7 @@ function todolist_install()
 	<tr class=\"trow1\">
 		<td colspan=\"2\"><input type=\"submit\" value=\"{\$lang->add_todo}\" style=\"margin-left: 280px; \"/></td>
 	</tr>
+	</form>
 </table>
 {\$footer}
 </body>
@@ -201,15 +205,18 @@ function todolist_install()
 </head>
 <body>
 {\$header}
+{\$errors}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"6\"><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
 	</tr>
-	<form action=\"todolist.php?action=submit-edit\" method=\"post\">
+	<form action=\"todolist.php\" method=\"post\">
+	<input type=\"hidden\" name=\"action\" value=\"edit\" />
+	<input type=\"hidden\" name=\"my_post_key\" value=\"{\$mybb->post_code}\" />
+	<input type=\"hidden\" name=\"id\" value=\"{\$id}\">
 		<tr class=\"trow1\">
-			<input type=\"hidden\" name=\"id\" size=\"2\" value=\"{\$id}\">
 			<td style=\"width:100px;\">Titel:</td>
-			<td><input type=\"text\" name=\"title\" size=\"40\" value=\"{\$title}\"></td>
+			<td><input type=\"text\" class=\"textbox\" name=\"title\" size=\"40\" value=\"{\$title}\"></td>
 		</tr>
 		<tr class=\"trow1\">
 			<td style=\"width:100px;\">{\$lang->priority_todo}:</td>
@@ -450,23 +457,21 @@ function todolist_uninstall()
 
 function todo_wol_activity($user_activity)
 {
+    global $parameters;
     $split_loc = explode(".php", $user_activity['location']);
     if($split_loc[0] == $user['location']) {
         $filename = '';
     } else {
         $filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
     }
-    global $parameters;
 
     switch ($filename)
     {
 		case 'todolist':
             $user_activity['activity'] = "todo";
             $user_activity['todo']['action'] = $parameters['action'];
-            if($parameters['action'] == "submit-edit")
-                $user_activity['todo']['action'] = "edit";
             
-            if(isset($parameters['id']))
+		    if(isset($parameters['id']))
                 $user_activity['todo']['id'] = (int)$parameters['id'];
 			break;
     }
@@ -492,8 +497,8 @@ function todo_wol_location($array)
 				case "show":
 		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
 		            break;
-				case "submit":
-		            $array['location_name'] = $lang->todo_wol_submit;
+				case "add":
+		            $array['location_name'] = $lang->todo_wol_add;
 		            break;
 		        case "delete":
 		            $array['location_name'] = $lang->todo_wol_delete;
