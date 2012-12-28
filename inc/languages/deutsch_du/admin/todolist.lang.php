@@ -22,4 +22,6 @@ $l['setting_todo_per_page'] = "Einträge pro Seite";
 $l['setting_todo_per_page_desc'] = "Gib hier die Anzahl der Einträge ein, die pro Seite angezeigt werden sollen";
 $l['setting_todo_404_errors'] = "Sollen 404 Fehler gezeigt werden?";
 $l['setting_todo_404_errors_desc'] = "Wenn diese Einstellung aktiviert ist, werden anstatt den \"no_permission\" Fehlern 404 (Seite existiert nicht) Fehler angezeigt.<br />Dies kann helfen, wenn die ToDo-Liste nicht für die öffentlichkeit bestimmt ist";
+$l['setting_todo_pm_notify'] = "Soll eine PN versendet werden, wenn die Zuständigkeit geändert wird?";
+$l['setting_todo_pm_notify_desc'] = "Sollen die User benachrichtigt werden, wenn ihnen eine Aufgabe zugewiesen wird?";
 ?>

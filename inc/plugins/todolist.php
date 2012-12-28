@@ -33,14 +33,15 @@ function todolist_install()
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
 				`id`			int(11)			NOT NULL AUTO_INCREMENT,
 				`title`			varchar(50)		NOT NULL,
-				`date`			bigint(30)		NOT NULL,
+				`message`		text			NOT NULL,
 				`name`			varchar(120)	NOT NULL,
 				`nameid`		int(10)			NOT NULL,
+				`date`			bigint(30)		NOT NULL,
+				`assign`		int(10)			NOT NULL DEFAULT '0',
 				`lasteditor`	varchar(120)	NOT NULL DEFAULT '',
 				`lasteditorid`	int(10)			NOT NULL DEFAULT '0',
 				`lastedit`		bigint(30)		NOT NULL DEFAULT '0',
-				`priority`		varchar(6)		NOT NULL,
-				`message`		text			NOT NULL,
+				`priority`		varchar(6)		NOT NULL DEFAULT 'normal',
 				`status`		varchar(11)		NOT NULL DEFAULT 'wait',
 				`done`			int(3)			NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
@@ -67,7 +68,7 @@ function todolist_install()
 {\$multipage}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=\"thead\" colspan=\"7\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
+		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
 	</tr>
 	<tr>
 		<td class=tcat>{\$lang->title_todo}</td>
@@ -76,11 +77,12 @@ function todolist_install()
 		<td class=tcat>{\$lang->priority_todo}</td>
 		<td class=tcat>{\$lang->status_todo}</td>
 		<td class=tcat>{\$lang->done_todo}</td>
+		<td class=tcat>{\$lang->assign_todo}</td>
 		<td class=tcat style=\"width:300px;\">{\$lang->action_todo}</td>
 	</tr>
 	{\$todo}
 	<tr class=\"trow1\">
-		<td colspan=\"5\">{\$addtodo}</td>
+		<td colspan=\"6\">{\$addtodo}</td>
 		<td style=\"width:190px;\" colspan=\"2\">{\$lang->moderation_todo}: {\$modgroup}</td>
 	</tr>
 </table>
@@ -121,18 +123,22 @@ function todolist_install()
 		<td>{\$showtodofrom}</td>
 	</tr>
 	<tr class=\"trow2\">
+		<td style=\"width:200px;\">{\$lang->assign_todo}:</td>
+		<td>{\$showtodoassign}</td>
+	</tr>
+	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->priority_todo}:</td>
 		<td>{\$showtodoprio}</td>
 	</tr>
-	<tr class=\"trow1\">
+	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->done_todo}:</td>
 		<td>{\$showtododone}</td>
 	</tr>
-	<tr class=\"trow2\">
+	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->status_todo}:</td>
 		<td>{\$showtodostatus}</td>
 	</tr>
-	<tr class=\"trow1\">
+	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->description_todo}:</td>
 		<td>{\$showtodomess}</td>
 	</tr>
@@ -181,6 +187,10 @@ function todolist_install()
 		</select></td>
 	</tr>
 	<tr class=\"trow1\">
+		<td style=\"width:100px;\">{\$lang->assign_todo}:</td>
+		<td><select name=\"assign\" style=\"width:100px;\">{\$userselect}</select></td>
+	</tr>
+	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->description_todo}:</td>
 		<td><textarea name=\"message\" rows=\"20\" cols=\"70\" id=\"message\">{\$message}</textarea>{\$codebuttons}</td>
 	</tr>
@@ -208,7 +218,7 @@ function todolist_install()
 {\$errors}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
-		<td class=\"thead\" colspan=\"6\"><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
+		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
 	</tr>
 	<form action=\"todolist.php\" method=\"post\">
 	<input type=\"hidden\" name=\"action\" value=\"edit\" />
@@ -253,6 +263,10 @@ function todolist_install()
 			</td>
 		</tr>
 		<tr class=\"trow1\">
+			<td style=\"width:100px;\">{\$lang->assign_todo}:</td>
+			<td><select name=\"assign\" style=\"width:100px;\">{\$userselect}</select></td>
+		</tr>
+		<tr class=\"trow1\">
 			<td style=\"width:200px;\">{\$lang->description_todo}:</td>
 			<td><textarea name=\"message\" rows=\"20\" cols=\"70\" id=\"message\">{\$message}</textarea>{\$codebuttons}</td>
 		</tr>
@@ -273,13 +287,14 @@ function todolist_install()
 
 	$templatearray = array(
         "title" => "todolist_table",
-        "template" => "<tr class=\"trow1\" colspan=\"7\">
+        "template" => "<tr class=\"trow1\" colspan=\"8\">
 	<td>{\$title}</td>
 	<td>{\$date}</td>
 	<td>{\$owner}</td>
 	<td>{\$priority}</td>
 	<td>{\$status}</td>
 	<td>{\$done}</td>
+	<td>{\$assign}</td>
 	<td style=\"width:200px\">
 		<center>
 			<a href=\"todolist.php?action=show&id={\$id}\"><img src=\"images/todolist/show.png\" /> {\$lang->show_todo}</a> {\$mod_todo}</a>
@@ -293,7 +308,7 @@ function todolist_install()
 	$templatearray = array(
         "title" => "todolist_table_no_results",
         "template" => "<tr class=\"trow1\">
-	<td colspan=\"7\"><center>{\$lang->no_todo}</center></td>
+	<td colspan=\"8\"><center>{\$lang->no_todo}</center></td>
 </tr>",
         "sid" => -2
     );
@@ -426,6 +441,17 @@ function todolist_install()
         "gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_8);
+
+	$todolist_setting_9 = array(
+        "name"			=> "todo_pm_notify",
+        "title"			=> $lang->setting_todo_pm_notify,
+        "description"	=> $lang->setting_todo_pm_notify_desc,
+        "optionscode"	=> "yesno",
+        "value"			=> "yes",
+        "disporder"		=> '9',
+        "gid"			=> (int)$gid,
+	);
+	$db->insert_query("settings", $todolist_setting_9);
 	rebuild_settings();
 }
 

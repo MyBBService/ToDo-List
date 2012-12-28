@@ -11,6 +11,7 @@ $l['moderation_todo'] = "Wird moderiert von";
 $l['date_todo'] = "Erstellt am";
 $l['title_todo'] = "Titel";
 $l['done_todo'] = "% Erledigt";
+$l['assign_todo'] = "Zugewiesen";
 $l['status_todo'] = "Status";
 $l['from_todo'] = "Geschrieben von";
 $l['priority_todo'] = "Priorität";
