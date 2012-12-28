@@ -54,6 +54,13 @@ if ($mybb->input['action'] == "") {
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
 			$group = "";
+		if($row['assign'] != 0) {
+			$assign = get_user($row['assign']);
+			$formattedname = format_name($assign['username'], $assign['usergroup']);
+			$assign = build_profile_link($formattedname, $assign['uid']);
+		} else {
+			$assign = $lang->assign_none;
+		}
 		if(in_array($mybb->user['usergroup'], $perm_group)) {
 			$mod_todo = "- ";
 			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
@@ -145,6 +152,13 @@ if ($mybb->input['action'] == "") {
 		$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$nameid}"), "usergroup");
 	else
 		$group = "";
+	if($row['assign'] != 0) {
+		$assign = get_user($row['assign']);
+		$formattedname = format_name($assign['username'], $assign['usergroup']);
+		$showtodoassign = build_profile_link($formattedname, $assign['uid']);
+	} else {
+		$showtodoassign = $lang->assign_none;
+	}
 	
 	
 	if($row['priority'] == 'normal') {
@@ -216,15 +230,25 @@ if ($mybb->input['action'] == "") {
 		
 		if(!isset($errors)) {
 			$insert = array(
-				"date" => TIME_NOW,
-				"nameid" => (int)$mybb->user['uid'],
-				"name" => $db->escape_string($mybb->user['username']),
 				"title" => $db->escape_string($mybb->input['title']),
-				"priority" => $db->escape_string($mybb->input['priority']),
-				"message" => $db->escape_string($mybb->input['message'])
+				"message" => $db->escape_string($mybb->input['message']),
+				"name" => $db->escape_string($mybb->user['username']),
+				"nameid" => (int)$mybb->user['uid'],
+				"date" => TIME_NOW,
+				"assign" => (int)$mybb->input['assign'],
+				"priority" => $db->escape_string($mybb->input['priority'])
 			);
-			$db->insert_query("todolist", $insert);
-			redirect("todolist.php", $lang->added_todo);
+			$id = $db->insert_query("todolist", $insert);
+			
+			if($mybb->input['assign'] != 0 && $mybb->settings['todo_pm_notify']) {
+				$assign = get_user($mybb->input['assign']);
+				$profil = $mybb->settings['bburl']."/".get_profile_link($mybb->user['uid']);
+				$todo = $mybb->settings['bburl']."/todolist.php?action=show&id=".$id;
+				$message = $lang->sprintf($lang->notify_message, $assign['username'], $profil, $mybb->user['username'], $todo, $mybb->input['title']);
+			    todo_pm($mybb->input['assign'], $lang->notify_subject, $message);
+			}
+
+			redirect("todolist.php?action=show&id={$id}", $lang->added_todo);
 		}
 	}
 	
@@ -246,6 +270,14 @@ if ($mybb->input['action'] == "") {
 	}
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 	add_breadcrumb($lang->add_todo, "todolist.php?action=add");
+	$query = $db->simple_select("users", "uid, username", "", array("order_by" => "username"));
+	$userselect = "<option value=\"0\">-</option>";
+	while($user = $db->fetch_array($query)) {
+		if(isset($mybb->input['assign']) && $mybb->input['assign'] == $user['uid'])
+		    $userselect .= "<option value=\"{$user['uid']}\" selected=\"selected\">{$user['username']}</option>";
+		else
+		    $userselect .= "<option value=\"{$user['uid']}\">{$user['username']}</option>";
+	}
 	$codebuttons = build_mycode_inserter();
 	eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
 	output_page($todolist_add);
@@ -257,6 +289,8 @@ if ($mybb->input['action'] == "") {
 	if(!isset($mybb->input['id']))
 	    header("Location: {$mybb->settings['bburl']}/todolist.php");
 	$id = (int)$mybb->input['id'];
+	$query = $db->simple_select('todolist', '*', "id='{$id}'");
+	$row = $db->fetch_array($query);
 	
 	if($mybb->request_method == "post") {
 		verify_post_check($mybb->input['my_post_key'], false);
@@ -278,22 +312,30 @@ if ($mybb->input['action'] == "") {
 		if(!isset($errors)) {
 			$update_array = array(
 				"title" => $db->escape_string($mybb->input['title']),
-				"done" => $db->escape_string($mybb->input['done']),
-				"status" => $db->escape_string($mybb->input['status']),
-				"priority" => $db->escape_string($mybb->input['priority']),
 				"message" => $db->escape_string($mybb->input['message']),
+				"assign" =>	(int)$mybb->input['assign'],
 				"lasteditor" => $db->escape_string($mybb->user['username']),
 				"lasteditorid" => (int)$mybb->user['uid'],
-				"lastedit" => TIME_NOW
+				"lastedit" => TIME_NOW,
+				"priority" => $db->escape_string($mybb->input['priority']),
+				"status" => $db->escape_string($mybb->input['status']),
+				"done" => $db->escape_string($mybb->input['done'])
 			);
 			$db->update_query("todolist", $update_array, "id='{$id}'");
+
+			if($mybb->input['assign'] != $row['assign'] && $mybb->input['assign'] != 0 && $mybb->settings['todo_pm_notify']) {
+				$assign = get_user($mybb->input['assign']);
+				$profil = $mybb->settings['bburl']."/".get_profile_link($mybb->user['uid']);
+				$todo = $mybb->settings['bburl']."/todolist.php?action=show&id=".$id;
+				$message = $lang->sprintf($lang->notify_message, $assign['username'], $profil, $mybb->user['username'], $todo, $mybb->input['title']);
+			    todo_pm($mybb->input['assign'], $lang->notify_subject, $message);
+			}
+
 			redirect("todolist.php?action=show&id={$id}", $lang->edited_todo);
 		}
 	}
 
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-	$query = $db->simple_select('todolist', '*', "id='{$id}'");
-	$row = $db->fetch_array($query);
 
 	$priority_check = array("high" => "", "normal" => "", "low" => "");
 	$status_check = array("wait" => "", "development" => "", "feedback" => "", "resolved" => "", "closed" => "");
@@ -333,6 +375,7 @@ if ($mybb->input['action'] == "") {
 
 		$title = $mybb->input['title'];
 		$message = $mybb->input['message'];
+		$assign = $mybb->input['assign'];
 	} else {
 		$errors = "";
 		
@@ -367,12 +410,22 @@ if ($mybb->input['action'] == "") {
 
 		$message = $row['message'];
 		$title = $row['title'];
+		$assign = $row['assign'];
 	}
 
 	add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
 	add_breadcrumb($lang->edit_edittodo, "todolist.php?action=edit&id={$id}");
 	
-	if($row['priority'] == 'normal')
+	$query = $db->simple_select("users", "uid, username", "", array("order_by" => "username"));
+	$userselect = "<option value=\"0\">-</option>";
+	while($user = $db->fetch_array($query)) {
+		if($assign == $user['uid'])
+		    $userselect .= "<option value=\"{$user['uid']}\" selected=\"selected\">{$user['username']}</option>";
+		else
+		    $userselect .= "<option value=\"{$user['uid']}\">{$user['username']}</option>";
+	}
+
+   	if($row['priority'] == 'normal')
 		$priority = "<img src=\"images/todolist/norm_prio.png\" border=\"0\" /> {$lang->normal_priority}";
 	elseif($row['priority'] == 'high')
 		$priority = "<img src=\"images/todolist/high_prio.gif\" border=\"0\" /> {$lang->high_priority}";

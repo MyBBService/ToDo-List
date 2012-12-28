@@ -18,7 +18,9 @@ $l['priority_todo'] = "Priorität";
 $l['action_todo'] = "Aktion";
 $l['description_todo'] = "Beschreibung";
 $l['no_todo'] = "Leider sind keine Aufgaben eingetragen.";
+$l['assign_none'] = "Niemandem";
 $l['added_todo'] = "Aufgabe hinzugefügt!";
+$l['edited_todo'] = "Aufgabe bearbeitet!";
 $l['deleted_todo'] = "Aufgabe gelöscht!";
 
 //Show Todo
@@ -59,6 +61,11 @@ $l['no_done'] = "Bitte wähle aus, wie viel bereits erledigt wurde!";
 $l['no_status'] = "Bitte wähle einen Status aus!";
 $l['no_priority'] = "Bitte wähle eine Priorität aus!";
 $l['no_message'] = "Bitte gebe eine Beschreibung an!";
+
+//Assign PN
+$l['notify_subject'] = "Du wurdest einer Aufgabe zugewiesen";
+$l['notify_message'] = "Hallo {1},
+du wurdest von [url={2}]{3}[/url] der Aufgabe [url={4}]{5}[/url] zugewiesen.";
 
 //WIO Liste
 $l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";

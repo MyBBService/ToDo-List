@@ -551,12 +551,14 @@ function todo_wol_location($array)
     return $array;
 }
 
-function todo_load_lang() {
+function todo_load_lang()
+{
 	global $lang;
 	$lang->load('todolist');
 }
 
-function todo_no_permission() {
+function todo_no_permission()
+{
 	global $mybb;
 	if($mybb->settings['todo_404_errors'])
 	    header("HTTP/1.1 404 Not Found");
@@ -564,5 +566,39 @@ function todo_no_permission() {
 		error_no_permission();
 	
 	exit;
+}
+
+function todo_pm($to, $subject, $message, $from=0)
+{
+    if(is_string($to))
+		$to = explode(',', $to);
+    elseif(is_int($to))
+		$to = (array)$to;
+
+	//Write PM
+	require_once MYBB_ROOT."inc/datahandlers/pm.php";
+	$pmhandler = new PMDataHandler();
+
+	$pm = array(
+		"subject" => $subject,
+		"message" => $message,
+		"icon" => "",
+		"fromid" => $from,
+		"do" => "",
+		"pmid" => "",
+	);
+	$pm['toid'] = $to;
+	$pmhandler->set_data($pm);
+
+	// Now let the pm handler do all the hard work.
+	if($pmhandler->validate_pm())
+	{
+		return $pmhandler->insert_pm();
+	}else {
+		$pm_errors = $pmhandler->get_friendly_errors();
+		$send_errors = inline_error($pm_errors);
+		echo $send_errors;
+		return false;
+	}
 }
 ?>
