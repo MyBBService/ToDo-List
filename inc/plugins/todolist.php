@@ -87,7 +87,6 @@ function todolist_install()
 	</tr>
 </table>
 {\$multipage}
-{\$loggedin}
 <br />
 {\$footer}
 </body>
@@ -105,50 +104,48 @@ function todolist_install()
 </head>
 <body>
 {\$header}
-{\$selectodo}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=thead colspan=\"4\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']} - {\$lang->show_showtodo}</strong></td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->title_todo}:</td>
-		<td>{\$showtodotitle}</td>
+		<td>{\$row[\'title\']}</td>
 	</tr>
 	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->date_todo}:</td>
-		<td>{\$showtododate}</td>
+		<td>{\$date}</td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->from_todo}:</td>
-		<td>{\$showtodofrom}</td>
+		<td>{\$from}</td>
 	</tr>
 	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->assign_todo}:</td>
-		<td>{\$showtodoassign}</td>
+		<td>{\$assign}</td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->priority_todo}:</td>
-		<td>{\$showtodoprio}</td>
+		<td>{\$priority}</td>
 	</tr>
 	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->done_todo}:</td>
-		<td>{\$showtododone}</td>
+		<td>{\$done}</td>
 	</tr>
 	<tr class=\"trow1\">
 		<td style=\"width:200px;\">{\$lang->status_todo}:</td>
-		<td>{\$showtodostatus}</td>
+		<td>{\$status}</td>
 	</tr>
 	<tr class=\"trow2\">
 		<td style=\"width:200px;\">{\$lang->description_todo}:</td>
-		<td>{\$showtodomess}</td>
+		<td>{\$message}</td>
 	</tr>
-	{\$showtodoaction}
-	{\$showtodolastedit}
+	{\$mod_todo}
+	{\$lastedit}
 	<tr class=\"trow2\">
-		<td colspan=\"2\">{\$showtodoback}</td>
+		<td colspan=\"2\">{\$back}</td>
 	</tr>
 </table>
-{\$loggedin}
 <br />
 {\$footer}
 </body>
@@ -288,7 +285,7 @@ function todolist_install()
 	$templatearray = array(
         "title" => "todolist_table",
         "template" => "<tr class=\"trow1\" colspan=\"8\">
-	<td>{\$title}</td>
+	<td>{\$row[\'title\']}</td>
 	<td>{\$date}</td>
 	<td>{\$owner}</td>
 	<td>{\$priority}</td>
@@ -297,7 +294,7 @@ function todolist_install()
 	<td>{\$assign}</td>
 	<td style=\"width:200px\">
 		<center>
-			<a href=\"todolist.php?action=show&id={\$id}\"><img src=\"images/todolist/show.png\" /> {\$lang->show_todo}</a> {\$mod_todo}</a>
+			<a href=\"todolist.php?action=show&id={\$row[\'id\']}\"><img src=\"images/todolist/show.png\" /> {\$lang->show_todo}</a> {\$mod_todo}</a>
 		</center>
 	</td>
 </tr>",
@@ -316,8 +313,8 @@ function todolist_install()
 
 	$templatearray = array(
         "title" => "todolist_mod",
-        "template" => "<a href=\"todolist.php?action=edit&id={\$id}\"><img src=\"images/todolist/edit.png\" /> {\$lang->edit_todo}</a> 
-- <a href=\"todolist.php?action=delete&id={\$id}\"><img src=\"images/todolist/delete.png\" /> {\$lang->delete_todo}</a>",
+        "template" => "<a href=\"todolist.php?action=edit&id={\$row[\'id\']}\"><img src=\"images/todolist/edit.png\" /> {\$lang->edit_todo}</a> 
+- <a href=\"todolist.php?action=delete&id={\$row[\'id\']}\"><img src=\"images/todolist/delete.png\" /> {\$lang->delete_todo}</a>",
         "sid" => -2
     );
     $db->insert_query("templates", $templatearray);

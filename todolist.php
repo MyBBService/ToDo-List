@@ -47,9 +47,6 @@ if ($mybb->input['action'] == "") {
 	$todo = "";
 	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
 	while($row = $db->fetch_array($query)) {
-		$id = $row['id'];
-		$title = $row['title'];
-		$name = $row['name'];
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
@@ -129,35 +126,30 @@ if ($mybb->input['action'] == "") {
 		"filter_badwords" => 1
 	);
 
+	$row = $db->fetch_array($query);
+	add_breadcrumb($lang->show_showtodo.": ".$row['title'], "todolist.php?action=show&id={$id}");
+
 	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
 	if(in_array($mybb->user['usergroup'], $perm_group)) {
 		eval("\$mod_todo = \"".$templates->get("todolist_mod")."\";");
 		eval("\$mod_todo = \"".$templates->get("todolist_mod_table")."\";");
 	}
 
-	$row = $db->fetch_array($query);
-	$id = $row['id'];
-	$title = $row['title'];
-	add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
-	$nameid = $row['nameid'];
-	$name = $row['name'];
 	$message = $parser->parse_message($row['message'], $parser_options);
-	$editor = $row['lasteditor'];
-	$editorid = $row['lasteditorid'];
-	if($editorid != "")
-		$editorgroup = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$editorid}"), "usergroup");
+	if($row['lasteditorid'] != "")
+		$editorgroup = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['lasteditorid']}"), "usergroup");
 	else
 		$editorgroup = "";
-	if($nameid != "")
-		$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$nameid}"), "usergroup");
+	if($row['nameid'] != "")
+		$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 	else
 		$group = "";
 	if($row['assign'] != 0) {
 		$assign = get_user($row['assign']);
 		$formattedname = format_name($assign['username'], $assign['usergroup']);
-		$showtodoassign = build_profile_link($formattedname, $assign['uid']);
+		$assign = build_profile_link($formattedname, $assign['uid']);
 	} else {
-		$showtodoassign = $lang->assign_none;
+		$assign = $lang->assign_none;
 	}
 	
 	
@@ -193,26 +185,20 @@ if ($mybb->input['action'] == "") {
 		$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
 	}
 	
-	$showtododate = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
-	$date = my_date($mybb->settings['dateformat'], $row['lastedit'])." - ".my_date($mybb->settings['timeformat'], $row['lastedit']);
+	$date = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
+	$editdate = my_date($mybb->settings['dateformat'], $row['lastedit'])." - ".my_date($mybb->settings['timeformat'], $row['lastedit']);
 
 	$formattedname = format_name($row['name'], $group);
-	$showtodofrom = build_profile_link($formattedname, $row['nameid']);
+	$from = build_profile_link($formattedname, $row['nameid']);
 	$formattedname = format_name($row['lasteditor'], $editorgroup);
-	$lasteditor = build_profile_link($formattedname, $editorid);
+	$lasteditor = build_profile_link($formattedname, $row['lasteditorid']);
 
-	$showtodolastedit = "";
-	if($lasteditor != '' && $editorid != 0 && $row['lastedit'] != '') {
-		eval("\$showtodolastedit = \"".$templates->get("todolist_edited")."\";");
+	$lastedit = "";
+	if($lasteditor != '' && $row['lasteditorid'] != 0 && $row['lastedit'] != '') {
+		eval("\$lastedit = \"".$templates->get("todolist_edited")."\";");
 	}
 	
-	$showtodotitle = $title;
-	$showtodoprio = $priority;
-	$showtododone = $done;
-	$showtodostatus = $status;
-	$showtodoaction = $mod_todo;
-	$showtodomess = $message;
-	$showtodoback = "<a href='todolist.php'>{$lang->back_showtodo}</a>";
+	$back = "<a href='todolist.php'>{$lang->back_showtodo}</a>";
 	
 	eval("\$todolist_show = \"".$templates->get("todolist_show")."\";");
 	output_page($todolist_show);
