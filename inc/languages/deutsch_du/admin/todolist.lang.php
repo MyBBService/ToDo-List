@@ -1,7 +1,18 @@
 <?php
 //Plugin
-$l['name_plugins'] = "ToDo-Liste";
-$l['description_plugins'] = "Es bietet eine Liste für deine zu erledigenden Aufgaben.";
+$l['todo'] = "ToDo-Liste";
+$l['todo_permissions'] = "Kann ToDo-Liste verwalten";
+
+//Menu
+$l['todo_list'] = "Projektliste";
+$l['todo_list_desc'] = "Zeigt eine Liste aller Projekte";
+$l['todo_add'] = "Lege ein neues Projekt an";
+$l['todo_add_desc'] = "Hier kannst du ein neues Projekt anlegen";
+
+//Listing
+$l['todo_item'] = "Projekt";
+$l['todo_todos'] = "Anzahl Aufgaben in diesem Projekt";
+$l['no_projects'] = "Bisher wurden keine Projekte erstellt";
 
 //Settings
 $l['setting_group_todo'] = "ToDo-Liste";

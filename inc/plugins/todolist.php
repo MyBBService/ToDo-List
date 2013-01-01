@@ -3,9 +3,14 @@ if(!defined("IN_MYBB")) {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
-$plugins->add_hook("admin_config_settings_begin", "todo_load_lang");
+//WIO Hooks
 $plugins->add_hook("fetch_wol_activity_end", "todo_wol_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "todo_wol_location");
+//ACP Hooks
+$plugins->add_hook("admin_config_menu", "todo_admin_config_menu");
+$plugins->add_hook("admin_config_action_handler", "todo_admin_config_action_handler");
+$plugins->add_hook("admin_config_permissions", "todo_admin_config_permissions");
+
 
 function todolist_info()
 {
@@ -32,6 +37,7 @@ function todolist_install()
 	$col = $db->build_create_table_collation();
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
 				`id`			int(11)			NOT NULL AUTO_INCREMENT,
+				`pid`			int(11)			NOT NULL,
 				`title`			varchar(50)		NOT NULL,
 				`message`		text			NOT NULL,
 				`name`			varchar(120)	NOT NULL,
@@ -45,6 +51,20 @@ function todolist_install()
 				`status`		varchar(11)		NOT NULL DEFAULT 'wait',
 				`done`			int(3)			NOT NULL DEFAULT '0',
 	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
+
+	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist_projects` (
+				`id`			int(11)			NOT NULL AUTO_INCREMENT,
+				`title`			varchar(50)		NOT NULL,
+				`description`	text			NOT NULL,
+	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
+
+	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist_permissions` (
+				`pid`			int(11)			NOT NULL,
+				`gid`			int(11)			NOT NULL,
+				`can_see`		boolean			NOT NULL,
+				`can_add`		boolean			NOT NULL,
+				`can_edit`		boolean			NOT NULL)
+	ENGINE=MyISAM {$col}");
 
 
 	//Template Gruppe
@@ -363,7 +383,7 @@ function todolist_install()
     );
 	$db->insert_query("settings", $todolist_setting_1);
 
-	$todolist_setting_2 = array(
+/*	$todolist_setting_2 = array(
         "name"           => "todo_allow_guests",
         "title"          => $lang->setting_todo_allow_guests,
         "description"    => $lang->setting_todo_allow_guests_desc,
@@ -405,7 +425,7 @@ function todolist_install()
         "disporder"      => '4',
         "gid"            => (int)$gid,
 	);
-	$db->insert_query("settings", $todolist_setting_5);
+	$db->insert_query("settings", $todolist_setting_5); */
 
 	$todolist_setting_6 = array(
         "name"           => "todo_name",
@@ -466,6 +486,8 @@ function todolist_uninstall()
 	global $db;
 	
 	$db->drop_table("todolist");
+	$db->drop_table("todolist_projects");
+	$db->drop_table("todolist_permissions");
 
 	$query = $db->simple_select("settinggroups", "gid", "name='todo'");
     $g = $db->fetch_array($query);
@@ -487,6 +509,38 @@ function todolist_uninstall()
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
+}
+
+function todo_admin_config_menu($sub_menu)
+{
+	global $lang;
+
+	$lang->load("todolist");
+
+	$sub_menu[] = array("id" => "todo", "title" => $lang->todo, "link" => "index.php?module=config-todo");
+
+	return $sub_menu;
+}
+
+function todo_admin_config_action_handler($actions)
+{
+	$actions['todo'] = array(
+		"active" => "todo",
+		"file" => "todo.php"
+	);
+
+	return $actions;
+}
+
+function todo_admin_config_permissions($admin_permissions)
+{
+	global $lang;
+
+	$lang->load("todo");
+
+	$admin_permissions['todo'] = $lang->todo_permission;
+
+	return $admin_permissions;
 }
 
 function todo_wol_activity($user_activity)
@@ -546,12 +600,6 @@ function todo_wol_location($array)
             break;
     }
     return $array;
-}
-
-function todo_load_lang()
-{
-	global $lang;
-	$lang->load('todolist');
 }
 
 function todo_no_permission()
