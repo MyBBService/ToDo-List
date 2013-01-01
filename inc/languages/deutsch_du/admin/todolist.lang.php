@@ -2,17 +2,39 @@
 //Plugin
 $l['todo'] = "ToDo-Liste";
 $l['todo_permissions'] = "Kann ToDo-Liste verwalten";
+$l['todo_no_id'] = "Für diese Aktion ist eine ID vonnöten, diese wurde nicht übermittelt";
+$l['todo_wrong_id'] = "Die übermittelte ID scheint nicht eindeutig zu sein";
 
 //Menu
 $l['todo_list'] = "Projektliste";
 $l['todo_list_desc'] = "Zeigt eine Liste aller Projekte";
 $l['todo_add'] = "Lege ein neues Projekt an";
 $l['todo_add_desc'] = "Hier kannst du ein neues Projekt anlegen";
+$l['todo_edit'] = "Projekt bearbeiten";
+$l['edit_success'] = "Projekt erfolgreich bearbeitet";
+$l['todo_deleted'] = "Projekt gel&ouml;scht";
+$l['todo_delete_confirm'] = "Soll das Projekt wirklich gel&ouml;scht werden?<br />
+<span style=\"text-color: #FFFFF; font-weight: bold;\">ACHTUNG:</span> Dadurch werden auch alle Aufgaben in diesem Projekt gel&ouml;scht";
 
 //Listing
 $l['todo_item'] = "Projekt";
 $l['todo_todos'] = "Anzahl Aufgaben in diesem Projekt";
 $l['no_projects'] = "Bisher wurden keine Projekte erstellt";
+
+//Add
+$l['todo_title'] = "Titel";
+$l['todo_title_desc'] = "Wie hei&szlig;t das Projekt?";
+$l['missing_title'] = "Bitte gib einen Titel f&uuml;r das Projekt an";
+$l['todo_desc'] = "Beschreibung";
+$l['todo_desc_desc'] = "Beschreibe das Projekt kurz";
+$l['missing_desc'] = "Bitte beschreibe das Projekt";
+$l['todo_permissions'] = "Berechtigungen";
+$l['group'] = "Benutzergruppe";
+$l['can_see'] = "Kann Projekt sehen";
+$l['can_add'] = "Kann neue Aufgaben hinzuf&uuml;gen";
+$l['can_edit'] = "Kann Aufgaben aktualisieren";
+$l['todo_save'] = "Speicher Projekt";
+$l['add_success'] = "Projekt erfolgreich gespeichert";
 
 //Settings
 $l['setting_group_todo'] = "ToDo-Liste";
