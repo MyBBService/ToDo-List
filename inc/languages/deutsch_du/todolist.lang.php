@@ -18,6 +18,7 @@ $l['priority_todo'] = "Priorität";
 $l['action_todo'] = "Aktion";
 $l['description_todo'] = "Beschreibung";
 $l['no_todo'] = "Leider sind keine Aufgaben eingetragen.";
+$l['no_projects'] = "Leider sind keine Projekte vorhanden.";
 $l['assign_none'] = "Niemandem";
 $l['added_todo'] = "Aufgabe hinzugefügt!";
 $l['edited_todo'] = "Aufgabe bearbeitet!";

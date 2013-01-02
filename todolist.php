@@ -10,24 +10,8 @@ $lang->load('todolist');
 if(!function_exists("todolist_info") || $mybb->settings['todo_activate'] == '0')
 	error($lang->offline);
 
-if($mybb->settings['todo_allow_guests'] == '0' && $mybb->user['uid'] == '0')
+if(!todo_has_any_permission())
 	todo_no_permission();
-
-$perm_group = explode(",", $mybb->settings['todo_disallowed_groups']);
-if(in_array($mybb->user['usergroup'], $perm_group))
-	todo_no_permission();
-
-$perm_group = explode(",", $mybb->settings['todo_add_groups']);
-if(in_array($mybb->user['usergroup'], $perm_group))
-	$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=add\">{$lang->add_todo}</a></strong>";
-
-$modgroup = "";
-$mods = explode(",", $mybb->settings['todo_mod_groups']);
-foreach($groupscache as $group) {
-	if(in_array($group['gid'], $mods))
-		$modgroup .= format_name($group['title'], $group['gid']).", ";
-}
-$modgroup = substr($modgroup, 0, -2);
 
 if ($mybb->input['action'] == "") {
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
@@ -39,13 +23,49 @@ if ($mybb->input['action'] == "") {
 		$start = 0;
 		$page = 1;
 	}
-	$query = $db->simple_select("todolist", "COUNT(id) AS count");
+	$query = $db->simple_select("todolist_projects", "COUNT(id) AS count");
 	$num = $db->fetch_field($query, "count");
 	$multipage = multipage($num, $mybb->settings['todo_per_page'], $page, "todolist.php");
 
-	$query = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
+	$query = $db->simple_select("todolist_projects", "*", "", array("order_by" => "title", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
 	$todo = "";
-	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
+	while($row = $db->fetch_array($query)) {
+		if(!todo_has_permission($row['id'], "can_see"))
+		    continue;
+		eval("\$todo .= \"".$templates->get("todolist_projects_table")."\";");
+	}
+
+	if ($todo == '') {
+		eval("\$todo = \"".$templates->get("todolist_projects_table_no_results")."\";");
+	}
+
+	eval("\$todolist .= \"".$templates->get("todolist_projects")."\";");
+	output_page($todolist);
+} elseif ($mybb->input['action'] == "show_project") {
+	$id = (int)$mybb->input['id'];
+	if(!todo_has_permission($id, "can_see"))
+	    todo_no_permission();
+	$query = $db->simple_select("todolist_projects", "*", "id={$id}");
+	$project = $db->fetch_array($query);
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	add_breadcrumb($project['title'], "todolist.php?action=show_project&id={$id}");
+
+	if(todo_has_permission($id, "can_add"))
+		$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=add&pid={$id}\">{$lang->add_todo}</a></strong>";
+
+	$page = (int)$mybb->input['page'];
+	if($page > 0)
+		$start = ($page-1) *$mybb->settings['todo_per_page'];
+	else {
+		$start = 0;
+		$page = 1;
+	}
+	$query = $db->simple_select("todolist", "COUNT(id) AS count", "pid={$id}");
+	$num = $db->fetch_field($query, "count");
+	$multipage = multipage($num, $mybb->settings['todo_per_page'], $page, "todolist.php");
+
+	$query = $db->simple_select("todolist", "*", "pid={$id}", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
+	$todo = "";
 	while($row = $db->fetch_array($query)) {
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
@@ -57,10 +77,6 @@ if ($mybb->input['action'] == "") {
 			$assign = build_profile_link($formattedname, $assign['uid']);
 		} else {
 			$assign = $lang->assign_none;
-		}
-		if(in_array($mybb->user['usergroup'], $perm_group)) {
-			$mod_todo = "- ";
-			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
 		}
 			
 		if($row['priority'] == 'normal') {
@@ -99,6 +115,11 @@ if ($mybb->input['action'] == "") {
 		
 		$formattedname = format_name($row['name'], $group);
 		$owner = build_profile_link($formattedname, $row['nameid']);
+
+		if(todo_has_permission($id, "can_edit")) {
+			$mod_todo = "- ";
+			eval("\$mod_todo .= \"".$templates->get("todolist_mod")."\";");
+		}
 		
 		eval("\$todo .= \"".$templates->get("todolist_table")."\";");		
 	}
@@ -110,10 +131,16 @@ if ($mybb->input['action'] == "") {
 	eval("\$todolist .= \"".$templates->get("todolist")."\";");
 	output_page($todolist);
 } elseif ($mybb->input['action'] == 'show') {
-	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-	
 	$id = (int)$mybb->input['id'];
 	$query = $db->simple_select('todolist', '*', "id='{$id}'");
+	$row = $db->fetch_array($query);
+	if(!todo_has_permission($row['pid'], "can_see"))
+	    todo_no_permission();
+	$query = $db->simple_select("todolist_projects", "*", "id={$row['pid']}");
+	$project = $db->fetch_array($query);
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	add_breadcrumb($project['title'], "todolist.php?action=show_project&id={$id}");
+	add_breadcrumb($lang->show_showtodo.": ".$row['title'], "todolist.php?action=show&id={$id}");
 
 	require_once MYBB_ROOT."inc/class_parser.php";
 	$parser = new postParser;
@@ -126,11 +153,7 @@ if ($mybb->input['action'] == "") {
 		"filter_badwords" => 1
 	);
 
-	$row = $db->fetch_array($query);
-	add_breadcrumb($lang->show_showtodo.": ".$row['title'], "todolist.php?action=show&id={$id}");
-
-	$perm_group = explode(",", $mybb->settings['todo_mod_groups']);
-	if(in_array($mybb->user['usergroup'], $perm_group)) {
+	if(todo_has_permission($row['pid'], "can_edit")) {
 		eval("\$mod_todo = \"".$templates->get("todolist_mod")."\";");
 		eval("\$mod_todo = \"".$templates->get("todolist_mod_table")."\";");
 	}
@@ -198,11 +221,13 @@ if ($mybb->input['action'] == "") {
 		eval("\$lastedit = \"".$templates->get("todolist_edited")."\";");
 	}
 	
-	$back = "<a href='todolist.php'>{$lang->back_showtodo}</a>";
+	$back = "<a href='todolist.php?action=show_project&id={$row['pid']}'>{$lang->back_showtodo}</a>";
 	
 	eval("\$todolist_show = \"".$templates->get("todolist_show")."\";");
 	output_page($todolist_show);
 } elseif ($mybb->input['action'] == 'add') {
+	if(!todo_has_permission($mybb->input['pid'], "can_add"))
+	    todo_no_permission();
 	if($mybb->request_method == "post") {
 		verify_post_check($mybb->input['my_post_key'], false);
 		if(!isset($mybb->input['title']) || $mybb->input['title'] == "")
@@ -216,6 +241,7 @@ if ($mybb->input['action'] == "") {
 		
 		if(!isset($errors)) {
 			$insert = array(
+				"pid" => (int)$mybb->input['pid'],
 				"title" => $db->escape_string($mybb->input['title']),
 				"message" => $db->escape_string($mybb->input['message']),
 				"name" => $db->escape_string($mybb->user['username']),
@@ -269,6 +295,9 @@ if ($mybb->input['action'] == "") {
 	output_page($todolist_add);
 } elseif ($mybb->input['action'] == 'delete') {
 	$id = (int)$mybb->input['id'];
+	$query = $db->simple_select("todolist", "pid", "id={$id}");
+	if(!todo_has_permission($db->fetch_field($query, "pid"), "can_edit"))
+	    todo_no_permission();
 	$db->delete_query("todolist", "id='{$id}'");
 	redirect("todolist.php", $lang->deleted_todo);
 } elseif ($mybb->input['action'] == 'edit') {
@@ -277,6 +306,8 @@ if ($mybb->input['action'] == "") {
 	$id = (int)$mybb->input['id'];
 	$query = $db->simple_select('todolist', '*', "id='{$id}'");
 	$row = $db->fetch_array($query);
+	if(!todo_has_permission($row['pid'], "can_edit"))
+	    todo_no_permission();
 	
 	if($mybb->request_method == "post") {
 		verify_post_check($mybb->input['my_post_key'], false);

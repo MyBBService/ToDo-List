@@ -164,14 +164,17 @@ if($mybb->input['action'] == "do_edit") {
 		);
 		$db->update_query("todolist_projects", $update, "id={$id}");
 
+		$db->delete_query("todolist_permissions", "pid={$id}");
 		foreach($mybb->input['perm'] as $gid => $perms)
 		{
 			$permRow = array(
+					"pid" => $id,
+					"gid" => (int)$gid,
 					"can_see"  => in_array("can_see",  $perms),
 					"can_add"  => in_array("can_add",  $perms),
 					"can_edit" => in_array("can_edit", $perms)
 			);
-			$db->update_query('todolist_permissions', $permRow, "pid={$id} AND gid={$gid}");
+			$db->insert_query('todolist_permissions', $permRow);
 		}
 
 

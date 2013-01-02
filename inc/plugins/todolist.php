@@ -102,9 +102,37 @@ function todolist_install()
 	</tr>
 	{\$todo}
 	<tr class=\"trow1\">
-		<td colspan=\"6\">{\$addtodo}</td>
-		<td style=\"width:190px;\" colspan=\"2\">{\$lang->moderation_todo}: {\$modgroup}</td>
+		<td colspan=\"8\">{\$addtodo}</td>
 	</tr>
+</table>
+{\$multipage}
+<br />
+{\$footer}
+</body>
+</html>",
+        "sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_projects",
+        "template" => "<html>
+<head>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
+{\$headerinclude}
+</head>
+<body>
+{\$header}
+{\$multipage}
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
+	<tr>
+		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
+	</tr>
+	<tr>
+		<td class=tcat>{\$lang->title_todo}</td>
+		<td class=tcat>{\$lang->description_todo}</td>
+	</tr>
+	{\$todo}
 </table>
 {\$multipage}
 <br />
@@ -191,6 +219,7 @@ function todolist_install()
 	<form action=\"todolist.php\" method=\"post\">
 	<input type=\"hidden\" name=\"action\" value=\"add\" />
 	<input type=\"hidden\" name=\"my_post_key\" value=\"{\$mybb->post_code}\" />
+	<input type=\"hidden\" name=\"pid\" value=\"{\$mybb->input[\'pid\']}\" />
 	<tr class=\"trow1\">
 		<td style=\"width:100px;\">{\$lang->title_todo}:</td>
 		<td><input type=\"text\" class=\"textbox\" name=\"title\" style=\"width:300px;\" value=\"{\$title}\" /></td>
@@ -326,6 +355,25 @@ function todolist_install()
         "title" => "todolist_table_no_results",
         "template" => "<tr class=\"trow1\">
 	<td colspan=\"8\"><center>{\$lang->no_todo}</center></td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_projects_table",
+        "template" => "<tr class=\"trow1\" colspan=\"8\">
+	<td><a href=\"todolist.php?action=show_project&id={\$row[\'id\']}\">{\$row[\'title\']}</a></td>
+	<td>{\$row[\'description\']}</td>
+</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_projects_table_no_results",
+        "template" => "<tr class=\"trow1\">
+	<td colspan=\"2\"><center>{\$lang->no_projects}</center></td>
 </tr>",
         "sid" => -2
     );
@@ -604,8 +652,8 @@ function todo_wol_location($array)
 
 function todo_no_permission()
 {
-	global $mybb;
-	if($mybb->settings['todo_404_errors'])
+	global $settings;
+	if($settings['todo_404_errors'] == 1)
 	    header("HTTP/1.1 404 Not Found");
 	else
 		error_no_permission();
@@ -645,5 +693,52 @@ function todo_pm($to, $subject, $message, $from=0)
 		echo $send_errors;
 		return false;
 	}
+}
+
+function todo_has_any_permission($right="can_see", $user=false)
+{
+	global $mybb, $db;
+	if(!$user)
+	    $user = $mybb->user;
+	if(is_int($user))
+	    $user = get_user($user);
+
+	if($user['additionalgroups'] != "")
+		$groups = explode(",", $user['additionalgroups']);
+	$groups[] = $user['usergroup'];
+	
+	$rights = false;
+	foreach($groups as $gid) {
+		$query = $db->simple_select("todolist_permissions", "pid", "gid={$gid} AND {$right}=1");
+	    if($db->num_rows($query) > 0)
+		    $rights = true;
+	}
+	if(!$rights) {
+		$query = $db->simple_select("todolist_permissions");
+		if($db->num_rows($query) == 0)
+		    $rights = true;
+	}
+	return $rights;
+}
+
+function todo_has_permission($project, $right="can_see", $user=false)
+{
+	global $mybb, $db;
+	if(!$user)
+	    $user = $mybb->user;
+	if(is_int($user))
+	    $user = get_user($user);
+
+	if($user['additionalgroups'] != "")
+		$groups = explode(",", $user['additionalgroups']);
+	$groups[] = $user['usergroup'];
+
+	$rights = false;
+	foreach($groups as $gid) {
+		$query = $db->simple_select("todolist_permissions", "pid", "pid={$project} AND gid={$gid} AND {$right}=1");
+	    if($db->num_rows($query) > 0)
+		    $rights = true;
+	}
+	return $rights;
 }
 ?>
