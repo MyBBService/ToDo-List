@@ -74,4 +74,16 @@ $l['todo_wol_add'] = "Fügt eine neue Aufgabe ein";
 $l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
 $l['todo_wol_delete'] = "Löscht eine Aufgabe";
 $l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
+
+//Suche
+$l['search'] = "Suchen";
+$l['search_string'] = "Suchkette";
+$l['search_status'] = "Status";
+$l['search_creator'] = "Ersteller";
+$l['search_assign'] = "Zugewiesener";
+$l['search_project'] = "Projekt";
+$l['search_priority'] = "Priorit&auml;t";
+$l['search_do'] = "Starte Suche!";
+$l['search_results'] = "Suchergebnisse";
+$l['search_results_nothing'] = "Leider wurde mit deinen Einstellungen nichts gefunden";
 ?>
