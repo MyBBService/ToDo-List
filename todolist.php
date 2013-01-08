@@ -294,12 +294,24 @@ if ($mybb->input['action'] == "") {
 	eval("\$todolist_add = \"".$templates->get("todolist_add")."\";");
 	output_page($todolist_add);
 } elseif ($mybb->input['action'] == 'delete') {
-	$id = (int)$mybb->input['id'];
+	if(!isset($mybb->input['id']))
+	    header("Location: {$mybb->settings['bburl']}/todolist.php");
+	$id=(int)$mybb->input['id'];
 	$query = $db->simple_select("todolist", "pid", "id={$id}");
 	if(!todo_has_permission($db->fetch_field($query, "pid"), "can_edit"))
 	    todo_no_permission();
-	$db->delete_query("todolist", "id='{$id}'");
-	redirect("todolist.php", $lang->deleted_todo);
+
+	if($mybb->input['no'])
+	    header("Location: {$mybb->settings['bburl']}/todolist.php?action=show&id={$id}");
+	else {
+		if($mybb->request_method == "post") {
+			$db->delete_query("todolist", "id='{$id}'");
+			redirect("todolist.php", $lang->deleted_todo);
+		} else {
+			eval("\$todolist_confirm = \"".$templates->get("todolist_confirm")."\";");
+			output_page($todolist_confirm);
+		}
+	}
 } elseif ($mybb->input['action'] == 'edit') {
 	if(!isset($mybb->input['id']))
 	    header("Location: {$mybb->settings['bburl']}/todolist.php");

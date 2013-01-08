@@ -522,6 +522,37 @@ function todolist_install()
 	);
 	$db->insert_query("templates", $templatearray);
 
+	$templatearray = array(
+        "title" => "todolist_confirm",
+        "template" => "<html>
+<head>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
+{\$headerinclude}
+</head>
+<body>
+{\$header}
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
+	<tr>
+		<td class=\"thead\" colspan=\"2\"><strong>{\$lang->confirm_delete}</strong></td>
+	</tr>
+	<form action=\"todolist.php?action=delete\" method=\"post\">
+	<input type=\"hidden\" name=\"id\" value=\"{\$id}\" />
+	<tr class=\"trow1\">
+		<td colspan=\"2\">{\$lang->confirm_delete_desc}</td>
+	</tr>
+	<tr class=\"trow1\">
+		<td style=\"text-align: center;\"><input type=\"submit\" value=\"{\$lang->yes}\" />
+			<input type=\"submit\" value=\"{\$lang->no}\" name=\"no\" /></td>
+	</tr>
+	</form>
+</table>
+{\$footer}
+</body>
+</html>",
+        "sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
+
 	//Einstellung Gruppe
 	$todolist_group = array(
         "title"          => $lang->setting_group_todo,

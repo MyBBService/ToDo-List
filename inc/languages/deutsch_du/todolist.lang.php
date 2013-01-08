@@ -86,4 +86,7 @@ $l['search_priority'] = "Priorit&auml;t";
 $l['search_do'] = "Starte Suche!";
 $l['search_results'] = "Suchergebnisse";
 $l['search_results_nothing'] = "Leider wurde mit deinen Einstellungen nichts gefunden";
+
+$l['confirm_delete'] = "L&ouml;schen best&auml;tigen";
+$l['confirm_delete_desc'] = "Willst du diese Aufgabe wirklich l&ouml;schen?";
 ?>
