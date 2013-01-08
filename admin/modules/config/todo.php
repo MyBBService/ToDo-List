@@ -135,7 +135,6 @@ if($mybb->input['action']=="delete") {
 		} else
 			$page->output_confirm_action("index.php?module=config-todo&action=delete&id={$id}", $lang->todo_delete_confirm);
 	}
-
 }
 if($mybb->input['action'] == "do_edit") {
 	if(!strlen(trim($mybb->input['id'])))

@@ -72,8 +72,10 @@ du wurdest von [url={2}]{3}[/url] der Aufgabe [url={4}]{5}[/url] zugewiesen.";
 $l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";
 $l['todo_wol_add'] = "Fügt eine neue Aufgabe ein";
 $l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
+$l['todo_wol_show_project'] = "Sieht sich das Projekt <a href=\"todolist.php?action=show_project&id={2}\">{1}</a> an";
 $l['todo_wol_delete'] = "Löscht eine Aufgabe";
 $l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
+$l['todo_wol_search'] = "<a href=\"todolist.php?action=search\">Durchsucht</a> die ToDo-Liste";
 
 //Suche
 $l['search'] = "Suchen";

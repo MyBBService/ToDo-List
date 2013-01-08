@@ -734,12 +734,16 @@ function todo_wol_location($array)
 	        if(isset($array['user_activity']['todo']['id'])) {
 	        	$id = $array['user_activity']['todo']['id'];
 	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");				
+	        	$project = $db->fetch_field($db->simple_select("todolist_projects", "title", "id={$id}"), "title");
 			}
 			
 			switch ($array['user_activity']['todo']['action'])
 			{
 				case "show":
 		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
+		            break;
+				case "show_project":
+		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show_project, $project, $id);
 		            break;
 				case "add":
 		            $array['location_name'] = $lang->todo_wol_add;
@@ -750,6 +754,9 @@ function todo_wol_location($array)
 		        case "edit":
 	           		$array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
 	           		break;
+		        case "search":
+		            $array['location_name'] = $lang->todo_wol_search;
+		        	break;
 	           	default:
 		            $array['location_name'] = $lang->todo_wol;          	
 			}
