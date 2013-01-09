@@ -301,6 +301,9 @@ if ($mybb->input['action'] == "") {
 	if(!todo_has_permission($db->fetch_field($query, "pid"), "can_edit"))
 	    todo_no_permission();
 
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	add_breadcrumb($lang->delete_todo, "todolist.php?action=delete&id={$id}");
+
 	if($mybb->input['no'])
 	    header("Location: {$mybb->settings['bburl']}/todolist.php?action=show&id={$id}");
 	else {
@@ -553,7 +556,7 @@ if ($mybb->input['action'] == "") {
 		if($assign != "") {
 			$aid = $db->fetch_field($db->simple_select("users", "uid", "username='{$assign}'"), "uid");
 		    $where[] = "assign = '".$db->escape_string($aid)."'";
-		    $url .= "assign={$assign}";
+		    $url .= "&assign={$assign}";
 		}
 
 		$where[] = "priority IN ('".str_replace(",", "','", $db->escape_string(implode(",", $priority)))."')";

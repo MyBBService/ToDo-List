@@ -66,6 +66,11 @@ function todolist_install()
 				`can_edit`		boolean			NOT NULL)
 	ENGINE=MyISAM {$col}");
 
+	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist_searchs` (
+				`id`			int(11)			NOT NULL AUTO_INCREMENT,
+				`title`			varchar(50)		NOT NULL,
+				`url`			text			NOT NULL,
+	PRIMARY KEY (`id`) ) ENGINE=MyISAM {$col}");
 
 	//Template Gruppe
 	$templateset = array(

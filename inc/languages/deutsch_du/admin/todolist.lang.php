@@ -10,6 +10,10 @@ $l['todo_list'] = "Projektliste";
 $l['todo_list_desc'] = "Zeigt eine Liste aller Projekte";
 $l['todo_add'] = "Lege ein neues Projekt an";
 $l['todo_add_desc'] = "Hier kannst du ein neues Projekt anlegen";
+$l['todo_search'] = "Suchabfragen";
+$l['todo_search_desc'] = "Zeigt eine Liste aller Suchabfragen";
+$l['todo_search_add'] = "Suchabfrage erstellen";
+$l['todo_search_add_desc'] = "Hiermit kannst du vorgefertigte Suchabfragen erstellen";
 $l['todo_edit'] = "Projekt bearbeiten";
 $l['edit_success'] = "Projekt erfolgreich bearbeitet";
 $l['todo_deleted'] = "Projekt gel&ouml;scht";
@@ -57,4 +61,39 @@ $l['setting_todo_404_errors'] = "Sollen 404 Fehler gezeigt werden?";
 $l['setting_todo_404_errors_desc'] = "Wenn diese Einstellung aktiviert ist, werden anstatt den \"no_permission\" Fehlern 404 (Seite existiert nicht) Fehler angezeigt.<br />Dies kann helfen, wenn die ToDo-Liste nicht für die öffentlichkeit bestimmt ist";
 $l['setting_todo_pm_notify'] = "Soll eine PN versendet werden, wenn die Zuständigkeit geändert wird?";
 $l['setting_todo_pm_notify_desc'] = "Sollen die User benachrichtigt werden, wenn ihnen eine Aufgabe zugewiesen wird?";
+
+//Search
+$l['todo_url'] = "Link";
+$l['no_searchs'] = "Bisher wurden keine Suchabfragen erstellt";
+
+//Search Add
+$l['todo_search_title_desc'] = "Wie soll die Suchabfrage betitelt werden?";
+$l['todo_string'] = "Suchkette";
+$l['todo_string_desc'] = "Welche Zeichenkette muss in der Aufgabe vorkommen (Titel oder Beschreibung)?";
+$l['todo_status'] = "Status";
+$l['todo_status_desc'] = "Welchen Status muss die Aufgabe haben?";
+$l['todo_creator'] = "Ersteller";
+$l['todo_creator_desc'] = "Wer muss die Aufgabe erstellt haben?";
+$l['todo_assign'] = "Zugewiesener";
+$l['todo_assign_desc'] = "Wem muss die Aufgabe zugewiesen sein?";
+$l['todo_project'] = "Projekt";
+$l['todo_project_desc'] = "In welchem Projekt muss die Aufgabe vorkommen?";
+$l['todo_priority'] = "Priorit&auml;t";
+$l['todo_priority_desc'] = "Welche Priorit&auml;t muss die Aufgabe haben?";
+$l['todo_save_search'] = "Speicher Suchabfrage";
+$l['missing_search_title'] = "Bitte gib einen Titel f&uuml;r die Suchabfrage an";
+$l['search_add_success'] = "Suchabfrage erfolgreich gespeichert";
+$l['todo_search_deleted'] = "Suchabfrage gel&ouml;scht";
+$l['todo_search_delete_confirm'] = "Soll die Suchabfrage wirklich gel&ouml;scht werden?";
+$l['search_edit_success'] = "Suchabfrage erfolgreich bearbeitet";
+
+$l['priority_normal'] = "Normal";
+$l['priority_high'] = "Hoch";
+$l['priority_low'] = "Niedrig";
+
+$l['status_wait'] = "Wartend";
+$l['status_dev'] = "In Entwicklung";
+$l['status_feed'] = "Feedback";
+$l['status_resolved'] = "Behoben";
+$l['status_closed'] = "Geschlossen";
 ?>
