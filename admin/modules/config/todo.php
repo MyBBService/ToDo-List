@@ -286,26 +286,29 @@ if($mybb->input['action'] == "search_do_add") {
 			$url .= "&creator={$mybb->input['creator']}";
 
 
-   		foreach($mybb->input['status'] as $st)
-		    $url .= "&status[]={$st}";
+		if(!empty($mybb->input['status'])){
+	   		foreach($mybb->input['status'] as $st)
+			    $url .= "&status[]={$st}";
+		}
 
 		if(!empty($mybb->input['project'])){
-			foreach($mybb->input['project'] as $pr) {
+			foreach($mybb->input['project'] as $pr)
 			    $url .= "&project[]={$pr}";
-			}
 		}
 
 		if($mybb->input['assign'] != "")
 		    $url .= "&assign={$mybb->input['assign']}";
 
-		foreach($mybb->input['priority'] as $pr)
-		    $url .= "&priority[]={$pr}";
+		if(!empty($mybb->input['priority'])){
+			foreach($mybb->input['priority'] as $pr)
+			    $url .= "&priority[]={$pr}";
+		}
 
 		$insert = array(
 			"title"			=> $db->escape_string($mybb->input['title']),
 			"url"			=> $db->escape_string($url),
 		);
-		$id = $db->insert_query("todolist_searchs", $insert);
+		$db->insert_query("todolist_searchs", $insert);
 
 		flash_message($lang->search_add_success, 'success');
 		admin_redirect("index.php?module=config-todo&action=search");
@@ -430,20 +433,23 @@ if($mybb->input['action'] == "search_do_edit") {
 			$url .= "&creator={$mybb->input['creator']}";
 
 
-   		foreach($mybb->input['status'] as $st)
-		    $url .= "&status[]={$st}";
+		if(!empty($mybb->input['status'])){
+	   		foreach($mybb->input['status'] as $st)
+			    $url .= "&status[]={$st}";
+		}
 
 		if(!empty($mybb->input['project'])){
-			foreach($mybb->input['project'] as $pr) {
+			foreach($mybb->input['project'] as $pr)
 			    $url .= "&project[]={$pr}";
-			}
 		}
 
 		if($mybb->input['assign'] != "")
 		    $url .= "&assign={$mybb->input['assign']}";
 
-		foreach($mybb->input['priority'] as $pr)
-		    $url .= "&priority[]={$pr}";
+		if(!empty($mybb->input['priority'])){
+			foreach($mybb->input['priority'] as $pr)
+			    $url .= "&priority[]={$pr}";
+		}
 
 		$update = array(
 			"title"			=> $db->escape_string($mybb->input['title']),
@@ -588,7 +594,7 @@ if($mybb->input['action'] == "search") {
 		while($todo = $db->fetch_array($query))
 		{
 			$table->construct_cell($todo['title']);
-			$table->construct_cell($todo['url']);
+			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">{$todo['url']}</a>");
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();

@@ -86,6 +86,7 @@ $l['search_add_success'] = "Suchabfrage erfolgreich gespeichert";
 $l['todo_search_deleted'] = "Suchabfrage gel&ouml;scht";
 $l['todo_search_delete_confirm'] = "Soll die Suchabfrage wirklich gel&ouml;scht werden?";
 $l['search_edit_success'] = "Suchabfrage erfolgreich bearbeitet";
+$l['todo_search_edit'] = "Suchabfrage bearbeiten";
 
 $l['priority_normal'] = "Normal";
 $l['priority_high'] = "Hoch";
