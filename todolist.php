@@ -32,6 +32,9 @@ if ($mybb->input['action'] == "") {
 	while($row = $db->fetch_array($query)) {
 		if(!todo_has_permission($row['id'], "can_see"))
 		    continue;
+		
+		$row['title'] = htmlspecialchars($row['title']);
+		$row['description'] = htmlspecialchars($row['description']);
 		eval("\$todo .= \"".$templates->get("todolist_projects_table")."\";");
 	}
 
@@ -48,7 +51,7 @@ if ($mybb->input['action'] == "") {
 	$query = $db->simple_select("todolist_projects", "*", "id={$id}");
 	$project = $db->fetch_array($query);
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-	add_breadcrumb($project['title'], "todolist.php?action=show_project&id={$id}");
+	add_breadcrumb(htmlspecialchars($project['title']), "todolist.php?action=show_project&id={$id}");
 
 	if(todo_has_permission($id, "can_add"))
 		$addtodo = "<strong><img src=\"images/todolist/add.png\" /> <a href=\"todolist.php?action=add&pid={$id}\">{$lang->add_todo}</a></strong>";
@@ -67,6 +70,7 @@ if ($mybb->input['action'] == "") {
 	$query = $db->simple_select("todolist", "*", "pid={$id}", array("order_by" => "date", "order_dir" => "DESC", "limit_start" => $start, "limit" => $mybb->settings['todo_per_page']));
 	$todo = "";
 	while($row = $db->fetch_array($query)) {
+		$row['title'] = htmlspecialchars($row['title']);
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
@@ -139,8 +143,8 @@ if ($mybb->input['action'] == "") {
 	$query = $db->simple_select("todolist_projects", "*", "id={$row['pid']}");
 	$project = $db->fetch_array($query);
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
-	add_breadcrumb($project['title'], "todolist.php?action=show_project&id={$row['pid']}");
-	add_breadcrumb($lang->show_showtodo.": ".$row['title'], "todolist.php?action=show&id={$id}");
+	add_breadcrumb(htmlspecialchars($project['title']), "todolist.php?action=show_project&id={$row['pid']}");
+	add_breadcrumb($lang->show_showtodo.": ".htmlspecialchars($row['title']), "todolist.php?action=show&id={$id}");
 
 	require_once MYBB_ROOT."inc/class_parser.php";
 	$parser = new postParser;
@@ -152,6 +156,8 @@ if ($mybb->input['action'] == "") {
 		"allow_videocode" => 0,
 		"filter_badwords" => 1
 	);
+
+	$row['title'] = htmlspecialchars($row['title']);
 
 	if(todo_has_permission($row['pid'], "can_edit")) {
 		eval("\$mod_todo = \"".$templates->get("todolist_mod")."\";");
@@ -405,7 +411,7 @@ if ($mybb->input['action'] == "") {
 		elseif($mybb->input['done'] == '100')
 			$done_check['100'] = "selected=\"selected\"";
 
-		$title = $mybb->input['title'];
+		$title = htmlspecialchars($mybb->input['title']);
 		$message = $mybb->input['message'];
 		$assign = $mybb->input['assign'];
 	} else {
@@ -441,7 +447,7 @@ if ($mybb->input['action'] == "") {
 			$done_check['100'] = "selected=\"selected\"";
 
 		$message = $row['message'];
-		$title = $row['title'];
+		$title = htmlspecialchars($row['title']);
 		$assign = $row['assign'];
 	}
 
@@ -670,7 +676,7 @@ if ($mybb->input['action'] == "") {
 	if($count != 0) {
 		$searches .= "<tr class=\"trow1\">\n";
 		foreach($sarray as $s) {
-			$searches .= "<td><a href=\"{$s['url']}\">{$s['title']}</a></td>\n";
+			$searches .= "<td><a href=\"{$s['url']}\">".htmlspecialchars($s['title'])."</a></td>\n";
 		}
 		for($i = sizeof($sarray); $i < 5; ++$i) {
 			$searches .= "<td></td>\n";
@@ -693,9 +699,9 @@ if ($mybb->input['action'] == "") {
 		if(!todo_has_permission($row['id'], "can_see"))
 		    continue;
 		if(in_array($row['id'], $project))
-		    $projects .= "<option value=\"{$row['id']}\" selected=\"selected\">{$row['title']}</option>";
+		    $projects .= "<option value=\"{$row['id']}\" selected=\"selected\">".htmlspecialchars($row['title'])."</option>";
 		else
-		    $projects .= "<option value=\"{$row['id']}\">{$row['title']}</option>";
+		    $projects .= "<option value=\"{$row['id']}\">".htmlspecialchars($row['title'])."</option>";
 	}
 
 	eval("\$search = \"".$templates->get("todolist_search")."\";");

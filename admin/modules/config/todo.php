@@ -369,7 +369,7 @@ if($mybb->input['action'] == "search_add") {
 	$query = $db->simple_select("todolist_projects", "id, title", "", array("order_by" => "title"));
 	if($db->num_rows($query) > 0) {
 		while($pr = $db->fetch_array($query))
-			$project[$pr['id']] = $pr['title'];
+			$project[$pr['id']] = htmlspecialchars($pr['title']);
 	} else { $project = array(); }
 	$add_project = $form->generate_select_box("project[]", $project, $project_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_project, $lang->todo_project_desc, $add_project);
@@ -560,7 +560,7 @@ if($mybb->input['action'] == "search_edit") {
 	$query = $db->simple_select("todolist_projects", "id, title", "", array("order_by" => "title"));
 	if($db->num_rows($query) > 0) {
 		while($pr = $db->fetch_array($query))
-			$project[$pr['id']] = $pr['title'];
+			$project[$pr['id']] = htmlspecialchars($pr['title']);
 	} else { $project = array(); }
 	$add_project = $form->generate_select_box("project[]", $project, $project_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_project, $lang->todo_project_desc, $add_project);
@@ -597,8 +597,8 @@ if($mybb->input['action'] == "search") {
 	{
 		while($todo = $db->fetch_array($query))
 		{
-			$table->construct_cell($todo['title']);
-			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">{$todo['url']}</a>");
+			$table->construct_cell(htmlspecialchars($todo['title']));
+			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">".htmlspecialchars($todo['url'])."</a>");
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();
@@ -625,7 +625,7 @@ if($mybb->input['action'] == "") {
 		while($todo = $db->fetch_array($query))
 		{
 			$count = $db->num_rows($db->simple_select("todolist", "id", "pid={$todo['id']}"));
-			$table->construct_cell("{$todo['title']}<br /><i>{$todo['description']}</i>");
+			$table->construct_cell(htmlspecialchars($todo['title'])."<br /><i>".htmlspecialchars($todo['description'])."</i>");
 			$table->construct_cell($count);
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
