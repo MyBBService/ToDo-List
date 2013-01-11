@@ -3,7 +3,7 @@ $l['offline'] = "ToDo-List is disabled. Please try it again later.";
 
 //Overview
 $l['title_overview'] = "ToDo-List";
-$l['add_todo'] = "Add new todo";
+$l['add_todo'] = "Add new task";
 $l['delete_todo'] = "Delete";
 $l['edit_todo'] = "Edit";
 $l['show_todo'] = "Show";
@@ -16,22 +16,22 @@ $l['from_todo'] = "Written by";
 $l['priority_todo'] = "Priority";
 $l['action_todo'] = "Action";
 $l['description_todo'] = "Description";
-$l['no_todo'] = "Unfortunately no todos are registered.";
+$l['no_todo'] = "Unfortunately no tasks are registered.";
 $l['no_projects'] = "Unfortunately no projects were added.";
 $l['assign_none'] = "Nobody";
-$l['added_todo'] = "ToDo added!";
-$l['edited_todo'] = "ToDo edited!";
-$l['deleted_todo'] = "ToDo deleted!";
+$l['added_todo'] = "Task added!";
+$l['edited_todo'] = "Task edited!";
+$l['deleted_todo'] = "Task deleted!";
 
 //Show Todo
-$l['show_showtodo'] = "Show todo";
+$l['show_showtodo'] = "Show task";
 $l['lastedit_showtodo'] = "Last edit";
 $l['back_showtodo'] = "Back to overview";
 $l['from_showtodo'] = "from";
 
 //Edit Todo
-$l['edit_edittodo'] = "Edit todo";
-$l['send_edittodo'] = "Save todo";
+$l['edit_edittodo'] = "Edit task";
+$l['send_edittodo'] = "Save task";
 $l['nowstat_edittodo'] = "Current status";
 $l['nowprio_edittodo'] = "Current priority";
 $l['nowdone_edittodo'] = "Current % done";
@@ -58,22 +58,22 @@ $l['done_100'] = "100% done";
 //Errors
 $l['no_title'] = "Please enter a title!";
 $l['no_done'] = "Please select how much has been already done!";
-$l['no_status'] = "Please selct a status!";
+$l['no_status'] = "Please select a status!";
 $l['no_priority'] = "Please select a priority!";
 $l['no_message'] = "Please enter a description!";
 
 //Assign PN
-$l['notify_subject'] = "You were assigned to a todo";
+$l['notify_subject'] = "You were assigned to a task";
 $l['notify_message'] = "Hello {1},
-you were assigned to the todo [url={4}]{5}[/url] by [url={2}]{3}[/url].";
+you were assigned to the task [url={4}]{5}[/url] by [url={2}]{3}[/url].";
 
 //WIO Liste
 $l['todo_wol'] = "Views the <a href=\"todolist.php\">ToDo-List</a>";
-$l['todo_wol_add'] = "Adds a new ToDo";
-$l['todo_wol_show'] = "Views the ToDo <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
+$l['todo_wol_add'] = "Adds a new task";
+$l['todo_wol_show'] = "Views the task <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
 $l['todo_wol_show_project'] = "Views the project <a href=\"todolist.php?action=show_project&id={2}\">{1}</a>";
-$l['todo_wol_delete'] = "Deletes a ToDo";
-$l['todo_wol_edit'] = "Edits the ToDo <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
+$l['todo_wol_delete'] = "Deletes a task";
+$l['todo_wol_edit'] = "Edits the task <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
 $l['todo_wol_search'] = "<a href=\"todolist.php?action=search\">Searchs</a> in our ToDo-List";
 
 //Suche
@@ -90,5 +90,5 @@ $l['search_results_nothing'] = "Unfortunately nothing was found with your settin
 $l['searches'] = "Searchqueries";
 
 $l['confirm_delete'] = "Confirm deleting";
-$l['confirm_delete_desc'] = "Are you sure you want to delete this ToDo?";
+$l['confirm_delete_desc'] = "Are you sure you want to delete this task?";
 ?>

@@ -7,7 +7,6 @@ $l['add_todo'] = "Aufgabe hinzufügen";
 $l['delete_todo'] = "Löschen";
 $l['edit_todo'] = "Bearbeiten";
 $l['show_todo'] = "Anzeigen";
-$l['moderation_todo'] = "Wird moderiert von";
 $l['date_todo'] = "Erstellt am";
 $l['title_todo'] = "Titel";
 $l['done_todo'] = "% Erledigt";
