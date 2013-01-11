@@ -573,7 +573,7 @@ if ($mybb->input['action'] == "") {
 			$page = 1;
 		}
 	
-		$query = "SELECT * FROM todolist WHERE {$where} ORDER BY date DESC";
+		$query = "SELECT * FROM ".TABLE_PREFIX."todolist WHERE {$where} ORDER BY date DESC";
 		$nquery = $db->query($query);
 
 		$num = $db->num_rows($nquery);
