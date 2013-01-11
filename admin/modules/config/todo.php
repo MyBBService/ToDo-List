@@ -367,8 +367,10 @@ if($mybb->input['action'] == "search_add") {
 	$form_container->output_row($lang->todo_assign, $lang->todo_assign_desc, $add_assign);
 
 	$query = $db->simple_select("todolist_projects", "id, title", "", array("order_by" => "title"));
-	while($pr = $db->fetch_array($query))
-		$project[$pr['id']] = $pr['title'];
+	if($db->num_rows($query) > 0) {
+		while($pr = $db->fetch_array($query))
+			$project[$pr['id']] = $pr['title'];
+	} else { $project = array(); }
 	$add_project = $form->generate_select_box("project[]", $project, $project_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_project, $lang->todo_project_desc, $add_project);
 
@@ -556,8 +558,10 @@ if($mybb->input['action'] == "search_edit") {
 	$form_container->output_row($lang->todo_assign, $lang->todo_assign_desc, $add_assign);
 
 	$query = $db->simple_select("todolist_projects", "id, title", "", array("order_by" => "title"));
-	while($pr = $db->fetch_array($query))
-		$project[$pr['id']] = $pr['title'];
+	if($db->num_rows($query) > 0) {
+		while($pr = $db->fetch_array($query))
+			$project[$pr['id']] = $pr['title'];
+	} else { $project = array(); }
 	$add_project = $form->generate_select_box("project[]", $project, $project_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_project, $lang->todo_project_desc, $add_project);
 

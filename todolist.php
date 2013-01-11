@@ -636,6 +636,50 @@ if ($mybb->input['action'] == "") {
 		eval("\$results = \"".$templates->get("todolist_search_results")."\";");
 	}
 
+	$query = $db->simple_select("todolist_searchs", "*", "", array("order_by" => "title"));
+	$searches = "";
+	$count = 0;
+	$sarray = array();
+	while($row = $db->fetch_array($query)) {
+		if(strpos("project", $row['url'])) {
+			$start = strpos("project", $row['url']) +7;
+			$end = strpos("&", $row['url'], $start);
+			$projects = explode(",", substr($row['url'], $start, $end));
+			$can_view = false;
+			foreach($projects as $pr) {
+				if(todo_has_permission($pr))
+				    $can_view = true;
+			}
+			if(!$can_view)
+			    continue;
+		}
+		++$count;
+
+		$sarray[$count] = $row;
+		
+		if($count == 5) {
+			$searches .= "<tr class=\"trow1\">\n";
+			foreach($sarray as $s) {
+				$searches .= "<td style=\"width: 20%;\"><a href=\"{$s['url']}\">{$s['title']}</a></td>\n";
+			}
+			$searches .= "</tr>\n";
+			$count = 0;
+			$sarray = array();
+		}
+	}
+	if($count != 0) {
+		$searches .= "<tr class=\"trow1\">\n";
+		foreach($sarray as $s) {
+			$searches .= "<td><a href=\"{$s['url']}\">{$s['title']}</a></td>\n";
+		}
+		for($i = sizeof($sarray); $i < 5; ++$i) {
+			$searches .= "<td></td>\n";
+		}
+		$searches .= "</tr>\n";
+	}
+	if($searches != "")
+		eval("\$searches = \"".$templates->get("todolist_searches")."\";");	    
+
 	$priority_check = array("high" => "", "normal" => "", "low" => "");
 	$status_check = array("wait" => "", "development" => "", "feedback" => "", "resolved" => "", "closed" => "");
 	foreach($priority as $pr)

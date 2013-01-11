@@ -465,6 +465,7 @@ function todolist_install()
 	</tr>
 	</form>
 </table>
+{\$searches}
 {\$footer}
 <script type=\"text/javascript\">
 <!--
@@ -558,6 +559,18 @@ function todolist_install()
 	);
 	$db->insert_query("templates", $templatearray);
 
+	$templatearray = array(
+        "title" => "todolist_searches",
+        "template" => "<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
+	<tr>
+		<td class=\"thead\" colspan=\"5\"><strong>{\$lang->searches}</strong></td>
+	</tr>
+	{\$searches}
+</table>",
+        "sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
+
 	//Einstellung Gruppe
 	$todolist_group = array(
         "title"          => $lang->setting_group_todo,
@@ -642,6 +655,7 @@ function todolist_uninstall()
 	$db->drop_table("todolist");
 	$db->drop_table("todolist_projects");
 	$db->drop_table("todolist_permissions");
+	$db->drop_table("todolist_searchs");
 
 	$query = $db->simple_select("settinggroups", "gid", "name='todo'");
     $g = $db->fetch_array($query);
@@ -666,7 +680,9 @@ function todolist_uninstall()
 		"todolist_search",
 		"todolist_search_resulttable",
 		"todolist_search_resulttable_nothing",
-		"todolist_search_results"
+		"todolist_search_results",
+		"todolist_confirm",
+		"todolist_searches"
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
