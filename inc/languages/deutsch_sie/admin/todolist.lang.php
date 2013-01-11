@@ -2,23 +2,23 @@
 //Plugin
 $l['todo'] = "ToDo-Liste";
 $l['todo_permissions'] = "Kann ToDo-Liste verwalten";
-$l['todo_no_id'] = "Für diese Aktion ist eine ID vonnöten, diese wurde nicht übermittelt";
-$l['todo_wrong_id'] = "Die übermittelte ID scheint nicht eindeutig zu sein";
+$l['todo_no_id'] = "FÃ¼r diese Aktion ist eine ID vonnÃ¶ten, diese wurde nicht Ã¼bermittelt";
+$l['todo_wrong_id'] = "Die Ã¼bermittelte ID scheint nicht eindeutig zu sein";
 
 //Menu
 $l['todo_list'] = "Projektliste";
 $l['todo_list_desc'] = "Zeigt eine Liste aller Projekte";
 $l['todo_add'] = "Lege ein neues Projekt an";
-$l['todo_add_desc'] = "Hier können Sie ein neues Projekt anlegen";
+$l['todo_add_desc'] = "Hier kÃ¶nnen Sie ein neues Projekt anlegen";
 $l['todo_search'] = "Suchabfragen";
 $l['todo_search_desc'] = "Zeigt eine Liste aller Suchabfragen";
 $l['todo_search_add'] = "Suchabfrage erstellen";
-$l['todo_search_add_desc'] = "Hiermit können Sie vorgefertigte Suchabfragen erstellen";
+$l['todo_search_add_desc'] = "Hiermit kÃ¶nnen Sie vorgefertigte Suchabfragen erstellen";
 $l['todo_edit'] = "Projekt bearbeiten";
 $l['edit_success'] = "Projekt erfolgreich bearbeitet";
-$l['todo_deleted'] = "Projekt gelöscht";
-$l['todo_delete_confirm'] = "Soll das Projekt wirklich gelöscht werden?<br />
-<span style=\"text-color: #FFFFF; font-weight: bold;\">ACHTUNG:</span> Dadurch werden auch alle Aufgaben in diesem Projekt gelöscht";
+$l['todo_deleted'] = "Projekt gelÃ¶scht";
+$l['todo_delete_confirm'] = "Soll das Projekt wirklich gelÃ¶scht werden?<br />
+<span style=\"text-color: #FFFFF; font-weight: bold;\">ACHTUNG:</span> Dadurch werden auch alle Aufgaben in diesem Projekt gelÃ¶scht";
 
 //Listing
 $l['todo_item'] = "Projekt";
@@ -27,39 +27,39 @@ $l['no_projects'] = "Bisher wurden keine Projekte erstellt";
 
 //Add
 $l['todo_title'] = "Titel";
-$l['todo_title_desc'] = "Wie heißt das Projekt?";
-$l['missing_title'] = "Bitte geben Sie einen Titel für das Projekt an";
+$l['todo_title_desc'] = "Wie heiÃŸt das Projekt?";
+$l['missing_title'] = "Bitte geben Sie einen Titel fÃ¼r das Projekt an";
 $l['todo_desc'] = "Beschreibung";
 $l['todo_desc_desc'] = "Bitte beschreiben Sie das Projekt kurz";
 $l['missing_desc'] = "Bitte beschreiben Sie das Projekt";
 $l['todo_permissions'] = "Berechtigungen";
 $l['group'] = "Benutzergruppe";
 $l['can_see'] = "Kann Projekt sehen";
-$l['can_add'] = "Kann neue Aufgaben hinzufügen";
+$l['can_add'] = "Kann neue Aufgaben hinzufÃ¼gen";
 $l['can_edit'] = "Kann Aufgaben aktualisieren";
 $l['todo_save'] = "Speicher Projekt";
 $l['add_success'] = "Projekt erfolgreich gespeichert";
 
 //Settings
 $l['setting_group_todo'] = "ToDo-Liste";
-$l['setting_group_todo_desc'] = "Einstellungen für die ToDo-Liste";
+$l['setting_group_todo_desc'] = "Einstellungen fÃ¼r die ToDo-Liste";
 $l['setting_todo_activate'] = "Aktivieren?";
 $l['setting_todo_activate_desc'] = "";
-$l['setting_todo_allow_guests'] = "Erlaube Gästen den Zugriff";
-$l['setting_todo_allow_guests_desc'] = "Möchten Sie Gästen den Zugriff erlauben?";
+$l['setting_todo_allow_guests'] = "Erlaube GÃ¤sten den Zugriff";
+$l['setting_todo_allow_guests_desc'] = "MÃ¶chten Sie GÃ¤sten den Zugriff erlauben?";
 $l['setting_todo_disallowed_groups'] = "Verweigere bestimmten Gruppen den Zugriff";
 $l['setting_todo_disallowed_groups_desc'] = "Geben Sie die Gruppen-IDs ein, denen der Zugriff verweigert werden soll. Mit \",\" trennen.";
 $l['setting_todo_mod_groups'] = "Moderation";
-$l['setting_todo_mod_groups_desc'] = "Geben Sie die Gruppen-IDs ein, deren Mitglieder Aufgaben moderieren können. Mit \",\" trennen.";
-$l['setting_todo_add_groups'] = "Kann Aufgaben hinzufügen";
-$l['setting_todo_add_groups_desc'] = "Geben Sie die Gruppen-IDs ein, die Aufgaben hinzufügen können. Mit \",\" trennen.";
+$l['setting_todo_mod_groups_desc'] = "Geben Sie die Gruppen-IDs ein, deren Mitglieder Aufgaben moderieren kÃ¶nnen. Mit \",\" trennen.";
+$l['setting_todo_add_groups'] = "Kann Aufgaben hinzufÃ¼gen";
+$l['setting_todo_add_groups_desc'] = "Geben Sie die Gruppen-IDs ein, die Aufgaben hinzufÃ¼gen kÃ¶nnen. Mit \",\" trennen.";
 $l['setting_todo_name'] = "Angezeigter Name";
 $l['setting_todo_name_desc'] = "Geben Sie hier den Namen ein, der angezeigt werden soll. Beispiel: Interne Aufgaben-Liste";
-$l['setting_todo_per_page'] = "Einträge pro Seite";
-$l['setting_todo_per_page_desc'] = "Geben Sie hier die Anzahl der Einträge ein, die pro Seite angezeigt werden sollen";
+$l['setting_todo_per_page'] = "EintrÃ¤ge pro Seite";
+$l['setting_todo_per_page_desc'] = "Geben Sie hier die Anzahl der EintrÃ¤ge ein, die pro Seite angezeigt werden sollen";
 $l['setting_todo_404_errors'] = "Sollen 404 Fehler gezeigt werden?";
-$l['setting_todo_404_errors_desc'] = "Wenn diese Einstellung aktiviert ist, werden anstatt den \"no_permission\" Fehlern 404 (Seite existiert nicht) Fehler angezeigt.<br />Dies kann helfen, wenn die ToDo-Liste nicht für die öffentlichkeit bestimmt ist";
-$l['setting_todo_pm_notify'] = "Soll eine PN versendet werden, wenn die Zuständigkeit geändert wird?";
+$l['setting_todo_404_errors_desc'] = "Wenn diese Einstellung aktiviert ist, werden anstatt den \"no_permission\" Fehlern 404 (Seite existiert nicht) Fehler angezeigt.<br />Dies kann helfen, wenn die ToDo-Liste nicht fÃ¼r die Ã¶ffentlichkeit bestimmt ist";
+$l['setting_todo_pm_notify'] = "Soll eine PN versendet werden, wenn die ZustÃ¤ndigkeit geÃ¤ndert wird?";
 $l['setting_todo_pm_notify_desc'] = "Sollen die User benachrichtigt werden, wenn ihnen eine Aufgabe zugewiesen wird?";
 
 //Search
@@ -78,13 +78,13 @@ $l['todo_assign'] = "Zugewiesener";
 $l['todo_assign_desc'] = "Wem muss die Aufgabe zugewiesen sein?";
 $l['todo_project'] = "Projekt";
 $l['todo_project_desc'] = "In welchem Projekt muss die Aufgabe vorkommen?";
-$l['todo_priority'] = "Priorität";
-$l['todo_priority_desc'] = "Welche Priorität muss die Aufgabe haben?";
+$l['todo_priority'] = "PrioritÃ¤t";
+$l['todo_priority_desc'] = "Welche PrioritÃ¤t muss die Aufgabe haben?";
 $l['todo_save_search'] = "Speicher Suchabfrage";
-$l['missing_search_title'] = "Bitte gib einen Titel für die Suchabfrage an";
+$l['missing_search_title'] = "Bitte gib einen Titel fÃ¼r die Suchabfrage an";
 $l['search_add_success'] = "Suchabfrage erfolgreich gespeichert";
-$l['todo_search_deleted'] = "Suchabfrage gelöscht";
-$l['todo_search_delete_confirm'] = "Soll die Suchabfrage wirklich gelöscht werden?";
+$l['todo_search_deleted'] = "Suchabfrage gelÃ¶scht";
+$l['todo_search_delete_confirm'] = "Soll die Suchabfrage wirklich gelÃ¶scht werden?";
 $l['search_edit_success'] = "Suchabfrage erfolgreich bearbeitet";
 $l['todo_search_edit'] = "Suchabfrage bearbeiten";
 

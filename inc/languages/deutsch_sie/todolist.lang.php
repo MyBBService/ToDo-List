@@ -1,10 +1,10 @@
 <?php
-$l['offline'] = "Die ToDo-Liste ist deaktiviert. Bitte versuchen Sie es später noch einmal.";
+$l['offline'] = "Die ToDo-Liste ist deaktiviert. Bitte versuchen Sie es spÃ¤ter noch einmal.";
 
 //Overview
 $l['title_overview'] = "ToDo-Liste";
-$l['add_todo'] = "Aufgabe hinzufügen";
-$l['delete_todo'] = "Löschen";
+$l['add_todo'] = "Aufgabe hinzufÃ¼gen";
+$l['delete_todo'] = "LÃ¶schen";
 $l['edit_todo'] = "Bearbeiten";
 $l['show_todo'] = "Anzeigen";
 $l['moderation_todo'] = "Wird moderiert von";
@@ -14,27 +14,27 @@ $l['done_todo'] = "% Erledigt";
 $l['assign_todo'] = "Zugewiesen";
 $l['status_todo'] = "Status";
 $l['from_todo'] = "Geschrieben von";
-$l['priority_todo'] = "Priorität";
+$l['priority_todo'] = "PrioritÃ¤t";
 $l['action_todo'] = "Aktion";
 $l['description_todo'] = "Beschreibung";
 $l['no_todo'] = "Leider sind keine Aufgaben eingetragen.";
 $l['no_projects'] = "Leider sind keine Projekte vorhanden.";
 $l['assign_none'] = "Niemandem";
-$l['added_todo'] = "Aufgabe hinzugefügt!";
+$l['added_todo'] = "Aufgabe hinzugefÃ¼gt!";
 $l['edited_todo'] = "Aufgabe bearbeitet!";
-$l['deleted_todo'] = "Aufgabe gelöscht!";
+$l['deleted_todo'] = "Aufgabe gelÃ¶scht!";
 
 //Show Todo
 $l['show_showtodo'] = "Aufgabe anzeigen";
 $l['lastedit_showtodo'] = "Zuletzt aktualisiert";
-$l['back_showtodo'] = "Zuruck zur Übersicht";
+$l['back_showtodo'] = "Zuruck zur Ãœbersicht";
 $l['from_showtodo'] = "von";
 
 //Edit Todo
 $l['edit_edittodo'] = "Aufgabe bearbeiten";
 $l['send_edittodo'] = "Aufgabe speichern";
 $l['nowstat_edittodo'] = "Momentaner Status";
-$l['nowprio_edittodo'] = "Momentane Priorität";
+$l['nowprio_edittodo'] = "Momentane PrioritÃ¤t";
 $l['nowdone_edittodo'] = "Momentan % Erledigt";
 
 //Priority Classes
@@ -58,9 +58,9 @@ $l['done_100'] = "100% Erledigt";
 
 //Errors
 $l['no_title'] = "Bitte geben Sie einen Titel an!";
-$l['no_done'] = "Bitte wählen Sie aus, wie viel bereits erledigt wurde!";
-$l['no_status'] = "Bitte wählen Sie einen Status aus!";
-$l['no_priority'] = "Bitte wählen Sie eine Priorität aus!";
+$l['no_done'] = "Bitte wÃ¤hlen Sie aus, wie viel bereits erledigt wurde!";
+$l['no_status'] = "Bitte wÃ¤hlen Sie einen Status aus!";
+$l['no_priority'] = "Bitte wÃ¤hlen Sie eine PrioritÃ¤t aus!";
 $l['no_message'] = "Bitte geben Sie eine Beschreibung an!";
 
 //Assign PN
@@ -70,10 +70,10 @@ Sie wurden von [url={2}]{3}[/url] der Aufgabe [url={4}]{5}[/url] zugewiesen.";
 
 //WIO Liste
 $l['todo_wol'] = "Sieht sich die <a href=\"todolist.php\">ToDo-Liste</a> an";
-$l['todo_wol_add'] = "Fügt eine neue Aufgabe ein";
+$l['todo_wol_add'] = "FÃ¼gt eine neue Aufgabe ein";
 $l['todo_wol_show'] = "Sieht sich die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a> an";
 $l['todo_wol_show_project'] = "Sieht sich das Projekt <a href=\"todolist.php?action=show_project&id={2}\">{1}</a> an";
-$l['todo_wol_delete'] = "Löscht eine Aufgabe";
+$l['todo_wol_delete'] = "LÃ¶scht eine Aufgabe";
 $l['todo_wol_edit'] = "Bearbeitet die Aufgabe <a href=\"todolist.php?action=show&id={2}\">{1}</a>";
 $l['todo_wol_search'] = "<a href=\"todolist.php?action=search\">Durchsucht</a> die ToDo-Liste";
 
@@ -84,12 +84,12 @@ $l['search_status'] = "Status";
 $l['search_creator'] = "Ersteller";
 $l['search_assign'] = "Zugewiesener";
 $l['search_project'] = "Projekt";
-$l['search_priority'] = "Priorität";
+$l['search_priority'] = "PrioritÃ¤t";
 $l['search_do'] = "Starte Suche!";
 $l['search_results'] = "Suchergebnisse";
 $l['search_results_nothing'] = "Leider wurde mit Ihren Einstellungen nichts gefunden";
 $l['searches'] = "Suchabfragen";
 
-$l['confirm_delete'] = "Löschen bestätigen";
-$l['confirm_delete_desc'] = "Wollen Sie diese Aufgabe wirklich löschen?";
+$l['confirm_delete'] = "LÃ¶schen bestÃ¤tigen";
+$l['confirm_delete_desc'] = "Wollen Sie diese Aufgabe wirklich lÃ¶schen?";
 ?>
