@@ -560,7 +560,7 @@ if ($mybb->input['action'] == "") {
 		}
 
 		if($assign != "") {
-			$aid = $db->fetch_field($db->simple_select("users", "uid", "username='{$assign}'"), "uid");
+			$aid = $db->fetch_field($db->simple_select("users", "uid", "username='".$db->escape_string($assign)."'"), "uid");
 		    $where[] = "assign = '".$db->escape_string($aid)."'";
 		    $url .= "&assign={$assign}";
 		}
