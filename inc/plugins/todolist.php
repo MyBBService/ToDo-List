@@ -273,10 +273,9 @@ function todolist_install()
 	<tr>
 		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->title_overview}: {\$lang->edit_edittodo}</strong></td>
 	</tr>
-	<form action=\"todolist.php\" method=\"post\">
+	<form action=\"todolist.php?id={\$id}\" method=\"post\">
 	<input type=\"hidden\" name=\"action\" value=\"edit\" />
 	<input type=\"hidden\" name=\"my_post_key\" value=\"{\$mybb->post_code}\" />
-	<input type=\"hidden\" name=\"id\" value=\"{\$id}\">
 		<tr class=\"trow1\">
 			<td style=\"width:100px;\">Titel:</td>
 			<td><input type=\"text\" class=\"textbox\" name=\"title\" size=\"40\" value=\"{\$title}\"></td>
