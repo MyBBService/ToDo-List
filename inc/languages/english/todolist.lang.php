@@ -14,6 +14,7 @@ $l['assign_todo'] = "Assigned";
 $l['status_todo'] = "Status";
 $l['from_todo'] = "Written by";
 $l['priority_todo'] = "Priority";
+$l['version_todo'] = "Version";
 $l['action_todo'] = "Action";
 $l['description_todo'] = "Description";
 $l['no_todo'] = "Unfortunately no tasks are registered.";

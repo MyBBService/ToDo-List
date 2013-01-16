@@ -14,6 +14,7 @@ $l['assign_todo'] = "Zugewiesen";
 $l['status_todo'] = "Status";
 $l['from_todo'] = "Geschrieben von";
 $l['priority_todo'] = "Priorität";
+$l['version_todo'] = "Version";
 $l['action_todo'] = "Aktion";
 $l['description_todo'] = "Beschreibung";
 $l['no_todo'] = "Leider sind keine Aufgaben eingetragen.";
