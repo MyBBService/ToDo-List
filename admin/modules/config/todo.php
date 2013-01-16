@@ -77,7 +77,7 @@ if($mybb->input['action'] == "add") {
 	$table->construct_header($lang->can_see, array('style' => 'text-align: center;'));
 	$table->construct_header($lang->can_add, array('style' => 'text-align: center;'));
 	$table->construct_header($lang->can_edit, array('style' => 'text-align: center;'));
-	
+
 	foreach($groupscache as $group)
 	{
 		$table->construct_cell(htmlspecialchars_uni($group['title']));
@@ -104,7 +104,7 @@ if($mybb->input['action'] == "add") {
 		$table->construct_cell($can_add, array('style' => 'text-align: center;'));
 		$can_edit = $form->generate_check_box("perm[{$group['gid']}][]", 'can_edit' , "", array("checked" => $perms['can_edit']));
 		$table->construct_cell($can_edit, array('style' => 'text-align: center;'));
-	
+
 		$table->construct_row();
 	}
 	$table->output($lang->todo_permissions);
@@ -280,28 +280,28 @@ if($mybb->input['action'] == "search_do_add") {
 		$url = "todolist.php?action=search&search=do";
 
 		if($mybb->input['string'] != "")
-			$url .= "&string={$mybb->input['string']}";
+			$url .= "&string=".urlencode($mybb->input['string']);
 
 		if($mybb->input['creator'] != "")
-			$url .= "&creator={$mybb->input['creator']}";
+			$url .= "&creator=".urlencode($mybb->input['creator']);
 
 
 		if(!empty($mybb->input['status'])){
 	   		foreach($mybb->input['status'] as $st)
-			    $url .= "&status[]={$st}";
+			    $url .= "&status[]=".urlencode($st);
 		}
 
 		if(!empty($mybb->input['project'])){
 			foreach($mybb->input['project'] as $pr)
-			    $url .= "&project[]={$pr}";
+			    $url .= "&project[]=".urlencode($pr);
 		}
 
 		if($mybb->input['assign'] != "")
-		    $url .= "&assign={$mybb->input['assign']}";
+		    $url .= "&assign=".urlencode($mybb->input['assign']);
 
 		if(!empty($mybb->input['priority'])){
 			foreach($mybb->input['priority'] as $pr)
-			    $url .= "&priority[]={$pr}";
+			    $url .= "&priority[]=".urlencode($pr);
 		}
 
 		$insert = array(
@@ -429,28 +429,28 @@ if($mybb->input['action'] == "search_do_edit") {
 		$url = "todolist.php?action=search&search=do";
 
 		if($mybb->input['string'] != "")
-			$url .= "&string={$mybb->input['string']}";
+			$url .= "&string=".urlencode($mybb->input['string']);
 
 		if($mybb->input['creator'] != "")
-			$url .= "&creator={$mybb->input['creator']}";
+			$url .= "&creator=".urlencode($mybb->input['creator']);
 
 
 		if(!empty($mybb->input['status'])){
 	   		foreach($mybb->input['status'] as $st)
-			    $url .= "&status[]={$st}";
+			    $url .= "&status[]=".urlencode($st);
 		}
 
 		if(!empty($mybb->input['project'])){
 			foreach($mybb->input['project'] as $pr)
-			    $url .= "&project[]={$pr}";
+			    $url .= "&project[]=".urlencode($pr);
 		}
 
 		if($mybb->input['assign'] != "")
-		    $url .= "&assign={$mybb->input['assign']}";
+		    $url .= "&assign=".urlencode($mybb->input['assign']);
 
 		if(!empty($mybb->input['priority'])){
 			foreach($mybb->input['priority'] as $pr)
-			    $url .= "&priority[]={$pr}";
+			    $url .= "&priority[]=".urlencode($pr);
 		}
 
 		$update = array(
@@ -502,9 +502,9 @@ if($mybb->input['action'] == "search_edit") {
 		foreach($pars as $par) {
 			$temp = explode("=", $par);
 			if(substr($temp[0], -2) == "[]")
-			    $parameters[substr($temp[0], 0, -2)][] = $temp[1];
+			    $parameters[substr($temp[0], 0, -2)][] = urldecode($temp[1]);
 			else
-				$parameters[$temp[0]] = $temp[1];
+				$parameters[$temp[0]] = urldecode($temp[1]);
 		}
 		if(isset($parameters['string']))
 			$string = $parameters['string'];
@@ -598,7 +598,7 @@ if($mybb->input['action'] == "search") {
 		while($todo = $db->fetch_array($query))
 		{
 			$table->construct_cell(htmlspecialchars($todo['title']));
-			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">".htmlspecialchars($todo['url'])."</a>");
+			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">".htmlspecialchars(urldecode($todo['url']))."</a>");
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();
@@ -607,12 +607,12 @@ if($mybb->input['action'] == "search") {
 		$table->construct_cell($lang->no_searchs, array('class' => 'align_center', 'colspan' => 4));
 		$table->construct_row();
 	}
-	$table->output($lang->todo_search);	
+	$table->output($lang->todo_search);
 }
 if($mybb->input['action'] == "") {
 	$page->output_header($lang->todo);
 	generate_tabs("list");
-	
+
 	$table = new Table;
 
 	$table->construct_header($lang->todo_item);
