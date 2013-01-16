@@ -33,7 +33,7 @@ function overview4todo_install()
 	</tr>
 	<tr class=\"tcat\">
 		<td>{\$lang->title_todo}</td>
-		<td>{\$lang->project}</td>
+		<td>{\$lang->search_project}</td>
 		<td>{\$lang->from_todo}</td>
 		<td>{\$lang->date_todo}</td>
 		<td>{\$lang->done_todo}</td>
@@ -47,7 +47,7 @@ function overview4todo_install()
 	</tr>
 	<tr class=\"tcat\">
 		<td>{\$lang->title_todo}</td>
-		<td>{\$lang->project}</td>
+		<td>{\$lang->search_project}</td>
 		<td>{\$lang->from_todo}</td>
 		<td>{\$lang->date_todo}</td>
 		<td>{\$lang->done_todo}</td>
