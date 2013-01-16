@@ -565,23 +565,23 @@ if ($mybb->input['action'] == "") {
 		
 		if($string != "") {
 		    $where[] = "(title LIKE '%".$db->escape_string($string)."%' OR message LIKE '%".$db->escape_string($string)."%')";
-			$url .= "&string={$string}";
+			$url .= "&string=".urlencode($string);
 		}
 
 		if($creator != "") {
 		    $where[] = "name = '".$db->escape_string($creator)."'";
-			$url .= "&creator={$creator}";
+			$url .= "&creator=".urlencode($creator);
 		}
 		
 		$where[] = "status IN ('".str_replace(",", "','", $db->escape_string(implode(",", $status)))."')";
 		foreach($status as $st)
-		    $url .= "&status[]={$st}";
+		    $url .= "&status[]=".urlencode($st);
 		
 		if(!empty($project)){
 			foreach($project as $pr) {
 				if(!todo_has_permission($pr, "can_see"))
 				    continue;
-			    $url .= "&project[]={$pr}";
+			    $url .= "&project[]=".urlencode($pr);
 			    $npr[] = $pr;
 			}
 			$project = $npr;
@@ -591,16 +591,16 @@ if ($mybb->input['action'] == "") {
 		if($assign != "") {
 			$aid = $db->fetch_field($db->simple_select("users", "uid", "username='".$db->escape_string($assign)."'"), "uid");
 		    $where[] = "assign = '".$db->escape_string($aid)."'";
-		    $url .= "&assign={$assign}";
+		    $url .= "&assign=".urlencode($assign);
 		}
 
 		$where[] = "priority IN ('".str_replace(",", "','", $db->escape_string(implode(",", $priority)))."')";
 		foreach($priority as $pr)
-		    $url .= "&priority[]={$pr}";
+		    $url .= "&priority[]=".urlencode($pr);
 
 		if($version != "") {
 		    $where[] = "version = '".$db->escape_string($version)."'";
-			$url .= "&version={$version}";
+			$url .= "&version=".urlencode($version);
 		}
 
 		$where = implode(" AND ", $where);
@@ -700,7 +700,7 @@ if ($mybb->input['action'] == "") {
 		if($count == 5) {
 			$searches .= "<tr class=\"trow1\">\n";
 			foreach($sarray as $s) {
-				$searches .= "<td style=\"width: 20%;\"><a href=\"".rawurlencode($s['url'])."\">".htmlspecialchars($s['title'])."</a></td>\n";
+				$searches .= "<td style=\"width: 20%;\"><a href=\"{$s['url']}\">".htmlspecialchars($s['title'])."</a></td>\n";
 			}
 			$searches .= "</tr>\n";
 			$count = 0;
@@ -738,6 +738,7 @@ if ($mybb->input['action'] == "") {
 		    $projects .= "<option value=\"{$row['id']}\">".htmlspecialchars($row['title'])."</option>";
 	}
 
+	$string = htmlspecialchars($string); $creator = htmlspecialchars($creator); $assign = htmlspecialchars($assign);
 	eval("\$search = \"".$templates->get("todolist_search")."\";");
 	output_page($search);
 }
