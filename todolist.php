@@ -35,11 +35,11 @@ if ($mybb->input['action'] == "") {
 		
 		$all = 0; $solved = 0; $percent = 0;
 		$aquery = $db->simple_select("todolist", "done", "pid={$row['id']}");
-		while($todo = $db->fetch_array($aquery)) {
+		while($t = $db->fetch_array($aquery)) {
 			++$all;
-			if($todo['done'] == 100)
+			if($t['done'] == 100)
 			    ++$solved;
-			$percent = $percent + $todo['done'];
+			$percent = $percent + $t['done'];
 		}
 		if($all != 0) {
 			$percent = (int) $percent / $all;
