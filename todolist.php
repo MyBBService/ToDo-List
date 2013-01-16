@@ -33,6 +33,23 @@ if ($mybb->input['action'] == "") {
 		if(!todo_has_permission($row['id'], "can_see"))
 		    continue;
 		
+		$all = 0; $solved = 0; $percent = 0;
+		$aquery = $db->simple_select("todolist", "done", "pid={$row['id']}");
+		while($todo = $db->fetch_array($aquery)) {
+			++$all;
+			if($todo['done'] == 100)
+			    ++$solved;
+			$percent = $percent + $todo['done'];
+		}
+		if($all != 0) {
+			$percent = (int) $percent / $all;
+			if($percent < 100)
+				$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$percent}% ({$solved}/{$all})";
+			else
+				$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$percent}% ({$solved}/{$all})";
+		} else
+			$done = "-";
+		
 		$row['title'] = htmlspecialchars($row['title']);
 		$row['description'] = htmlspecialchars($row['description']);
 		eval("\$todo .= \"".$templates->get("todolist_projects_table")."\";");
@@ -227,6 +244,7 @@ if ($mybb->input['action'] == "") {
 		eval("\$lastedit = \"".$templates->get("todolist_edited")."\";");
 	}
 	
+	$row['version'] = htmlspecialchars($row['version']);
 	$back = "<a href='todolist.php?action=show_project&id={$row['pid']}'>{$lang->back_showtodo}</a>";
 	
 	eval("\$todolist_show = \"".$templates->get("todolist_show")."\";");
@@ -254,7 +272,8 @@ if ($mybb->input['action'] == "") {
 				"nameid" => (int)$mybb->user['uid'],
 				"date" => TIME_NOW,
 				"assign" => (int)$mybb->input['assign'],
-				"priority" => $db->escape_string($mybb->input['priority'])
+				"priority" => $db->escape_string($mybb->input['priority']),
+				"version" => $db->escape_string($mybb->input['version'])
 			);
 			$id = $db->insert_query("todolist", $insert);
 			
@@ -282,9 +301,11 @@ if ($mybb->input['action'] == "") {
 			$priority_check['low'] = "selected=\"selected\"";
 		$title = $mybb->input['title'];
 		$message = $mybb->input['message'];
+		$version = $mybb->input['version'];
 	} else {
 		$priority_check['normal'] = "selected=\"selected\"";
 		$title = ""; $message = "";
+		$version = "";
 	}
 	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
 	add_breadcrumb($lang->add_todo, "todolist.php?action=add");
@@ -357,7 +378,8 @@ if ($mybb->input['action'] == "") {
 				"lastedit" => TIME_NOW,
 				"priority" => $db->escape_string($mybb->input['priority']),
 				"status" => $db->escape_string($mybb->input['status']),
-				"done" => $db->escape_string($mybb->input['done'])
+				"done" => $db->escape_string($mybb->input['done']),
+				"version" => $db->escape_string($mybb->input['version'])
 			);
 			$db->update_query("todolist", $update_array, "id='{$id}'");
 
@@ -414,6 +436,7 @@ if ($mybb->input['action'] == "") {
 		$title = htmlspecialchars($mybb->input['title']);
 		$message = $mybb->input['message'];
 		$assign = $mybb->input['assign'];
+		$version = $mybb->input['version'];
 	} else {
 		$errors = "";
 		
@@ -449,6 +472,7 @@ if ($mybb->input['action'] == "") {
 		$message = $row['message'];
 		$title = htmlspecialchars($row['title']);
 		$assign = $row['assign'];
+		$version = $row['version'];
 	}
 
 	add_breadcrumb($lang->show_showtodo.": ".$title, "todolist.php?action=show&id={$id}");
@@ -529,6 +553,11 @@ if ($mybb->input['action'] == "") {
 	else
 		$priority = array("low", "normal", "high");
 
+	if($mybb->input['version'])
+	    $version = $mybb->input['version'];
+	else
+		$version = "";
+
 	if($mybb->input['search'] == "do") {
 		//Let's search :O
 		$where = array();
@@ -568,7 +597,12 @@ if ($mybb->input['action'] == "") {
 		$where[] = "priority IN ('".str_replace(",", "','", $db->escape_string(implode(",", $priority)))."')";
 		foreach($priority as $pr)
 		    $url .= "&priority[]={$pr}";
-		
+
+		if($version != "") {
+		    $where[] = "version = '".$db->escape_string($version)."'";
+			$url .= "&version={$version}";
+		}
+
 		$where = implode(" AND ", $where);
 		
 		$page = (int)$mybb->input['page'];
@@ -666,7 +700,7 @@ if ($mybb->input['action'] == "") {
 		if($count == 5) {
 			$searches .= "<tr class=\"trow1\">\n";
 			foreach($sarray as $s) {
-				$searches .= "<td style=\"width: 20%;\"><a href=\"{$s['url']}\">{$s['title']}</a></td>\n";
+				$searches .= "<td style=\"width: 20%;\"><a href=\"".rawurlencode($s['url'])."\">".htmlspecialchars($s['title'])."</a></td>\n";
 			}
 			$searches .= "</tr>\n";
 			$count = 0;
@@ -676,7 +710,7 @@ if ($mybb->input['action'] == "") {
 	if($count != 0) {
 		$searches .= "<tr class=\"trow1\">\n";
 		foreach($sarray as $s) {
-			$searches .= "<td><a href=\"{$s['url']}\">".htmlspecialchars($s['title'])."</a></td>\n";
+			$searches .= "<td><a href=\"".rawurlencode($s['url'])."\">".htmlspecialchars($s['title'])."</a></td>\n";
 		}
 		for($i = sizeof($sarray); $i < 5; ++$i) {
 			$searches .= "<td></td>\n";

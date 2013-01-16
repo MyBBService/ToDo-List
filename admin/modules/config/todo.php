@@ -304,6 +304,9 @@ if($mybb->input['action'] == "search_do_add") {
 			    $url .= "&priority[]={$pr}";
 		}
 
+		if($mybb->input['version'] != "")
+			$url .= "&version={$mybb->input['version']}";
+
 		$insert = array(
 			"title"			=> $db->escape_string($mybb->input['title']),
 			"url"			=> $db->escape_string($url),
@@ -331,6 +334,7 @@ if($mybb->input['action'] == "search_add") {
 		$assign = $mybb->input['assign'];
 		$project_select = $mybb->input['project'];
 		$priority_select = $mybb->input['priority'];
+		$version = $mybb->input['version'];
 	} else {
 		$title = "";
 		$string = "";
@@ -339,6 +343,7 @@ if($mybb->input['action'] == "search_add") {
 		$assign = "";
 		$project_select = array();
 		$priority_select = array();
+		$version = "";
 	}
 
 	$form = new Form("index.php?module=config-todo&amp;action=search_do_add", "post");
@@ -381,6 +386,9 @@ if($mybb->input['action'] == "search_add") {
 	);
 	$add_priority = $form->generate_select_box("priority[]", $priority, $priority_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_priority, $lang->todo_priority_desc, $add_priority);
+
+	$add_version = $form->generate_text_box("version", $version);
+	$form_container->output_row($lang->todo_version, $lang->todo_version_desc, $add_version);
 
 	$form_container->end();
 
@@ -453,6 +461,9 @@ if($mybb->input['action'] == "search_do_edit") {
 			    $url .= "&priority[]={$pr}";
 		}
 
+		if($mybb->input['version'] != "")
+			$url .= "&version={$mybb->input['version']}";
+
 		$update = array(
 			"title"			=> $db->escape_string($mybb->input['title']),
 			"url"			=> $db->escape_string($url),
@@ -495,6 +506,7 @@ if($mybb->input['action'] == "search_edit") {
 		$assign = $mybb->input['assign'];
 		$project_select = $mybb->input['project'];
 		$priority_select = $mybb->input['priority'];
+		$version = $mybb->input['priority'];
 	} else {
 		$title = $todo['title'];
 		$pars = substr($todo['url'], strpos($todo['url'], "?"));
@@ -530,6 +542,10 @@ if($mybb->input['action'] == "search_edit") {
 			$priority_select = $parameters['priority'];
 		else
 			$priority_select = array();
+		if(isset($parameters['version']))
+			$version = $parameters['version'];
+		else
+			$version = "";
 	}
 
 	$form = new Form("index.php?module=config-todo&amp;action=search_do_edit", "post");
@@ -573,6 +589,9 @@ if($mybb->input['action'] == "search_edit") {
 	$add_priority = $form->generate_select_box("priority[]", $priority, $priority_select, array("multiple" => "true"));
 	$form_container->output_row($lang->todo_priority, $lang->todo_priority_desc, $add_priority);
 
+	$add_version = $form->generate_text_box("version", $version);
+	$form_container->output_row($lang->todo_version, $lang->todo_version_desc, $add_version);
+
 	$form_container->end();
 
 	echo $form->generate_hidden_field("id", $id);
@@ -598,7 +617,7 @@ if($mybb->input['action'] == "search") {
 		while($todo = $db->fetch_array($query))
 		{
 			$table->construct_cell(htmlspecialchars($todo['title']));
-			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">".htmlspecialchars($todo['url'])."</a>");
+			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/".rawurlencode($todo['url'])."\" target=\"_blank\">".htmlspecialchars($todo['url'])."</a>");
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();
