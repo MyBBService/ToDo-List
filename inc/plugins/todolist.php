@@ -20,7 +20,7 @@ function todolist_info()
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
 		"authorsite"	=> "http://mybbservice.de",
-		"version"		=> "1.0 Beta 2",
+		"version"		=> "1.0",
 		"guid"			=> "",
 		"compatibility" => "16*",
 	);
