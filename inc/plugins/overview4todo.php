@@ -27,7 +27,7 @@ function overview4todo_install()
 
 	$templatearray = array(
         "title" => "todolist_overview",
-        "template" => "<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both; width: 45%; float: left;\">
+        "template" => "<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both; width: 50%; float: left;\">
 	<tr>
 		<td class=thead colspan=\"6\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']} - {\$lang->newest}</strong></td>
 	</tr>
@@ -41,7 +41,7 @@ function overview4todo_install()
 	</tr>
 	{\$newest}
 </table>
-<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both; width: 45%; float: right;\">
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"width: 50%; float: left;\">
 	<tr>
 		<td class=thead colspan=\"6\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']} - {\$lang->last_edit}</strong></td>
 	</tr>
