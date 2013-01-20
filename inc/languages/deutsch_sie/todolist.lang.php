@@ -92,4 +92,6 @@ $l['searches'] = "Suchabfragen";
 
 $l['confirm_delete'] = "Löschen bestätigen";
 $l['confirm_delete_desc'] = "Wollen Sie diese Aufgabe wirklich löschen?";
+
+$l['new'] = "Neues";
 ?>

@@ -92,4 +92,6 @@ $l['searches'] = "Searchqueries";
 
 $l['confirm_delete'] = "Confirm deleting";
 $l['confirm_delete_desc'] = "Are you sure you want to delete this task?";
+
+$l['new'] = "News";
 ?>

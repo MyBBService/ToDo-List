@@ -15,7 +15,7 @@ $plugins->add_hook("admin_config_permissions", "todo_admin_config_permissions");
 function todolist_info()
 {
 	return array(
-		"name"			=> "ToDo-Liste",
+		"name"			=> "ToDo-Liste (+)",
 		"description"	=> "Dieses Plugin erstellt eine ToDo Liste, mithilfe Aufgaben in deinem Forum verwaltet werden können<br /><i>Based on ToDo List by FalkenaugeMihawk</i>",
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
@@ -95,7 +95,7 @@ function todolist_install()
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"6\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
-		<td class=\"thead\" colspan=\"2\" style=\"text-align: right;\"><a href=\"todolist.php?action=search\">{\$lang->search}</a></td>
+		<td class=\"thead\" colspan=\"2\" style=\"text-align: right;\"><a href=\"todolist.php?action=new\">{\$lang->new}</a> | <a href=\"todolist.php?action=search\">{\$lang->search}</a></td>
 	</tr>
 	<tr>
 		<td class=tcat>{\$lang->title_todo}</td>
@@ -134,7 +134,7 @@ function todolist_install()
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"2\"><strong>{\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</strong></td>
-		<td class=\"thead\" style=\"text-align: right;\"><a href=\"todolist.php?action=search\">{\$lang->search}</a></td>
+		<td class=\"thead\" style=\"text-align: right;\"><a href=\"todolist.php?action=new\">{\$lang->new}</a> | <a href=\"todolist.php?action=search\">{\$lang->search}</a></td>
 	</tr>
 	<tr>
 		<td class=tcat>{\$lang->title_todo}</td>
@@ -592,6 +592,50 @@ function todolist_install()
         "sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_new",
+        "template" => "<html>
+<head>
+<title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
+{\$headerinclude}
+</head>
+<body>
+{\$header}
+<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
+	<tr>
+		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->new}</strong></td>
+	</tr>
+	<tr class=\"tcat\">
+		<td>{\$lang->title_todo}</td>
+		<td>{\$lang->search_project}</td>
+		<td>{\$lang->from_todo}</td>
+		<td>{\$lang->date_todo}</td>
+		<td>{\$lang->done_todo}</td>
+		<td>{\$lang->status_todo}</td>
+	</tr>
+	{\$news}
+</table>
+{\$footer}
+</body>
+</html>",
+        "sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
+
+	$templatearray = array(
+        "title" => "todolist_new_table",
+        "template" => "	<tr class=\"trow1\">
+		<td>{\$title}</td>
+		<td>{\$project}</td>
+		<td>{\$from}</td>
+		<td>{\$date}</td>
+		<td>{\$done}</td>
+		<td>{\$status}</td>
+	</tr>",
+        "sid" => -2
+    );
+    $db->insert_query("templates", $templatearray);
 
 	//Einstellung Gruppe
 	$todolist_group = array(

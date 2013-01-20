@@ -741,5 +741,91 @@ if ($mybb->input['action'] == "") {
 	$string = htmlspecialchars($string); $creator = htmlspecialchars($creator); $assign = htmlspecialchars($assign);
 	eval("\$search = \"".$templates->get("todolist_search")."\";");
 	output_page($search);
+} elseif($mybb->input['action'] == "new") {
+	add_breadcrumb($lang->title_overview.": ".$mybb->settings['todo_name'], "todolist.php");
+	add_breadcrumb($lang->new, "todolist.php?action=new");
+
+	$fetch = 20;
+	$fetched = array();
+	//Fetch new added
+	$query = $db->simple_select("todolist", "*", "", array("order_by" => "date", "order_dir" => "desc", "limit" => $fetch));
+	$count = 0; $lastdate = 0;
+	while($row = $db->fetch_array($query)) {
+		++$count;
+		$fetched[$row['id']] = $row;
+		if($count == $fetch)
+		    $lastdate = $row['date'];
+	}
+	//Fetch last edited
+	$query = $db->simple_select("todolist", "*", "lastedit > '{$lastdate}'", array("order_by" => "lastedit", "order_dir" => "desc", "limit" => $fetch));
+	while($row = $db->fetch_array($query))
+		$fetched[$row['id']] = $row;
+	
+	uasort($fetched, "todo_sort_new");
+	array_splice($fetched, $fetch);
+	
+	foreach($fetched as $row) {
+		if(!todo_has_permission($row['pid']))
+		    continue;
+		$title = "<a href=\"todolist.php?action=show&id={$row['id']}\">".htmlspecialchars($row['title'])."</a>";
+		if($row['nameid'] != "")
+			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
+		else
+			$group = "";
+		$formattedname = format_name($row['name'], $group);
+		$from = build_profile_link($formattedname, $row['nameid']);
+
+		$pquery = $db->simple_select("todolist_projects", "*", "id={$row['pid']}");
+		$project = $db->fetch_array($pquery);
+		$project = "<a href=\"todolist.php?action=show_project&id={$project['id']}\">".htmlspecialchars($project['title'])."</a>";
+
+		if($row['status'] == 'wait') {
+			$status = "<img src=\"images/todolist/waiting.png\" border=\"0\" /> {$lang->status_wait}";
+		} elseif($row['status'] == 'development') {
+			$status = "<img src=\"images/todolist/development.png\" border=\"0\" /> {$lang->status_dev}";
+		} elseif($row['status'] == 'feedback') {
+			$status = "<img src=\"images/todolist/feedback.png\" border=\"0\" /> {$lang->status_feed}";
+		} elseif($row['status'] == 'resolved') {
+			$status = "<img src=\"images/icons/exclamation.gif\" border=\"0\" /> {$lang->status_resolved}";
+		} elseif($row['status'] == 'closed') {
+			$status = "<img src=\"images/todolist/lock.png\" border=\"0\" /> {$lang->status_closed}";
+		}
+
+		if($row['done'] == '0') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_0}";
+		} elseif($row['done'] == '25') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_25}";
+		} elseif($row['done'] == '50') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_50}";
+		} elseif($row['done'] == '75') {
+			$done = "<img src=\"images/spinner.gif\" border=\"0\" /> {$lang->done_75}";
+		} elseif($row['done'] == '100') {
+			$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
+		}
+
+		$date = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
+		eval("\$news .= \"".$templates->get("todolist_new_table")."\";");
+	}
+
+	eval("\$new = \"".$templates->get("todolist_new")."\";");
+	output_page($new);
+}
+
+function todo_sort_new($a, $b)
+{
+	if($a['lastedit'] > $a['date'])
+	    $adate = $a['lastedit'];
+	else
+		$adate = $a['date'];
+
+	if($b['lastedit'] > $b['date'])
+	    $bdate = $b['lastedit'];
+	else
+		$bdate = $b['date'];
+	
+	if($adate == $bdate)
+	    return 1;
+	return ($adate < $bdate) ? 2 : 0;
+
 }
 ?>
