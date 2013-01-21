@@ -753,13 +753,16 @@ if ($mybb->input['action'] == "") {
 	while($row = $db->fetch_array($query)) {
 		++$count;
 		$fetched[$row['id']] = $row;
+		$fetched[$row['id']]['type'] = "new";
 		if($count == $fetch)
 		    $lastdate = $row['date'];
 	}
 	//Fetch last edited
 	$query = $db->simple_select("todolist", "*", "lastedit > '{$lastdate}'", array("order_by" => "lastedit", "order_dir" => "desc", "limit" => $fetch));
-	while($row = $db->fetch_array($query))
+	while($row = $db->fetch_array($query)) {
 		$fetched[$row['id']] = $row;
+		$fetched[$row['id']]['type'] = "edited";
+	}
 	
 	uasort($fetched, "todo_sort_new");
 	array_splice($fetched, $fetch);
@@ -767,7 +770,7 @@ if ($mybb->input['action'] == "") {
 	foreach($fetched as $row) {
 		if(!todo_has_permission($row['pid']))
 		    continue;
-		$title = "<a href=\"todolist.php?action=show&id={$row['id']}\">".htmlspecialchars($row['title'])."</a>";
+		$title = "<img src=\"images/todolist/{$row['type']}.png\" alt=\"\" /> <a href=\"todolist.php?action=show&id={$row['id']}\">".htmlspecialchars($row['title'])."</a>";
 		if($row['nameid'] != "")
 			$group = $db->fetch_field($db->simple_select("users", "usergroup", "uid={$row['nameid']}"), "usergroup");
 		else
@@ -803,7 +806,10 @@ if ($mybb->input['action'] == "") {
 			$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
 		}
 
-		$date = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
+		if($row['type'] == "edited")
+			$date = my_date($mybb->settings['dateformat'], $row['lastedit'])." - ".my_date($mybb->settings['timeformat'], $row['lastedit']);
+		else
+			$date = my_date($mybb->settings['dateformat'], $row['date'])." - ".my_date($mybb->settings['timeformat'], $row['date']);
 		eval("\$news .= \"".$templates->get("todolist_new_table")."\";");
 	}
 
