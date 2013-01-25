@@ -37,7 +37,7 @@ $l['group'] = "Usergroup";
 $l['can_see'] = "Can view project";
 $l['can_add'] = "Can add new tasks";
 $l['can_edit'] = "Can edit tasks";
-$l['todo_save'] = "Save prokect";
+$l['todo_save'] = "Save project";
 $l['add_success'] = "Project successfully saved";
 
 //Settings
