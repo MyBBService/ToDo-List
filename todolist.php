@@ -634,6 +634,8 @@ if ($mybb->input['action'] == "") {
 				$done = "<img src=\"images/todolist/done.png\" border=\"0\" /> {$lang->done_100}";
 			}
 
+			$row['title'] = "<a href=\"todolist.php?action=show&id={$row['id']}\">".htmlspecialchars($row['title'])."</a>";
+			$prname = "<a href=\"todolist.php?action=show_project&id={$row['pid']}\">".htmlspecialchars($prname)."</a>";
 			eval("\$resulttable .= \"".$templates->get("todolist_search_resulttable")."\";");
 		}
 		if($resulttable == "")
