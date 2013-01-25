@@ -881,9 +881,10 @@ function todo_pm($to, $subject, $message, $from=0)
 		"fromid" => $from,
 		"do" => "",
 		"pmid" => "",
+		"toid" => $to
 	);
-	$pm['toid'] = $to;
 	$pmhandler->set_data($pm);
+	$pmhandler->admin_override = true;
 
 	// Now let the pm handler do all the hard work.
 	if($pmhandler->validate_pm())
