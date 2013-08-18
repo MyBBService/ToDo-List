@@ -3,14 +3,22 @@ if(!defined("IN_MYBB")) {
 	die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
+global $cache;
+if(!isset($pluginlist))
+    $pluginlist = $cache->read("plugins");
+
 //WIO Hooks
 $plugins->add_hook("fetch_wol_activity_end", "todo_wol_activity");
 $plugins->add_hook("build_friendly_wol_location_end", "todo_wol_location");
 //ACP Hooks
-$plugins->add_hook("admin_config_menu", "todo_admin_config_menu");
-$plugins->add_hook("admin_config_action_handler", "todo_admin_config_action_handler");
-$plugins->add_hook("admin_config_permissions", "todo_admin_config_permissions");
-
+if(is_array($pluginlist['active']) && in_array("mybbservice", $pluginlist['active'])) {
+	$plugins->add_hook("mybbservice_actions", "todo_mybbservice_actions");
+	$plugins->add_hook("mybbservice_permission", "todo_admin_config_permissions");
+} else {
+	$plugins->add_hook("admin_config_menu", "todo_admin_config_menu");
+	$plugins->add_hook("admin_config_action_handler", "todo_admin_config_action_handler");
+	$plugins->add_hook("admin_config_permissions", "todo_admin_config_permissions");
+}
 
 function todolist_info()
 {
@@ -20,9 +28,10 @@ function todolist_info()
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
 		"authorsite"	=> "http://mybbservice.de",
-		"version"		=> "1.0",
+		"version"		=> "1.0.1",
 		"guid"			=> "",
-		"compatibility" => "16*, 17*",
+		"compatibility" => "16*",
+		"dlcid"			=> "18"
 	);
 }
 
@@ -685,6 +694,26 @@ function todolist_uninstall()
     );
     $deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
+}
+
+function todo_mybbservice_actions($actions)
+{
+	global $page, $lang, $info;
+	$lang->load("todolist");
+
+	$actions['todo'] = array(
+		"active" => "todo",
+		"file" => "../config/todo.php"
+	);
+
+	$sub_menu = array();
+	$sub_menu['10'] = array("id" => "todo", "title" => $lang->todo, "link" => "index.php?module=mybbservice-todo");
+	$sidebar = new SidebarItem($lang->todo);
+	$sidebar->add_menu_items($sub_menu, $actions[$info]['active']);
+
+	$page->sidebar .= $sidebar->get_markup();
+
+	return $actions;
 }
 
 function todo_admin_config_menu($sub_menu)

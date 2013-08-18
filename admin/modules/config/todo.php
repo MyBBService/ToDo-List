@@ -5,13 +5,18 @@ if(!defined("IN_MYBB"))
 	exit;
 }
 
-$page->add_breadcrumb_item($lang->todo, "index.php?module=config-todo");
+if(function_exists("mybbservice_info"))
+    define(MODULE, "mybbservice-todo");
+else
+    define(MODULE, "config-todo");
+
+$page->add_breadcrumb_item($lang->todo, "index.php?module=".MODULE);
 
 if($mybb->input['action'] == "do_add") {
 	if(!verify_post_check($mybb->input['my_post_key']))
 	{
 		flash_message($lang->invalid_post_verify_key2, 'error');
-		admin_redirect("index.php?module=config-todo&action=add");
+		admin_redirect("index.php?module=".MODULE."&action=add");
 	}
 
 	if(!strlen(trim($mybb->input['title'])))
@@ -41,13 +46,13 @@ if($mybb->input['action'] == "do_add") {
 
 
 		flash_message($lang->add_success, 'success');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	} else {
 		$mybb->input['action'] = "add";
 	}
 }
 if($mybb->input['action'] == "add") {
-	$page->add_breadcrumb_item($lang->todo_add, "index.php?module=config-todo&action=add");
+	$page->add_breadcrumb_item($lang->todo_add, "index.php?module=".MODULE."&action=add");
 	$page->output_header($lang->todo_add);
 	generate_tabs("add");
 
@@ -60,7 +65,7 @@ if($mybb->input['action'] == "add") {
 		$desc = "";
 	}
 
-	$form = new Form("index.php?module=config-todo&amp;action=do_add", "post");
+	$form = new Form("index.php?module=".MODULE."&amp;action=do_add", "post");
 	$form_container = new FormContainer($lang->todo_add);
 
 	$add_title = $form->generate_text_box("title", $title);
@@ -119,35 +124,35 @@ if($mybb->input['action']=="delete") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	}
 	$id=(int)$mybb->input['id'];
 
 	if($mybb->input['no'])
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	else {
 		if($mybb->request_method == "post") {
 			$db->delete_query("todolist_projects", "id='{$id}'");
 			$db->delete_query("todolist", "pid='{$id}'");
 			$db->delete_query("todolist_permissions", "pid='{$id}'");
 			flash_message($lang->todo_deleted, 'success');
-			admin_redirect("index.php?module=config-todo");
+			admin_redirect("index.php?module=".MODULE);
 		} else
-			$page->output_confirm_action("index.php?module=config-todo&action=delete&id={$id}", $lang->todo_delete_confirm);
+			$page->output_confirm_action("index.php?module=".MODULE."&action=delete&id={$id}", $lang->todo_delete_confirm);
 	}
 }
 if($mybb->input['action'] == "do_edit") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	}
 	$id=(int)$mybb->input['id'];
 
     if(!verify_post_check($mybb->input['my_post_key']))
 	{
 		flash_message($lang->invalid_post_verify_key2, 'error');
-		admin_redirect("index.php?module=config-todo&action=edit");
+		admin_redirect("index.php?module=".MODULE."&action=edit");
 	}
 
 	if(!strlen(trim($mybb->input['title'])))
@@ -178,7 +183,7 @@ if($mybb->input['action'] == "do_edit") {
 
 
 		flash_message($lang->edit_success, 'success');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	} else {
 		$mybb->input['action'] = "edit";
 	}
@@ -187,18 +192,18 @@ if($mybb->input['action'] == "edit") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	}
 	$id=(int)$mybb->input['id'];
 	$query = $db->simple_select("todolist_projects", "*", "id='{$id}'");
 	if($db->num_rows($query) != 1)
 	{
 		flash_message($lang->todo_wrong_id, 'error');
-		admin_redirect("index.php?module=config-todo");
+		admin_redirect("index.php?module=".MODULE);
 	}
 	$todo = $db->fetch_array($query);
 
-	$page->add_breadcrumb_item($lang->todo_edit, "index.php?module=config-todo&action=edit&id={$id}");
+	$page->add_breadcrumb_item($lang->todo_edit, "index.php?module=".MODULE."&action=edit&id={$id}");
 	$page->output_header($lang->todo_edit);
 	generate_tabs("edit");
 
@@ -211,7 +216,7 @@ if($mybb->input['action'] == "edit") {
 		$desc = $todo['description'];
 	}
 
-	$form = new Form("index.php?module=config-todo&amp;action=do_edit", "post");
+	$form = new Form("index.php?module=".MODULE."&amp;action=do_edit", "post");
 	$form_container = new FormContainer($lang->todo_edit);
 
 	$add_title = $form->generate_text_box("title", $title);
@@ -270,7 +275,7 @@ if($mybb->input['action'] == "search_do_add") {
 	if(!verify_post_check($mybb->input['my_post_key']))
 	{
 		flash_message($lang->invalid_post_verify_key2, 'error');
-		admin_redirect("index.php?module=config-todo&action=search_add");
+		admin_redirect("index.php?module=".MODULE."&action=search_add");
 	}
 
 	if(!strlen(trim($mybb->input['title'])))
@@ -311,14 +316,14 @@ if($mybb->input['action'] == "search_do_add") {
 		$db->insert_query("todolist_searchs", $insert);
 
 		flash_message($lang->search_add_success, 'success');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	} else {
 		$mybb->input['action'] = "search_add";
 	}
 }
 if($mybb->input['action'] == "search_add") {
-	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=config-todo&action=search");
-	$page->add_breadcrumb_item($lang->todo_search_add, "index.php?module=config-todo&action=search_add");
+	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=".MODULE."&action=search");
+	$page->add_breadcrumb_item($lang->todo_search_add, "index.php?module=".MODULE."&action=search_add");
 	$page->output_header($lang->todo_search_add);
 	generate_tabs("search_add");
 
@@ -341,7 +346,7 @@ if($mybb->input['action'] == "search_add") {
 		$priority_select = array();
 	}
 
-	$form = new Form("index.php?module=config-todo&amp;action=search_do_add", "post");
+	$form = new Form("index.php?module=".MODULE."&amp;action=search_do_add", "post");
 	$form_container = new FormContainer($lang->todo_search_add);
 
 	$add_title = $form->generate_text_box("title", $title);
@@ -393,33 +398,33 @@ if($mybb->input['action']=="search_delete") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	}
 	$id=(int)$mybb->input['id'];
 
 	if($mybb->input['no'])
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	else {
 		if($mybb->request_method == "post") {
 			$db->delete_query("todolist_searchs", "id='{$id}'");
 			flash_message($lang->todo_search_deleted, 'success');
-			admin_redirect("index.php?module=config-todo&action=search");
+			admin_redirect("index.php?module=".MODULE."&action=search");
 		} else
-			$page->output_confirm_action("index.php?module=config-todo&action=search_delete&id={$id}", $lang->todo_search_delete_confirm);
+			$page->output_confirm_action("index.php?module=".MODULE."&action=search_delete&id={$id}", $lang->todo_search_delete_confirm);
 	}
 }
 if($mybb->input['action'] == "search_do_edit") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	}
 	$id=(int)$mybb->input['id'];
 
    	if(!verify_post_check($mybb->input['my_post_key']))
 	{
 		flash_message($lang->invalid_post_verify_key2, 'error');
-		admin_redirect("index.php?module=config-todo&action=search_edit");
+		admin_redirect("index.php?module=".MODULE."&action=search_edit");
 	}
 
 	if(!strlen(trim($mybb->input['title'])))
@@ -460,7 +465,7 @@ if($mybb->input['action'] == "search_do_edit") {
 		$db->update_query("todolist_searchs", $update, "id={$id}");
 
 		flash_message($lang->search_edit_success, 'success');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	} else {
 		$mybb->input['action'] = "search_edit";
 	}
@@ -470,19 +475,19 @@ if($mybb->input['action'] == "search_edit") {
 	if(!strlen(trim($mybb->input['id'])))
 	{
 		flash_message($lang->todo_no_id, 'error');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	}
 	$id=(int)$mybb->input['id'];
 	$query = $db->simple_select("todolist_searchs", "*", "id='{$id}'");
 	if($db->num_rows($query) != 1)
 	{
 		flash_message($lang->todo_wrong_id, 'error');
-		admin_redirect("index.php?module=config-todo&action=search");
+		admin_redirect("index.php?module=".MODULE."&action=search");
 	}
 	$todo = $db->fetch_array($query);
 
-	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=config-todo&action=search");
-	$page->add_breadcrumb_item($lang->todo_search_edit, "index.php?module=config-todo&action=search_edit&id={$id}");
+	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=".MODULE."&action=search");
+	$page->add_breadcrumb_item($lang->todo_search_edit, "index.php?module=".MODULE."&action=search_edit&id={$id}");
 	$page->output_header($lang->todo_search_edit);
 	generate_tabs("search_edit");
 
@@ -532,7 +537,7 @@ if($mybb->input['action'] == "search_edit") {
 			$priority_select = array();
 	}
 
-	$form = new Form("index.php?module=config-todo&amp;action=search_do_edit", "post");
+	$form = new Form("index.php?module=".MODULE."&amp;action=search_do_edit", "post");
 	$form_container = new FormContainer($lang->todo_search_edit);
 
 	$add_title = $form->generate_text_box("title", $title);
@@ -582,7 +587,7 @@ if($mybb->input['action'] == "search_edit") {
 	$form->end();
 }
 if($mybb->input['action'] == "search") {
-	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=config-todo&action=search");
+	$page->add_breadcrumb_item($lang->todo_search, "index.php?module=".MODULE."&action=search");
 	$page->output_header($lang->todo_search);
 	generate_tabs("search");
 
@@ -599,8 +604,8 @@ if($mybb->input['action'] == "search") {
 		{
 			$table->construct_cell(htmlspecialchars($todo['title']));
 			$table->construct_cell("<a href=\"{$mybb->settings['bburl']}/{$todo['url']}\" target=\"_blank\">".htmlspecialchars(urldecode($todo['url']))."</a>");
-			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
-			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
+			$table->construct_cell("<a href=\"index.php?module=".MODULE."&amp;action=search_edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
+			$table->construct_cell("<a href=\"index.php?module=".MODULE."&amp;action=search_delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();
 		}
 	} else {
@@ -627,8 +632,8 @@ if($mybb->input['action'] == "") {
 			$count = $db->num_rows($db->simple_select("todolist", "id", "pid={$todo['id']}"));
 			$table->construct_cell(htmlspecialchars($todo['title'])."<br /><i>".htmlspecialchars($todo['description'])."</i>");
 			$table->construct_cell($count);
-			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
-			$table->construct_cell("<a href=\"index.php?module=config-todo&amp;action=delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
+			$table->construct_cell("<a href=\"index.php?module=".MODULE."&amp;action=edit&amp;id={$todo['id']}\">{$lang->edit}</a>", array('class' => 'align_center', 'width' => '10%'));
+			$table->construct_cell("<a href=\"index.php?module=".MODULE."&amp;action=delete&amp;id={$todo['id']}\">{$lang->delete}</a>", array('class' => 'align_center', 'width' => '10%'));
 			$table->construct_row();
 		}
 	} else {
@@ -647,22 +652,22 @@ function generate_tabs($selected)
 	$sub_tabs = array();
 	$sub_tabs['list'] = array(
 		'title' => $lang->todo_list,
-		'link' => "index.php?module=config-todo",
+		'link' => "index.php?module=".MODULE,
 		'description' => $lang->todo_list_desc
 	);
 	$sub_tabs['add'] = array(
 		'title' => $lang->todo_add,
-		'link' => "index.php?module=config-todo&amp;action=add",
+		'link' => "index.php?module=".MODULE."&amp;action=add",
 		'description' => $lang->todo_add_desc
 	);
 	$sub_tabs['search'] = array(
 		'title' => $lang->todo_search,
-		'link' => "index.php?module=config-todo&amp;action=search",
+		'link' => "index.php?module=".MODULE."&amp;action=search",
 		'description' => $lang->todo_search_desc
 	);
 	$sub_tabs['search_add'] = array(
 		'title' => $lang->todo_search_add,
-		'link' => "index.php?module=config-todo&amp;action=search_add",
+		'link' => "index.php?module=".MODULE."&amp;action=search_add",
 		'description' => $lang->todo_search_add_desc
 	);
 
