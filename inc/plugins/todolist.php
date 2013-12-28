@@ -741,7 +741,7 @@ function todo_admin_config_permissions($admin_permissions)
 {
 	global $lang;
 
-	$lang->load("todo");
+	$lang->load("todolist");
 
 	$admin_permissions['todo'] = $lang->todo_permission;
 
