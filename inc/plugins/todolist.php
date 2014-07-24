@@ -5,7 +5,7 @@ if(!defined("IN_MYBB")) {
 
 global $cache;
 if(!isset($pluginlist))
-    $pluginlist = $cache->read("plugins");
+	$pluginlist = $cache->read("plugins");
 
 //WIO Hooks
 $plugins->add_hook("fetch_wol_activity_end", "todo_wol_activity");
@@ -28,9 +28,9 @@ function todolist_info()
 		"website"		=> "http://mybbservice.de",
 		"author"		=> "MyBBService",
 		"authorsite"	=> "http://mybbservice.de",
-		"version"		=> "1.0.1",
+		"version"		=> "1.0.2",
 		"guid"			=> "",
-		"compatibility" => "16*",
+		"compatibility" => "17*,18*",
 		"dlcid"			=> "18"
 	);
 }
@@ -40,8 +40,8 @@ function todolist_install()
 {
 	global $db, $lang;
 	$lang->load('todolist');
-	
-	
+
+
 	//Datenbank Tabelle
 	$col = $db->build_create_table_collation();
 	$db->query("CREATE TABLE `".TABLE_PREFIX."todolist` (
@@ -83,16 +83,16 @@ function todolist_install()
 
 	//Template Gruppe
 	$templateset = array(
-	    "prefix" => "todolist",
-	    "title" => "ToDoListe",
-    );
+		"prefix" => "todolist",
+		"title" => "ToDoListe",
+	);
 	$db->insert_query("templategroups", $templateset);
 
 
 	//Templates
 	$templatearray = array(
-        "title" => "todolist",
-        "template" => "<html>
+		"title" => "todolist",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
 {\$headerinclude}
@@ -125,13 +125,13 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_projects",
-        "template" => "<html>
+		"title" => "todolist_projects",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
 {\$headerinclude}
@@ -155,13 +155,13 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_show",
-        "template" => "<html>
+		"title" => "todolist_show",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->show_showtodo}</title>
 {\$headerinclude}
@@ -214,13 +214,13 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_add",
-        "template" => "<html>
+		"title" => "todolist_add",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->add_todo}</title>
 {\$headerinclude}
@@ -264,13 +264,13 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_edit",
-        "template" => "<html>
+		"title" => "todolist_edit",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$mybb->settings[\'todo_name\']} - {\$lang->edit_edittodo}</title>
 {\$headerinclude}
@@ -342,13 +342,13 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_table",
-        "template" => "<tr class=\"trow1\" colspan=\"8\">
+		"title" => "todolist_table",
+		"template" => "<tr class=\"trow1\" colspan=\"8\">
 	<td>{\$row[\'title\']}</td>
 	<td>{\$date}</td>
 	<td>{\$owner}</td>
@@ -362,73 +362,74 @@ function todolist_install()
 		</center>
 	</td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_table_no_results",
-        "template" => "<tr class=\"trow1\">
+		"title" => "todolist_table_no_results",
+		"template" => "<tr class=\"trow1\">
 	<td colspan=\"8\"><center>{\$lang->no_todo}</center></td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_projects_table",
-        "template" => "<tr class=\"trow1\" colspan=\"8\">
+		"title" => "todolist_projects_table",
+		"template" => "<tr class=\"trow1\" colspan=\"8\">
 	<td><a href=\"todolist.php?action=show_project&id={\$row[\'id\']}\">{\$row[\'title\']}</a></td>
 	<td>{\$row[\'description\']}</td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_projects_table_no_results",
-        "template" => "<tr class=\"trow1\">
+		"title" => "todolist_projects_table_no_results",
+		"template" => "<tr class=\"trow1\">
 	<td colspan=\"2\"><center>{\$lang->no_projects}</center></td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_mod",
-        "template" => "<a href=\"todolist.php?action=edit&id={\$row[\'id\']}\"><img src=\"images/todolist/edit.png\" /> {\$lang->edit_todo}</a> 
+		"title" => "todolist_mod",
+		"template" => "<a href=\"todolist.php?action=edit&id={\$row[\'id\']}\"><img src=\"images/todolist/edit.png\" /> {\$lang->edit_todo}</a> 
 - <a href=\"todolist.php?action=delete&id={\$row[\'id\']}\"><img src=\"images/todolist/delete.png\" /> {\$lang->delete_todo}</a>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_mod_table",
-        "template" => "<tr class=\"trow2\">
+		"title" => "todolist_mod_table",
+		"template" => "<tr class=\"trow2\">
 	<td style=\"width:100px;\">{\$lang->action_todo}</td>
 	<td>{\$mod_todo}</td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_edited",
-        "template" => "<tr class=\"trow1\">
+		"title" => "todolist_edited",
+		"template" => "<tr class=\"trow1\">
 	<td style=\"width:200px;\">{\$lang->lastedit_showtodo}:</td>
 	<td>{\$date} {\$lang->from_todo} {\$lasteditor}</td>
 </tr>",
-        "sid" => -2
-    );
-    $db->insert_query("templates", $templatearray);
+		"sid" => -2
+	);
+	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_search",
-        "template" => "<html>
+		"title" => "todolist_search",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
 {\$headerinclude}
-<script type=\"text/javascript\" src=\"jscripts/autocomplete.js?ver=1400\"></script>
+<link rel=\"stylesheet\" href=\"{\$mybb->asset_url}/jscripts/select2/select2.css\">
+<script type=\"text/javascript\" src=\"{\$\mybb->asset_url}/jscripts/select2/select2.min.js\"></script>
 </head>
 <body>
 {\$header}
@@ -479,20 +480,61 @@ function todolist_install()
 <!--
 	if(use_xmlhttprequest == \"1\")
 	{
-		new autoComplete(\"creator\", \"xmlhttp.php?action=get_users\", {valueSpan: \"username\"});
-		new autoComplete(\"assign\", \"xmlhttp.php?action=get_users\", {valueSpan: \"username\"});
+		$(\"#creator\").select2({
+			minimumInputLength: 3,
+			maximumSelectionSize: 3,
+			ajax: {
+				url: \"xmlhttp.php?action=get_users\",
+				dataType: 'json',
+				data: function (term, page) {
+					return {
+						query: term,
+					};
+				},
+				results: function (data, page) {
+					return {results: data};
+				}
+			},
+			initSelection: function(element, callback) {
+				var query = $(element).val();
+				var data = { id: query, text: query };
+				callback(data);
+			}
+		});
+
+		$(\"#assign\").select2({
+			minimumInputLength: 3,
+			maximumSelectionSize: 3,
+			ajax: {
+				url: \"xmlhttp.php?action=get_users\",
+				dataType: 'json',
+				data: function (term, page) {
+					return {
+						query: term,
+					};
+				},
+				results: function (data, page) {
+					return {results: data};
+				}
+			},
+			initSelection: function(element, callback) {
+				var query = $(element).val();
+				var data = { id: query, text: query };
+				callback(data);
+			}
+		});
 	}
 // -->
 </script>
 </body>
 </html>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_search_results",
-        "template" => "{\$multipage}
+		"title" => "todolist_search_results",
+		"template" => "{\$multipage}
 <table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"8\"><strong>{\$lang->search_results}</strong></td>
@@ -509,13 +551,13 @@ function todolist_install()
 	</tr>
 	{\$resulttable}
 </table><br />",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 	
 	$templatearray = array(
-        "title" => "todolist_search_resulttable",
-        "template" => "<tr class=\"trow1\">
+		"title" => "todolist_search_resulttable",
+		"template" => "<tr class=\"trow1\">
 	<td>{\$row[\'title\']}</td>
 	<td>{\$prname}</td>
 	<td>{\$date}</td>
@@ -525,20 +567,20 @@ function todolist_install()
 	<td>{\$done}</td>
 	<td>{\$sassign}</td>
 </tr>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_search_resulttable_nothing",
-        "template" => "<tr class=\"trow1\"><td colspan=\"8\" style=\"text-align: center;\">{\$lang->search_results_nothing}</td></tr>",
-        "sid" => -2
+		"title" => "todolist_search_resulttable_nothing",
+		"template" => "<tr class=\"trow1\"><td colspan=\"8\" style=\"text-align: center;\">{\$lang->search_results_nothing}</td></tr>",
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_confirm",
-        "template" => "<html>
+		"title" => "todolist_confirm",
+		"template" => "<html>
 <head>
 <title>{\$mybb->settings[\'bbname\']} - {\$lang->title_overview}: {\$mybb->settings[\'todo_name\']}</title>
 {\$headerinclude}
@@ -563,85 +605,86 @@ function todolist_install()
 {\$footer}
 </body>
 </html>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	$templatearray = array(
-        "title" => "todolist_searches",
-        "template" => "<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
+		"title" => "todolist_searches",
+		"template" => "<table border=\"0\" cellspacing=\"{\$theme[\'borderwidth\']}\" cellpadding=\"{\$theme[\'tablespace\']}\" class=\"tborder\" style=\"clear: both;\">
 	<tr>
 		<td class=\"thead\" colspan=\"5\"><strong>{\$lang->searches}</strong></td>
 	</tr>
 	{\$searches}
 </table>",
-        "sid" => -2
+		"sid" => -2
 	);
 	$db->insert_query("templates", $templatearray);
 
 	//Einstellung Gruppe
 	$todolist_group = array(
-        "title"          => $lang->setting_group_todo,
-        "name"           => "todo",
-        "description"    => $lang->setting_group_todo_desc,
-        "disporder"      => "50",
-        "isdefault"      => "0",
-    );
-    $gid = $db->insert_query("settinggroups", $todolist_group);
+		"title"			=> $lang->setting_group_todo,
+		"name"			=> "todo",
+		"description"	=> $lang->setting_group_todo_desc,
+		"disporder"		=> "50",
+		"isdefault"		=> "0",
+	);
+	$gid = $db->insert_query("settinggroups", $todolist_group);
 
 
 	//Einstellungen
 	$todolist_setting_1 = array(
-        "name"           => "todo_activate",
-        "title"          => $lang->setting_todo_activate,
-        "description"    => $lang->setting_todo_activate_desc,
-        "optionscode"    => "yesno",
-        "value"          => 'yes',
-        "disporder"      => '1',
-        "gid"            => (int)$gid,
-    );
+		"name"			=> "todo_activate",
+		"title"			=> $lang->setting_todo_activate,
+		"description"	=> $lang->setting_todo_activate_desc,
+		"optionscode"	=> "yesno",
+		"value"			=> 'yes',
+		"disporder"		=> '1',
+		"gid"			=> (int)$gid,
+	);
 	$db->insert_query("settings", $todolist_setting_1);
 
 	$todolist_setting_2 = array(
-        "name"           => "todo_name",
-        "title"          => $lang->setting_todo_name,
-        "description"    => $lang->setting_todo_name_desc,
-        "optionscode"    => "text",
-        "disporder"      => '2',
-        "gid"            => (int)$gid,
+		"name"			=> "todo_name",
+		"title"			=> $lang->setting_todo_name,
+		"description"	=> $lang->setting_todo_name_desc,
+		"optionscode"	=> "text",
+		"value"			=> "",
+		"disporder"		=> '2',
+		"gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_2);
 
 	$todolist_setting_3 = array(
-        "name"			=> "todo_per_page",
-        "title"			=> $lang->setting_todo_per_page,
-        "description"	=> $lang->setting_todo_per_page_desc,
-        "optionscode"	=> "text",
-        "value"			=> "10",
-        "disporder"		=> '3',
-        "gid"			=> (int)$gid,
+		"name"			=> "todo_per_page",
+		"title"			=> $lang->setting_todo_per_page,
+		"description"	=> $lang->setting_todo_per_page_desc,
+		"optionscode"	=> "text",
+		"value"			=> "10",
+		"disporder"		=> '3',
+		"gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_3);
 
 	$todolist_setting_4 = array(
-        "name"			=> "todo_404_errors",
-        "title"			=> $lang->setting_todo_404_errors,
-        "description"	=> $lang->setting_todo_404_errors_desc,
-        "optionscode"	=> "yesno",
-        "value"			=> "no",
-        "disporder"		=> '4',
-        "gid"			=> (int)$gid,
+		"name"			=> "todo_404_errors",
+		"title"			=> $lang->setting_todo_404_errors,
+		"description"	=> $lang->setting_todo_404_errors_desc,
+		"optionscode"	=> "yesno",
+		"value"			=> "no",
+		"disporder"		=> '4',
+		"gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_4);
 
 	$todolist_setting_5 = array(
-        "name"			=> "todo_pm_notify",
-        "title"			=> $lang->setting_todo_pm_notify,
-        "description"	=> $lang->setting_todo_pm_notify_desc,
-        "optionscode"	=> "yesno",
-        "value"			=> "yes",
-        "disporder"		=> '5',
-        "gid"			=> (int)$gid,
+		"name"			=> "todo_pm_notify",
+		"title"			=> $lang->setting_todo_pm_notify,
+		"description"	=> $lang->setting_todo_pm_notify_desc,
+		"optionscode"	=> "yesno",
+		"value"			=> "yes",
+		"disporder"		=> '5',
+		"gid"			=> (int)$gid,
 	);
 	$db->insert_query("settings", $todolist_setting_5);
 	rebuild_settings();
@@ -659,24 +702,24 @@ function todolist_deactivate() {}
 function todolist_uninstall()
 {
 	global $db;
-	
+
 	$db->drop_table("todolist");
 	$db->drop_table("todolist_projects");
 	$db->drop_table("todolist_permissions");
 	$db->drop_table("todolist_searchs");
 
 	$query = $db->simple_select("settinggroups", "gid", "name='todo'");
-    $g = $db->fetch_array($query);
+	$g = $db->fetch_array($query);
 	$db->delete_query("settinggroups", "gid='".$g['gid']."'");
 	$db->delete_query("settings", "gid='".$g['gid']."'");
 	rebuild_settings();
 
 	//Delete templates
 	$templatearray = array(
-        "todolist",
-        "todolist_projects",
-        "todolist_show",
-        "todolist_add",
+		"todolist",
+		"todolist_projects",
+		"todolist_show",
+		"todolist_add",
 		"todolist_edit",
 		"todolist_table",
 		"todolist_table_no_results",
@@ -691,8 +734,8 @@ function todolist_uninstall()
 		"todolist_search_results",
 		"todolist_confirm",
 		"todolist_searches"
-    );
-    $deltemplates = implode("','", $templatearray);
+	);
+	$deltemplates = implode("','", $templatearray);
 	$db->delete_query("templates", "title in ('{$deltemplates}')");
 }
 
@@ -750,86 +793,86 @@ function todo_admin_config_permissions($admin_permissions)
 
 function todo_wol_activity($user_activity)
 {
-    global $parameters;
-    $split_loc = explode(".php", $user_activity['location']);
-    if($split_loc[0] == $user['location']) {
-        $filename = '';
-    } else {
-        $filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
-    }
+	global $parameters;
+	$split_loc = explode(".php", $user_activity['location']);
+	if($split_loc[0] == $user['location']) {
+		$filename = '';
+	} else {
+		$filename = my_substr($split_loc[0], -my_strpos(strrev($split_loc[0]), "/"));
+	}
 
-    switch ($filename)
-    {
+	switch ($filename)
+	{
 		case 'todolist':
-            $user_activity['activity'] = "todo";
-            $user_activity['todo']['action'] = $parameters['action'];
-            
-		    if(isset($parameters['id']))
-                $user_activity['todo']['id'] = (int)$parameters['id'];
-			break;
-    }
+			$user_activity['activity'] = "todo";
+			$user_activity['todo']['action'] = $parameters['action'];
 
-    return $user_activity;
+			if(isset($parameters['id']))
+				$user_activity['todo']['id'] = (int)$parameters['id'];
+			break;
+	}
+
+	return $user_activity;
 }
 
 function todo_wol_location($array)
 {
 	global $lang, $settings, $db;
 	$lang->load("todolist");
-    switch ($array['user_activity']['activity'])
-    {
-        case 'todo':
-	    	//echo "<pre>"; var_dump($array['user_activity']['todo']); echo "</pre>";
-	        if(isset($array['user_activity']['todo']['id'])) {
-	        	$id = $array['user_activity']['todo']['id'];
-	        	$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");				
-	        	$project = $db->fetch_field($db->simple_select("todolist_projects", "title", "id={$id}"), "title");
+	switch ($array['user_activity']['activity'])
+	{
+		case 'todo':
+			//echo "<pre>"; var_dump($array['user_activity']['todo']); echo "</pre>";
+			if(isset($array['user_activity']['todo']['id'])) {
+				$id = $array['user_activity']['todo']['id'];
+				$todo = $db->fetch_field($db->simple_select("todolist", "title", "id={$id}"), "title");				
+				$project = $db->fetch_field($db->simple_select("todolist_projects", "title", "id={$id}"), "title");
 			}
-			
+
 			switch ($array['user_activity']['todo']['action'])
 			{
 				case "show":
-		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
-		            break;
+					$array['location_name'] = $lang->sprintf($lang->todo_wol_show, $todo, $id);
+					break;
 				case "show_project":
-		            $array['location_name'] = $lang->sprintf($lang->todo_wol_show_project, $project, $id);
-		            break;
+					$array['location_name'] = $lang->sprintf($lang->todo_wol_show_project, $project, $id);
+					break;
 				case "add":
-		            $array['location_name'] = $lang->todo_wol_add;
-		            break;
-		        case "delete":
-		            $array['location_name'] = $lang->todo_wol_delete;
-		        	break;
-		        case "edit":
-	           		$array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
-	           		break;
-		        case "search":
-		            $array['location_name'] = $lang->todo_wol_search;
-		        	break;
-	           	default:
-		            $array['location_name'] = $lang->todo_wol;          	
+					$array['location_name'] = $lang->todo_wol_add;
+					break;
+				case "delete":
+					$array['location_name'] = $lang->todo_wol_delete;
+					break;
+				case "edit":
+					$array['location_name'] = $lang->sprintf($lang->todo_wol_edit, $todo, $id);
+					break;
+				case "search":
+					$array['location_name'] = $lang->todo_wol_search;
+					break;
+				default:
+					$array['location_name'] = $lang->todo_wol;          	
 			}
-            break;
-    }
-    return $array;
+			break;
+	}
+	return $array;
 }
 
 function todo_no_permission()
 {
 	global $settings;
 	if($settings['todo_404_errors'] == 1)
-	    header("HTTP/1.1 404 Not Found");
+		header("HTTP/1.1 404 Not Found");
 	else
 		error_no_permission();
-	
+
 	exit;
 }
 
 function todo_pm($to, $subject, $message, $from=0)
 {
-    if(is_string($to))
+	if(is_string($to))
 		$to = explode(',', $to);
-    elseif(is_int($to))
+	elseif(is_int($to))
 		$to = (array)$to;
 
 	//Write PM
@@ -864,9 +907,9 @@ function todo_has_any_permission($right="can_see", $user=false)
 {
 	global $mybb, $db;
 	if(!$user)
-	    $user = $mybb->user;
+		$user = $mybb->user;
 	if(is_int($user))
-	    $user = get_user($user);
+		$user = get_user($user);
 
 	if($user['additionalgroups'] != "")
 		$groups = explode(",", $user['additionalgroups']);
@@ -875,13 +918,13 @@ function todo_has_any_permission($right="can_see", $user=false)
 	$rights = false;
 	foreach($groups as $gid) {
 		$query = $db->simple_select("todolist_permissions", "pid", "gid={$gid} AND {$right}=1");
-	    if($db->num_rows($query) > 0)
-		    $rights = true;
+		if($db->num_rows($query) > 0)
+			$rights = true;
 	}
 	if(!$rights) {
 		$query = $db->simple_select("todolist_permissions");
 		if($db->num_rows($query) == 0)
-		    $rights = true;
+			$rights = true;
 	}
 	return $rights;
 }
@@ -890,9 +933,9 @@ function todo_has_permission($project, $right="can_see", $user=false)
 {
 	global $mybb, $db;
 	if(!$user)
-	    $user = $mybb->user;
+		$user = $mybb->user;
 	if(is_int($user))
-	    $user = get_user($user);
+		$user = get_user($user);
 
 	if($user['additionalgroups'] != "")
 		$groups = explode(",", $user['additionalgroups']);
@@ -901,8 +944,8 @@ function todo_has_permission($project, $right="can_see", $user=false)
 	$rights = false;
 	foreach($groups as $gid) {
 		$query = $db->simple_select("todolist_permissions", "pid", "pid={$project} AND gid={$gid} AND {$right}=1");
-	    if($db->num_rows($query) > 0)
-		    $rights = true;
+		if($db->num_rows($query) > 0)
+			$rights = true;
 	}
 	return $rights;
 }
