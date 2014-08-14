@@ -511,7 +511,7 @@ if($mybb->input['action'] == "search_edit") {
 		$assign = $mybb->input['assign'];
 		$project_select = $mybb->input['project'];
 		$priority_select = $mybb->input['priority'];
-		$version = $mybb->input['priority'];
+		$version = $mybb->input['version'];
 	} else {
 		$title = $todo['title'];
 		$pars = substr($todo['url'], strpos($todo['url'], "?"));

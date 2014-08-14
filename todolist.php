@@ -712,7 +712,7 @@ if ($mybb->input['action'] == "") {
 	if($count != 0) {
 		$searches .= "<tr class=\"trow1\">\n";
 		foreach($sarray as $s) {
-			$searches .= "<td><a href=\"".rawurlencode($s['url'])."\">".htmlspecialchars($s['title'])."</a></td>\n";
+			$searches .= "<td><a href=\"{$s['url']}\">".htmlspecialchars($s['title'])."</a></td>\n";
 		}
 		for($i = sizeof($sarray); $i < 5; ++$i) {
 			$searches .= "<td></td>\n";

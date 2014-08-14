@@ -506,7 +506,7 @@ function todolist_install()
 			maximumSelectionSize: 3,
 			ajax: {
 				url: \"xmlhttp.php?action=get_users\",
-				dataType: 'json',
+				dataType: \'json\',
 				data: function (term, page) {
 					return {
 						query: term,
@@ -528,7 +528,7 @@ function todolist_install()
 			maximumSelectionSize: 3,
 			ajax: {
 				url: \"xmlhttp.php?action=get_users\",
-				dataType: 'json',
+				dataType: \'json\',
 				data: function (term, page) {
 					return {
 						query: term,
